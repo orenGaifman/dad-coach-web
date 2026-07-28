@@ -19,6 +19,7 @@ These documents guide all future design and implementation work. They define *wh
 | [PHOTOGRAPHY_GUIDELINES.md](./PHOTOGRAPHY_GUIDELINES.md) | Photo style, subject guidance, and usage contexts |
 | [SPACING_PHILOSOPHY.md](./SPACING_PHILOSOPHY.md) | Why generous spacing matters and how it creates calm |
 | [MOTION_PHILOSOPHY.md](./MOTION_PHILOSOPHY.md) | Animation principles, timing, and emotional restraint |
+| [ASSET_STRATEGY.md](./ASSET_STRATEGY.md) | Asset organization, naming, formats, lifecycle, and optimization |
 
 ## Recommended Reading Order
 
@@ -27,6 +28,7 @@ These documents guide all future design and implementation work. They define *wh
 3. **COLOR_SYSTEM** → **TYPOGRAPHY** → **SPACING_PHILOSOPHY** — the foundational triad
 4. **ICONOGRAPHY** → **ILLUSTRATION_STYLE** → **PHOTOGRAPHY_GUIDELINES** — visual assets
 5. **MOTION_PHILOSOPHY** — the time-based layer
+6. **ASSET_STRATEGY** — how assets are organized and maintained
 
 ## Relationship to docs/brand
 

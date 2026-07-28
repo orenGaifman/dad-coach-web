@@ -29,11 +29,11 @@ These documents sit between strategy ([docs/brand](../brand/README.md)) and visu
 ### The Web Is a Companion, Not the Primary Experience
 
 Coaching happens on WhatsApp. The web application serves three purposes:
-1. **Onboarding** — register and activate WhatsApp
+1. **Onboarding** — register via invitation link and activate WhatsApp
 2. **Progress tracking** — see growth, belt, streak, achievements
 3. **Management** — update profile, children, preferences
 
-The web never tries to replicate the coaching conversation.
+The web never tries to replicate the coaching conversation. There is no public marketing landing page in the MVP — fathers access the product exclusively through invitation links.
 
 ### Shallow Architecture
 

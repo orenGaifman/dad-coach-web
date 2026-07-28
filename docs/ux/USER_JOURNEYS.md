@@ -2,44 +2,101 @@
 
 ## Overview
 
-These journeys map the primary paths a father takes through Dad Coach's web experience. The web application serves two key functions: (1) onboarding new fathers into the system, and (2) providing a dashboard where fathers can track progress, review coaching history, and manage their profiles.
+These journeys map the complete paths a father takes through the Dad Coach experience. The product spans two platforms:
 
-The primary coaching interaction happens via WhatsApp. The web is a companion — not a replacement for the conversational experience.
+- **Web** — onboarding, progress tracking, profile management
+- **WhatsApp** — daily AI coaching, mission delivery, reflections
+
+The web application is a companion to the WhatsApp coaching experience, not a replacement for it.
+
+### Platform Responsibilities
+
+| Platform | Owns | Does Not Own |
+|----------|------|--------------|
+| **Web** | Registration, onboarding wizard, progress dashboard, activity logging, profile/children/goal management, notifications display | Coaching conversations, mission delivery, AI interactions, daily engagement |
+| **WhatsApp** | AI coaching conversations, mission assignment/completion, reflections, daily engagement, habit prompts | Registration, progress visualization, profile editing, achievement gallery |
+| **Backend** | Data persistence, growth signal processing, belt/streak/achievement evaluation, scheduling, AI orchestration | Direct user interaction on either platform |
 
 ---
 
-## Journey 1: New Father Onboarding
+## Journey 1: Complete New Father Experience
 
 **Trigger:** Father receives an invitation link (from admin, referral, or beta program)
 
-**Goal:** Complete registration and activate WhatsApp coaching
+**Goal:** Go from stranger to actively coached father
 
-**Emotional state:** Curious but skeptical → Understood and respected → Motivated and connected
+**Emotional arc:** Curious → Understood → Motivated → Connected → Growing
 
-### Steps
+### Phase 1: Discovery (Web)
 
-1. **Arrive at invitation link** — Sees welcome page explaining Dad Coach's value in one clear statement
-2. **Choose language** — Hebrew or English (determines RTL/LTR for entire experience)
-3. **Create profile** — Name, phone number, timezone
-4. **Add children** (optional) — Name, birth date, interests, challenges
-5. **Select goals** (optional) — Choose 1–5 from curated list or add custom
-6. **Set preferences** (optional) — Coaching style, preferred time, notification frequency
-7. **Review** — Confirm details in a clear summary
-8. **Activate WhatsApp** — Click deep link, send activation message, see confirmation
+| Step | Screen | Action | Emotional State |
+|------|--------|--------|-----------------|
+| 1.1 | Invitation link arrives | Father clicks link from message/email | Curious, possibly skeptical |
+| 1.2 | Welcome (O1) | Reads value proposition, sees product identity | "This looks like it's for me" |
 
-### Key Principles
+### Phase 2: Registration (Web)
 
-- Required steps: only 3 (welcome, language, profile). Everything else is skippable.
-- Progress is visible but not pressuring
-- Father can go back without losing data
-- Session persists across page reloads and devices (72h)
-- Tone throughout: warm, brief, never overwhelming
+| Step | Screen | Action | Emotional State |
+|------|--------|--------|-----------------|
+| 2.1 | Language (O2) | Selects Hebrew or English | Comfortable — product speaks their language |
+| 2.2 | Father Profile (O3) | Enters name, phone (E.164), timezone | Quick, low-friction, no unnecessary fields |
+| 2.3 | Children (O4) | Adds children: name, birth date, interests, challenges | Starting to feel personal — "it cares about my family" |
+| 2.4 | Goals (O5) | Selects 1–5 parenting goals from curated list | Defining intent — "I know what I want to improve" |
+| 2.5 | Preferences (O6) | Sets coaching style, preferred time, notification frequency | "It adapts to me" |
+| 2.6 | Review (O7) | Confirms all details in a clear summary | Confidence — "this is right" |
+
+**Notes:**
+- Steps 2.3–2.5 are optional (skippable)
+- Session persists across page reloads and devices for 72 hours
+- Back navigation preserves all entered data
+- Required steps: Language, Father Profile, Review
+
+### Phase 3: Activation (Web → WhatsApp)
+
+| Step | Screen | Action | Emotional State |
+|------|--------|--------|-----------------|
+| 3.1 | Activation (O8) | Sees WhatsApp deep link with instructions | Clear on what to do next |
+| 3.2 | WhatsApp opens | Clicks deep link (`wa.me/{number}?text=🚀 START`) | Crossing the threshold |
+| 3.3 | Sends activation message | Sends pre-filled "🚀 START" to Dad Coach WhatsApp number | Active commitment |
+| 3.4 | Activation confirmed | Web page updates via polling (status: CONVERSATION_STARTED) | "I'm in" — relief and excitement |
+
+**Handoff:** At this point, responsibility transfers from Web to WhatsApp for coaching.
+
+### Phase 4: First Coaching Interaction (WhatsApp)
+
+| Step | Platform | What Happens | Emotional State |
+|------|----------|--------------|-----------------|
+| 4.1 | WhatsApp | Dad Coach sends personalized welcome message referencing children and goals | "It remembers what I said" |
+| 4.2 | WhatsApp | Brief orientation: how coaching works, what to expect | Setting expectations — no overwhelm |
+| 4.3 | WhatsApp | First micro-mission suggested (low difficulty, high warmth) | Actionable — "I can do this tonight" |
+
+### Phase 5: First Dashboard Visit (Web)
+
+| Step | Screen | What Father Sees | Emotional State |
+|------|--------|------------------|-----------------|
+| 5.1 | Dashboard (D1) | Warm welcome state, White belt, zero streak, "first session coming soon" | Beginning of something good |
+| 5.2 | Dashboard (D1) | Clear mental model explanation: WhatsApp = coaching, Web = progress | Understanding the system |
+| 5.3 | Dashboard (D1) | If first coaching happened: initial points visible, belt progress started | "It's already counting" |
+
+### Phase 6: Long-Term Usage Pattern
+
+After the first week, the father settles into a rhythm:
+
+| Frequency | Platform | Activity |
+|-----------|----------|----------|
+| Daily | WhatsApp | Receives coaching message, completes missions, reflects |
+| 2–3x/week | Web | Checks dashboard progress, views belt advancement |
+| As needed | Web | Logs quality time or positive activities |
+| Occasionally | Web | Reviews achievements, manages children/goals |
+| Rarely | Web | Updates preferences or profile |
 
 ### Success Criteria
 
-- Father completes registration in under 5 minutes
-- Father successfully activates WhatsApp
-- Father feels understood and hopeful, not overwhelmed
+- Registration completed in under 5 minutes
+- WhatsApp activation successful on first attempt
+- First coaching interaction within 24 hours of activation
+- First dashboard return within 48 hours
+- Father understands the two-platform model without confusion
 
 ---
 
@@ -49,7 +106,7 @@ The primary coaching interaction happens via WhatsApp. The web is a companion �
 
 **Goal:** See progress at a glance, feel encouraged, leave quickly
 
-**Emotional state:** Busy, checking in → Acknowledged → Satisfied, returns to life
+**Emotional arc:** Busy → Acknowledged → Satisfied → Returns to life
 
 ### Steps
 
@@ -73,22 +130,28 @@ The primary coaching interaction happens via WhatsApp. The web is a companion �
 
 **Goal:** Record the activity and see it reflected in progress
 
-**Emotional state:** Warm from the experience → Wants to capture it → Sees it count
+**Emotional arc:** Warm from the experience → Wants to capture it → Sees it count
 
 ### Steps
 
-1. **Navigate to activity logging** — Clear entry point from dashboard
+1. **Navigate to activity logging** — Clear entry point from dashboard or Coaching tab
 2. **Choose type** — Quality time or positive activity (praise, teaching moment, shared activity)
-3. **Add details** — Which child, duration (for quality time), brief description (optional)
-4. **Submit** — Instant confirmation, points awarded, streak updated
+3. **Add details** — Which child (required), duration for quality time (optional), brief description (optional)
+4. **Submit** — Instant confirmation with points awarded, streak updated
 5. **See impact** — Progress bar moves, score updates, encouraging message
 
 ### Key Principles
 
 - Logging takes under 30 seconds
-- Minimum required fields (child selection + type)
+- Minimum required fields: child + activity type
 - Feels like capturing a good memory, not filing a report
 - Immediate feedback makes it satisfying
+
+### Validation Rules (from backend)
+
+- Duration: 15–480 minutes (quality time only)
+- Activity date: not future, not more than 7 days past
+- Rate limits: max 10 quality time / 20 positive activity per day
 
 ---
 
@@ -98,13 +161,13 @@ The primary coaching interaction happens via WhatsApp. The web is a companion �
 
 **Goal:** Feel a sense of accomplishment and see the trajectory
 
-**Emotional state:** Reflective → Proud → Motivated to continue
+**Emotional arc:** Reflective → Proud → Motivated to continue
 
 ### Steps
 
-1. **Open growth section** — Sees current belt, score, progress toward next belt
+1. **Open Growth tab** — Sees current belt, score, progress toward next belt
 2. **View achievements** — Earned achievements displayed with dignity; unearned shown as available (not locked/greyed out)
-3. **Check streak history** — Current and longest streak, milestone markers
+3. **Check streak** — Current and longest streak, milestone markers
 4. **Review statistics** (future) — Weekly/monthly activity patterns
 
 ### Key Principles
@@ -118,15 +181,15 @@ The primary coaching interaction happens via WhatsApp. The web is a companion �
 
 ## Journey 5: Managing Children and Goals
 
-**Trigger:** Father's situation changes (new child, new goal, updated interests)
+**Trigger:** Father's situation changes (new child, updated interests, new goal)
 
 **Goal:** Keep the coaching context accurate
 
-**Emotional state:** Practical → Efficient → Confident the system knows them
+**Emotional arc:** Practical → Efficient → Confident the system knows them
 
 ### Steps
 
-1. **Navigate to profile/children** — Clear path from dashboard
+1. **Navigate to Profile tab → Children Management** — Clear path from dashboard
 2. **Edit or add** — Update child interests, add a new child, modify goals
 3. **Confirm changes** — Simple save, confirmation that coaching will adapt
 4. **Return to dashboard** — Updated summary reflects changes
@@ -134,26 +197,26 @@ The primary coaching interaction happens via WhatsApp. The web is a companion �
 ### Key Principles
 
 - Management is practical, not emotional
-- Changes take immediate effect on coaching
+- Changes take immediate effect on future coaching (via WhatsApp)
 - No judgment about what changed or why
 - Minimal friction for updates
 
 ---
 
-## Journey 6: First-Time Dashboard Experience (Post-Onboarding)
+## Journey 6: First-Time Dashboard Experience
 
-**Trigger:** Father completes onboarding and visits the dashboard for the first time
+**Trigger:** Father completes onboarding and visits the dashboard before first coaching session
 
 **Goal:** Understand what happens next without feeling overwhelmed
 
-**Emotional state:** Just set things up → "Now what?" → Clear on the path forward
+**Emotional arc:** "Now what?" → Clear on the path forward → Anticipation
 
 ### Steps
 
 1. **Arrive at dashboard** — Sees a warm welcome state, not an empty shell
-2. **Understand the coaching flow** — Brief explanation: coaching happens on WhatsApp, the dashboard tracks progress
-3. **See initial state** — White belt, zero streak, first coaching session coming soon
-4. **First hint of progress** — Onboarding completion itself might award initial points
+2. **Understand the model** — Brief explanation: coaching happens on WhatsApp, dashboard tracks progress
+3. **See initial state** — White belt, zero streak, first coaching session indicated as "coming soon"
+4. **Optional:** — Link to WhatsApp is available if father wants to initiate
 
 ### Key Principles
 
@@ -169,5 +232,6 @@ The primary coaching interaction happens via WhatsApp. The web is a companion �
 - [INFORMATION_ARCHITECTURE.md](./INFORMATION_ARCHITECTURE.md) — how content is organized
 - [NAVIGATION_MODEL.md](./NAVIGATION_MODEL.md) — how fathers move between areas
 - [SCREEN_INVENTORY.md](./SCREEN_INVENTORY.md) — the screens these journeys touch
+- [FEATURE_MAP.md](./FEATURE_MAP.md) — features that enable these journeys
 - [Personas](../brand/PERSONAS.md) — who these journeys serve
 - [North Star](../brand/NORTH_STAR.md) — the metric these journeys ultimately drive
