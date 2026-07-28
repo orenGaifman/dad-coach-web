@@ -42,4 +42,13 @@ The product exists to serve families, not to maximize engagement. If the best th
 - Notifications are respectful and minimal
 - Success means less screen time, not more
 
-See [BRAND_PRINCIPLES.md](./BRAND_PRINCIPLES.md) for how these values translate into brand expression.
+## Related Documents
+
+| Document | Relationship |
+|----------|-------------|
+| [BRAND_PRINCIPLES.md](./BRAND_PRINCIPLES.md) | How values translate into brand expression |
+| [TONE_OF_VOICE.md](./TONE_OF_VOICE.md) | How values show up in language |
+| [AI_PHILOSOPHY.md](./AI_PHILOSOPHY.md) | How values guide AI behavior |
+| [ANTI_GOALS.md](./ANTI_GOALS.md) | The boundaries values create |
+| [NORTH_STAR.md](./NORTH_STAR.md) | The metric that validates our values |
+| [MISSION.md](./MISSION.md) | The purpose these values serve |

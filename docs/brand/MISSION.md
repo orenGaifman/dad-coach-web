@@ -22,4 +22,11 @@ We do this by:
 
 A world where fathers are supported as actively as mothers. Where asking for help is strength, not weakness. Where every child benefits from a father who is present, engaged, and growing.
 
-See [VALUES.md](./VALUES.md) for the principles that guide how we pursue this mission.
+## Related Documents
+
+| Document | Relationship |
+|----------|-------------|
+| [VISION.md](./VISION.md) | The destination we're heading toward |
+| [NORTH_STAR.md](./NORTH_STAR.md) | How we measure progress toward this mission |
+| [VALUES.md](./VALUES.md) | The principles that guide how we pursue this mission |
+| [PRODUCT.md](./PRODUCT.md) | How the product delivers on this mission |

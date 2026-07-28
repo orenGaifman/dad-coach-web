@@ -16,16 +16,17 @@ Dad Coach has helped redefine what fatherhood support looks like. The data and i
 
 ## The World We're Building
 
-A world where:
-
 - Every father has a patient coach in his pocket
 - Parenting growth is celebrated the same way fitness progress is
 - Children grow up with fathers who are intentionally present
 - The "absent father" narrative is replaced by stories of consistent, supported dads
 - Asking for parenting help is normalized for men
 
-## Guiding Principle
+## Related Documents
 
-We measure our success not by app metrics, but by the quality of real-world moments between fathers and their children.
-
-See [MISSION.md](./MISSION.md) for why we're building this, and [PRODUCT.md](./PRODUCT.md) for how.
+| Document | Relationship |
+|----------|-------------|
+| [MISSION.md](./MISSION.md) | Why we're building toward this vision |
+| [NORTH_STAR.md](./NORTH_STAR.md) | The compass that keeps us on course |
+| [PRODUCT.md](./PRODUCT.md) | How the product serves this vision today |
+| [VALUES.md](./VALUES.md) | The principles we won't compromise along the way |

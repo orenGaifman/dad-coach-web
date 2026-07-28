@@ -20,12 +20,14 @@ Dad Coach provides personalized, AI-driven coaching that adapts to each father's
 - A judgment-free space to explore parenting challenges
 - Evidence-based strategies drawn from child development research
 
+See [AI_PHILOSOPHY.md](./AI_PHILOSOPHY.md) for how the AI coaching model works.
+
 ## Target Users
 
 - **Primary:** Fathers aged 28–45 with children aged 0–12
 - **Secondary:** Expectant fathers, co-parents, and father figures
 
-See [TARGET_AUDIENCE.md](./TARGET_AUDIENCE.md) and [PERSONAS.md](./PERSONAS.md) for detailed profiles.
+See [TARGET_AUDIENCE.md](./TARGET_AUDIENCE.md) for detailed audience analysis and [PERSONAS.md](./PERSONAS.md) for representative user profiles.
 
 ## Core Pillars
 
@@ -43,8 +45,15 @@ See [TARGET_AUDIENCE.md](./TARGET_AUDIENCE.md) and [PERSONAS.md](./PERSONAS.md) 
 - Retention at 30, 60, and 90 days
 - Quality of father-child interactions (self-assessed)
 
-## Future Vision
+See [NORTH_STAR.md](./NORTH_STAR.md) for the single metric that guides all prioritization.
 
-Dad Coach aspires to become the trusted companion that every father turns to — not as a replacement for human connection, but as a catalyst for it. The platform will expand to support fathers through every stage, from pregnancy to young adulthood, creating a generation of more present, intentional dads.
+## Related Documents
 
-See [VISION.md](./VISION.md) for the long-term outlook.
+| Document | Relationship |
+|----------|-------------|
+| [MISSION.md](./MISSION.md) | Why we're building this |
+| [VISION.md](./VISION.md) | Where we're going |
+| [VALUES.md](./VALUES.md) | How we make decisions |
+| [NORTH_STAR.md](./NORTH_STAR.md) | What we optimize for |
+| [ANTI_GOALS.md](./ANTI_GOALS.md) | What we refuse to build |
+| [DESIGN_PHILOSOPHY.md](./DESIGN_PHILOSOPHY.md) | How the experience should feel |

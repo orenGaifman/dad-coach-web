@@ -2,6 +2,8 @@
 
 This document defines how Dad Coach communicates with fathers across all touchpoints — from AI coaching conversations to notifications, error messages, and marketing copy.
 
+For the AI-specific communication approach, see [AI_PHILOSOPHY.md](./AI_PHILOSOPHY.md).
+
 ## Writing Style
 
 ### We Are
@@ -98,21 +100,11 @@ This document defines how Dad Coach communicates with fathers across all touchpo
 
 ### AI Coaching Tone
 
-The AI coach communicates as a patient, experienced mentor. It adapts to the father's energy and context.
-
-**Characteristics:**
-
-- Listens before advising
-- Asks thoughtful follow-up questions
-- Offers one clear suggestion at a time
-- Validates feelings before offering solutions
-- Uses the father's own language and references
-
 **Good coaching response:**
 > "Sounds like mornings are the hardest right now. That makes sense — everyone's rushed and tired. What if we focused on just one calm moment? Even 30 seconds of eye contact before you leave can change the tone of the whole day."
 
 **Bad coaching response:**
-> "Research indicates that morning routines are crucial for child development. You should establish a consistent 15-minute connection ritual each morning before leaving for work. Here are 7 steps to implement this..."
+> "Research indicates that morning routines are crucial for child development. You should establish a consistent 15-minute connection ritual each morning before leaving for work. Here are 7 steps..."
 
 **Good follow-up:**
 > "How did that feel? Even if it didn't go perfectly, you tried — and that matters."
@@ -145,4 +137,12 @@ The AI coach communicates as a patient, experienced mentor. It adapts to the fat
 
 ---
 
-See [BRAND_PRINCIPLES.md](./BRAND_PRINCIPLES.md) for the visual and experiential principles that complement this voice, and [VALUES.md](./VALUES.md) for the beliefs that inform our communication choices.
+## Related Documents
+
+| Document | Relationship |
+|----------|-------------|
+| [BRAND_PRINCIPLES.md](./BRAND_PRINCIPLES.md) | The experiential principles this voice serves |
+| [AI_PHILOSOPHY.md](./AI_PHILOSOPHY.md) | Deeper AI coaching philosophy and guardrails |
+| [VALUES.md](./VALUES.md) | The beliefs that inform communication choices |
+| [DESIGN_PHILOSOPHY.md](./DESIGN_PHILOSOPHY.md) | How language and design work together |
+| [ANTI_GOALS.md](./ANTI_GOALS.md) | Communication anti-patterns we reject |

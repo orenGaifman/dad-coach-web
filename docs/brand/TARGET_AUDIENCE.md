@@ -57,4 +57,9 @@ These are men who are actively involved in parenting and want to do better. They
 - Information overload without clear next steps
 - Lack of progress visibility in parenting
 
-See [PERSONAS.md](./PERSONAS.md) for detailed character profiles.
+## Related Documents
+
+- [PERSONAS.md](./PERSONAS.md) — detailed character profiles representing this audience
+- [PRODUCT.md](./PRODUCT.md) — how the product addresses these pain points
+- [DESIGN_PHILOSOPHY.md](./DESIGN_PHILOSOPHY.md) — how design respects their constraints
+- [TONE_OF_VOICE.md](./TONE_OF_VOICE.md) — how we speak to this audience

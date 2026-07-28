@@ -1,10 +1,10 @@
 # Brand Principles
 
-These principles define how Dad Coach looks, feels, and communicates across every touchpoint.
+These principles define how Dad Coach looks, feels, and communicates across every touchpoint. They translate our [values](./VALUES.md) into tangible brand expression.
 
 ## Calm
 
-The parenting world is noisy and overwhelming. Dad Coach is a quiet, steady presence. Our design and communication should feel like a deep breath — not another thing demanding attention.
+The parenting world is noisy and overwhelming. Dad Coach is a quiet, steady presence — like a deep breath, not another thing demanding attention.
 
 - Generous white space
 - Unhurried interactions
@@ -12,7 +12,7 @@ The parenting world is noisy and overwhelming. Dad Coach is a quiet, steady pres
 
 ## Premium
 
-Dad Coach respects the seriousness of fatherhood. The experience should feel considered, polished, and worthy of the topic. This isn't a casual gamified toy — it's a meaningful tool for personal growth.
+Dad Coach respects the seriousness of fatherhood. The experience should feel considered, polished, and worthy of the topic.
 
 - Refined typography and spacing
 - Thoughtful micro-interactions
@@ -60,7 +60,7 @@ Less is more. Every screen, every message, every notification should earn its pl
 
 ## Never Manipulative
 
-We will never use dark patterns, artificial urgency, FOMO, or guilt to drive engagement. Our success depends on genuine value, not psychological tricks.
+We will never use dark patterns, artificial urgency, FOMO, or guilt to drive engagement.
 
 - No streak-shaming
 - No push notification abuse
@@ -74,4 +74,12 @@ Regardless of where a father is starting from, Dad Coach meets him with respect.
 - No comparison to other users
 - Accepting of all family structures and situations
 
-See [TONE_OF_VOICE.md](./TONE_OF_VOICE.md) for how these principles translate into writing, and [VALUES.md](./VALUES.md) for the underlying product values.
+## Related Documents
+
+| Document | Relationship |
+|----------|-------------|
+| [TONE_OF_VOICE.md](./TONE_OF_VOICE.md) | How principles translate into writing |
+| [DESIGN_PHILOSOPHY.md](./DESIGN_PHILOSOPHY.md) | The deeper design thinking behind these principles |
+| [VALUES.md](./VALUES.md) | The underlying beliefs |
+| [AI_PHILOSOPHY.md](./AI_PHILOSOPHY.md) | How the AI embodies these principles |
+| [ANTI_GOALS.md](./ANTI_GOALS.md) | Hard boundaries that protect these principles |
