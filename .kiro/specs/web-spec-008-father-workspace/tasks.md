@@ -66,6 +66,7 @@ graph TD
     - _Requirements: 1.1, 17.1_
   - [ ] 1.2 Create `src/components/layout/TabNavigation.tsx` — 5-tab navigation component (Home, Growth, Family, Coaching, Profile). Active tab highlighted via URL matching. Render as bottom tab bar (mobile implementation deferred to Phase 8).
     - _Requirements: 1.1_
+    - _Layout: See "Screen D1: Dashboard Home" tab bar at bottom — fixed, bg-[#0F172A]/95 backdrop-blur, 5 icons with labels, active=text-indigo-400, inactive=text-gray-500_
   - [ ] 1.3 Create `src/components/layout/WhatsAppBridge.tsx` — persistent WhatsApp deep link component. Opens WhatsApp with Dad Coach number. Subtle styling, never competing with content.
     - _Requirements: 1.5_
   - [ ] 1.4 Create `src/types/` TypeScript type definitions: `workspace.ts`, `growth.ts`, `family.ts`, `coaching.ts`, `notifications.ts`, `common.ts`. Define all DTOs matching backend API contracts from WEB-SPEC-008.
@@ -82,24 +83,31 @@ graph TD
     - _Requirements: 5.1, 6.1, 7.1, 8.1, 9.1, 12.1, 13.1_
   - [ ] 1.10 Create `src/components/common/SkeletonScreen.tsx` — reusable skeleton loading primitives (card skeleton, list skeleton, text skeleton). No spinners.
     - _Requirements: 17.1_
-  - [ ] 1.11 Create `src/components/common/EmptyState.tsx` — reusable empty state component with illustration slot, message, and optional action button. Warm copy per Tone of Voice.
+  - [ ] 1.11 Create `src/components/common/EmptyState.tsx` — reusable empty state component with illustration slot, message, and optional action button. Warm copy per Tone of Voice. Empty state images available at: `/dashboard/dashboard-empty.webp`, `/dashboard/growth-empty.webp`, `/dashboard/insights-empty.webp`.
     - _Requirements: 17.7_
-  - [ ] 1.12 Create `src/components/common/ErrorState.tsx` — reusable error display for network, server, and offline states. Includes retry button. Copy follows Tone of Voice.
+    - _Assets: Use `<Image src="/dashboard/{section}-empty.webp" ... />` per section_
+  - [ ] 1.12 Create `src/components/common/ErrorState.tsx` — reusable error display for network, server, and offline states. Includes retry button. Copy follows Tone of Voice. Use `/illustrations/error-state.webp` for errors, `/illustrations/offline-state.webp` for offline.
     - _Requirements: 17.2, 17.3, 17.4_
+    - _Assets: `<Image src="/illustrations/error-state.webp" alt="Something went wrong" width={150} height={150} />` and `<Image src="/illustrations/offline-state.webp" alt="You are offline" width={150} height={150} />`_
   - [ ] 1.13 Create `src/components/common/ProgressBar.tsx` — reusable progress fill bar component. Fills only (never depletes). Supports percentage input. Accessible with aria-valuenow.
     - _Requirements: 2.4_
 
 - [ ] 2. Phase 2: Dashboard Home (Screen D1)
   - [ ] 2.1 Create `app/(workspace)/dashboard/page.tsx` — Dashboard home page. Composes summary cards from workspace summary hook. Handles partial degradation (null sections rendered as placeholders via SkeletonScreen or neutral placeholder).
     - _Requirements: 1.1, 1.3_
+    - _Layout: See "Screen D1: Dashboard Home" in design.md for exact card structure, greeting, stats row, mission card, quick actions grid_
   - [ ] 2.2 Create `src/components/dashboard/BeltSummaryCard.tsx` — compact belt display showing current belt name, score, and mini progress bar. Links to Growth tab.
     - _Requirements: 1.1, 2.1_
+    - _Layout: See "Screen D1: Dashboard Home" belt summary card section — bg-[#1E293B] rounded-2xl with belt icon (48x48), name, and emerald progress bar_
   - [ ] 2.3 Create `src/components/dashboard/StreakSummaryCard.tsx` — compact streak display showing current streak days. Never shows "at risk." Links to Growth/Streak.
     - _Requirements: 1.1, 4.1, 4.2_
-  - [ ] 2.4 Create `src/components/dashboard/ActiveMissionCard.tsx` — displays current active mission (title, child, category) or null state if no mission. Read-only.
+  - [ ] 2.4 Create `src/components/dashboard/ActiveMissionCard.tsx` — displays current active mission (title, child, category) or null state if no mission. Read-only. Use mission illustrations from `/dashboard/mission-{type}.webp` (quality-time, listening, play, conversation, routine).
     - _Requirements: 1.1_
-  - [ ] 2.5 Create `src/components/dashboard/EmptyDashboard.tsx` — first-visit empty state explaining: "Coaching happens on WhatsApp. This dashboard tracks your progress." Warm, inviting.
+    - _Assets: `<Image src={'/dashboard/mission-${missionCategory}.webp'} alt={missionTitle} width={80} height={80} />`_
+  - [ ] 2.5 Create `src/components/dashboard/EmptyDashboard.tsx` — first-visit empty state explaining: "Coaching happens on WhatsApp. This dashboard tracks your progress." Warm, inviting. Use `/dashboard/dashboard-empty.webp` illustration and `/dashboard/coach-greeting.webp` coach character.
     - _Requirements: 1.4_
+    - _Layout: See "Screen D1: Empty Dashboard (first visit)" in design.md for centered layout with coach + empty state illustration + text + green WhatsApp button_
+    - _Assets: `<Image src="/dashboard/dashboard-empty.webp" alt="Start your journey" width={200} height={200} />` and `<Image src="/dashboard/coach-greeting.webp" alt="Your coach" width={100} height={100} />`_
   - [ ] 2.6 Create `src/components/layout/NavigationBadge.tsx` — notification count badge component. Simple dot or count. Never red. Updates from workspace summary unread_notifications_count.
     - _Requirements: 12.3, 12.4_
   - [ ] 2.7 Write tests for Dashboard: renders all sections with complete data, handles partial degradation (null growth_score), renders empty state for new father, skeleton shows during load.
@@ -108,18 +116,24 @@ graph TD
 - [ ] 3. Phase 3: Growth Section (Screens G1, G2, G3)
   - [ ] 3.1 Create `app/(workspace)/growth/page.tsx` — Growth Overview page displaying belt progression and score breakdown. Uses `useBeltProgression` and growth score hooks.
     - _Requirements: 2.1, 2.2_
-  - [ ] 3.2 Create `src/components/belts/BeltProgressDisplay.tsx` — full belt view: current belt visual (SVG from `public/belts/`), score, next belt, points remaining, percentage progress bar. BLACK belt shows mastery state.
+    - _Layout: See "Screen G1: Growth / Belt Progression" in design.md for belt row (scrollable), current belt detail card, coach section, and motivational cards_
+  - [ ] 3.2 Create `src/components/belts/BeltProgressDisplay.tsx` — full belt view: current belt visual (from `public/belts/`), score, next belt, points remaining, percentage progress bar. BLACK belt shows mastery state. Belt images are WebP character illustrations at `/belts/{color}-belt.webp`.
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
-  - [ ] 3.3 Create `src/components/belts/BeltBadge.tsx` — belt icon component. Loads SVG by belt name from `public/belts/belt-{name}.svg`. Fallback to text label if asset missing.
+    - _Layout: See "Screen G1" current belt detail card — large belt image (120px), belt name in emerald, progress bar, points remaining text_
+    - _Asset: `<Image src={'/belts/${beltLevel.toLowerCase()}-belt.webp'} alt={beltName} width={120} height={120} />`_
+  - [ ] 3.3 Create `src/components/belts/BeltBadge.tsx` — belt icon component. Loads image by belt name from `/belts/{color}-belt.webp`. Fallback to text label if asset missing.
     - _Requirements: 2.2_
+    - _Asset: `<Image src={'/belts/${belt}-belt.webp'} alt={beltLabel} width={64} height={64} />`_
   - [ ] 3.4 Create `src/components/belts/ScoreBreakdown.tsx` — displays score by signal type (from growth score endpoint). Shows recent signals list.
     - _Requirements: 2.1_
   - [ ] 3.5 Create `app/(workspace)/growth/achievements/page.tsx` — Achievements page using `useAchievements` hook. Renders AchievementGallery component.
     - _Requirements: 3.1_
-  - [ ] 3.6 Create `src/components/achievements/AchievementGallery.tsx` — renders all achievements grouped by category. Earned shows date. Unearned shown as available (not locked). Highlights "next achievable."
+  - [ ] 3.6 Create `src/components/achievements/AchievementGallery.tsx` — renders all achievements grouped by category. Earned shows date. Unearned shown as available (not locked). Highlights "next achievable." Achievement images at `/achievements/{slug}.webp`.
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
-  - [ ] 3.7 Create `src/components/achievements/AchievementCard.tsx` — single achievement card with icon (from `public/achievements/`), name, description, earned status. Accessible labels for screen readers.
+    - _Layout: See "Screen G2: Achievements" in design.md — grid-cols-3 gap-4, earned=opacity-100 with checkmark, unearned=opacity-40 (not locked)_
+  - [ ] 3.7 Create `src/components/achievements/AchievementCard.tsx` — single achievement card with icon (from `/achievements/{slug}.webp`), name, description, earned status. Accessible labels for screen readers.
     - _Requirements: 3.2_
+    - _Asset: `<Image src={'/achievements/${achievement.iconKey}.webp'} alt={achievement.name} width={64} height={64} />`_
   - [ ] 3.8 Create `app/(workspace)/growth/streak/page.tsx` — Streak page using `useStreak` hook. Displays current, longest, milestones. Zero-streak shows encouraging message.
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
   - [ ] 3.9 Write tests for Growth: belt renders correctly for all 8 levels, BLACK belt shows mastery, achievements grouped by category, unearned are not locked/greyed, streak zero shows encouraging message, no "at risk" language present anywhere.
@@ -180,8 +194,10 @@ graph TD
     - _Requirements: 12.1, 12.2, 12.5_
   - [ ] 7.2 Create `src/hooks/useMarkRead.ts` — mutation hook for mark-read (list of IDs) and mark-all-read. Optimistic update: badge count decrements immediately, notification list updates. Reverts on failure.
     - _Requirements: 12.2_
-  - [ ] 7.3 Create `src/components/common/CelebrationModal.tsx` — celebration overlay component. Accepts a queue of celebration events. Displays one at a time: event type, title, encouragement message. Dismiss on click or swipe. Marks as displayed via API on dismiss. Dignified animation (subtle fade/scale, not confetti).
+  - [ ] 7.3 Create `src/components/common/CelebrationModal.tsx` — celebration overlay component. Accepts a queue of celebration events. Displays one at a time: event type, title, encouragement message. Dismiss on click or swipe. Marks as displayed via API on dismiss. Dignified animation (subtle fade/scale, not confetti). Use `/illustrations/celebration-confetti.webp` as background and `/dashboard/coach-celebrating.webp` as coach illustration.
     - _Requirements: 16.1, 16.2, 16.3, 16.4, 16.5, 16.6, 16.7_
+    - _Layout: See "Celebration Modal (Overlay)" in design.md — bg-black/60 backdrop-blur overlay, centered modal card with coach + achievement badge + XP + dismiss button_
+    - _Assets: `<Image src="/illustrations/celebration-confetti.webp" alt="" width={300} height={300} />` and `<Image src="/dashboard/coach-celebrating.webp" alt="Coach celebrating" width={100} height={100} />`_
   - [ ] 7.4 Integrate celebration check into dashboard: on dashboard mount, fetch undisplayed celebrations via `useCelebrations` hook. If any exist, queue them in client state and render CelebrationModal before father interacts with dashboard content.
     - _Requirements: 16.1, 16.4_
   - [ ] 7.5 Write tests for Notifications: list renders with correct data, mark-read updates badge count, mark-all clears badge to zero, empty state renders. Celebrations: modal appears when undisplayed events exist, sequential display works, dismiss triggers mark-displayed API call, modal does not reappear after dismiss.

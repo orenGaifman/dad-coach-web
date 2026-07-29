@@ -454,6 +454,221 @@ src/types/
 
 ---
 
+## Screen Visual Layouts
+
+This section describes the exact visual layout of every workspace screen. The implementation must follow these layouts precisely.
+
+### Global Workspace Design Rules
+
+- **Background:** Dark navy (`bg-[#0F172A]`)
+- **Cards:** `bg-[#1E293B] rounded-2xl p-4 border border-white/5`
+- **Max width:** Content area `max-w-lg` (512px) centered on desktop
+- **Mobile:** Full width with `px-4` padding
+- **Tab bar (mobile):** Fixed bottom, `bg-[#0F172A]/95 backdrop-blur border-t border-white/10`, height 64px
+- **Typography:** Inter/Noto Sans. Headings white, body `text-gray-300`, muted `text-gray-500`
+- **Accent colors:** Indigo-500 (primary), Emerald/Green (#13A881 success), Gold (#B88B1E achievement), Red-400 (not error-alarming)
+- **Illustrations:** Contained within cards or sections, never full-bleed
+- **Spacing:** `space-y-4` between cards, `gap-3` within cards
+
+---
+
+### Screen D1: Dashboard Home
+
+```
+┌─────────────────────────────────┐
+│  ☰  [Logo]  DAD COACH    [👤]   │  ← Header: logo left, avatar right
+├─────────────────────────────────┤
+│                                  │
+│  "Good morning, Daniel! 👋"      │  ← Greeting: text-xl, font-semibold, white
+│  "Keep going. You're making a   │     Subtitle: text-gray-400
+│   real difference."              │
+│                                  │
+│  ┌──────────────────────────┐    │  ← Belt Summary Card
+│  │ Your Belt                 │    │     bg-[#1E293B] rounded-2xl p-4
+│  │ [🥋] Green Belt           │    │     /belts/green-belt.webp (48x48)
+│  │ ████████░░  1,250/2,000 XP│   │     Progress bar: bg-emerald-500
+│  └──────────────────────────┘    │
+│                                  │
+│  ┌──────┐ ┌──────┐ ┌──────┐     │  ← Stats row: 3 equal cards
+│  │  12  │ │ 8.4  │ │  3   │     │     grid grid-cols-3 gap-3
+│  │Streak│ │Score │ │Kids  │     │     Each: bg-[#1E293B] rounded-xl p-3
+│  └──────┘ └──────┘ └──────┘     │     Number: text-2xl font-bold white
+│                                  │     Label: text-xs text-gray-500
+│  ┌──────────────────────────┐    │
+│  │ Active Mission    2 days │    │  ← Mission card
+│  │ [🎯] Quality Time        │    │     /dashboard/mission-quality-time.webp (40x40)
+│  │  Challenge               │    │     Title: font-semibold white
+│  │ "Spend 20 focused mins   │    │     Description: text-gray-400 text-sm
+│  │  with each child"        │    │
+│  │ ██░░░  2/3 completed     │    │     Mini progress bar
+│  └──────────────────────────┘    │
+│                                  │
+│  Quick Actions                   │  ← Section label: text-sm text-gray-500 uppercase
+│  ┌────────┐ ┌────────┐          │
+│  │⏰ Report│ │💜 Report│          │  ← 2x2 grid of action buttons
+│  │Quality │ │Positive│          │     bg-[#1E293B] rounded-xl p-3
+│  │ Time   │ │Action  │          │     Icon + label, centered
+│  └────────┘ └────────┘          │
+│  ┌────────┐ ┌────────┐          │
+│  │💬 Chat │ │🎯 View │          │
+│  │ with   │ │Missions│          │
+│  │ Coach  │ │        │          │
+│  └────────┘ └────────┘          │
+│                                  │
+│  Recent Achievements    View All │  ← Section header with link
+│  ┌──────────────────────────┐    │
+│  │ [🏆] Great Listener  +200│    │  ← /achievements/great-listener.webp (32x32)
+│  │ "Had 10 meaningful..."   │    │     bg-[#1E293B] rounded-xl p-3
+│  └──────────────────────────┘    │
+│                                  │
+├─────────────────────────────────┤
+│  [🏠] [🎯] [🌱] [👶] [⚙️]     │  ← Tab bar: 5 icons
+│  Home Missions Growth Kids More │     Active: text-indigo-400
+└─────────────────────────────────┘     Inactive: text-gray-500
+```
+
+**Empty Dashboard (first visit):**
+```
+┌─────────────────────────────────┐
+│  ☰  [Logo]  DAD COACH    [👤]   │
+├─────────────────────────────────┤
+│                                  │
+│    ┌──────────────────────┐      │
+│    │ [Coach Greeting]     │      │  ← /dashboard/coach-greeting.webp (120x120)
+│    └──────────────────────┘      │     Centered
+│                                  │
+│    ┌──────────────────────┐      │
+│    │ [Empty State Illust.]│      │  ← /dashboard/dashboard-empty.webp (200x200)
+│    └──────────────────────┘      │
+│                                  │
+│  "Your journey begins on        │  ← text-lg white center
+│   WhatsApp"                      │
+│  "This dashboard will track     │  ← text-gray-400 center
+│   your progress as you grow."    │
+│                                  │
+│  ┌──────────────────────────┐    │
+│  │  💬 Open WhatsApp →       │    │  ← Green button
+│  └──────────────────────────┘    │
+│                                  │
+└─────────────────────────────────┘
+```
+
+---
+
+### Screen G1: Growth / Belt Progression
+
+```
+┌─────────────────────────────────┐
+│  ← Growth                        │  ← Header with back arrow
+├─────────────────────────────────┤
+│                                  │
+│  "Your Journey of Growth"        │  ← h2, centered
+│  "Every step makes you a        │
+│   better father"                 │
+│                                  │
+│  ┌──────────────────────────┐    │  ← Belt system row (scrollable)
+│  │[W][Y][O][🟢][B][P][Br][Bk]│   │     /belts/{color}-belt.webp (56x56 each)
+│  │         ↑ current         │    │     Current: ring-2 ring-indigo-500 scale-110
+│  └──────────────────────────┘    │     Others: opacity-60
+│                                  │
+│  ┌──────────────────────────┐    │  ← Current belt detail card
+│  │    [Green Belt 120px]     │    │     /belts/green-belt.webp large
+│  │                           │    │
+│  │  "Green Belt"             │    │     h3, text-xl, text-emerald-400
+│  │  "Committed"              │    │     text-gray-400
+│  │                           │    │
+│  │  1,250 / 2,000 XP        │    │     Progress text
+│  │  ████████████░░░░░░░░     │    │     bg-emerald-500 progress bar
+│  │  750 points to Blue Belt  │    │     text-sm text-gray-400
+│  └──────────────────────────┘    │
+│                                  │
+│  "Meet Your Coach"               │  ← Section
+│  ┌──────────────────────────┐    │
+│  │ [Coach Avatar 64px]       │    │  ← /dashboard/coach-avatar.webp
+│  │ "Your partner on the     │    │
+│  │  path of fatherhood"      │    │
+│  └──────────────────────────┘    │
+│                                  │
+│  Motivational Cards              │  ← Horizontal scroll
+│  ┌────┐ ┌────┐ ┌────┐ ┌────┐    │     /dashboard/motivation-*.webp (100x100)
+│  │Great│ │Smal│ │Miss│ │Stro│    │     Each: bg-[#1E293B] rounded-xl p-3
+│  │ !  │ │step│ │comp│ │nger│    │     Image + short text below
+│  └────┘ └────┘ └────┘ └────┘    │
+│                                  │
+└─────────────────────────────────┘
+```
+
+---
+
+### Screen G2: Achievements
+
+```
+┌─────────────────────────────────┐
+│  ← Achievements                  │
+├─────────────────────────────────┤
+│                                  │
+│  grid grid-cols-3 gap-4          │  ← Achievement gallery
+│  ┌────┐ ┌────┐ ┌────┐           │
+│  │[🏆]│ │[⏰]│ │[⭐]│           │     /achievements/{slug}.webp (64x64)
+│  │Grt │ │Q.T.│ │1st │           │     Earned: opacity-100
+│  │List.│ │Chmp│ │Miss│           │     Unearned: opacity-40 (not locked, just faded)
+│  │✓   │ │✓   │ │    │           │     Checkmark on earned
+│  └────┘ └────┘ └────┘           │
+│  ┌────┐ ┌────┐ ┌────┐           │
+│  │[🔥]│ │[🔥]│ │[💬]│           │
+│  │7day│ │30dy│ │Deep│           │
+│  │Strk│ │Strk│ │Conv│           │
+│  │✓   │ │    │ │✓   │           │
+│  └────┘ └────┘ └────┘           │
+│  ┌────┐ ┌────┐ ┌────┐           │
+│  │[🧘]│ │[⚽]│ │[🌙]│           │
+│  │Pati│ │Play│ │Bed │           │
+│  │ence│ │Dad │ │Hero│           │
+│  │    │ │✓   │ │    │           │
+│  └────┘ └────┘ └────┘           │
+│  ┌────┐                          │
+│  │[🌳]│                          │
+│  │Grth│                          │
+│  │Mile│                          │
+│  │    │                          │
+│  └────┘                          │
+│                                  │
+└─────────────────────────────────┘
+```
+
+---
+
+### Celebration Modal (Overlay)
+
+```
+┌─────────────────────────────────┐
+│  ┌───────────────────────────┐   │  ← Overlay: bg-black/60 backdrop-blur
+│  │                           │   │
+│  │  [Confetti Illustration]  │   │  ← /illustrations/celebration-confetti.webp
+│  │                           │   │     Behind content, opacity-30
+│  │  ┌─────────────────────┐  │   │
+│  │  │                     │  │   │  ← Modal card: bg-[#1E293B] rounded-3xl p-6
+│  │  │  [Coach Celebrating]│  │   │     /dashboard/coach-celebrating.webp (80x80)
+│  │  │                     │  │   │
+│  │  │  "Congratulations!" │  │   │     h3, text-xl, white, center
+│  │  │                     │  │   │
+│  │  │  "You earned the    │  │   │     p, text-gray-300, center
+│  │  │   Great Listener    │  │   │
+│  │  │   achievement!"     │  │   │
+│  │  │                     │  │   │
+│  │  │  [Achievement Badge]│  │   │     /achievements/{slug}.webp (80x80)
+│  │  │                     │  │   │
+│  │  │  +200 XP            │  │   │     text-amber-400 font-bold
+│  │  │                     │  │   │
+│  │  │  [  Awesome! →  ]   │  │   │     Dismiss button
+│  │  └─────────────────────┘  │   │
+│  │                           │   │
+│  └───────────────────────────┘   │
+└─────────────────────────────────┘
+```
+
+---
+
 ## Frontend Asset Naming Conventions
 
 All assets follow the conventions defined in [ASSET_STRATEGY.md](../../../docs/design/ASSET_STRATEGY.md). This section summarizes the naming rules relevant to workspace implementation.
@@ -468,46 +683,50 @@ All assets follow the conventions defined in [ASSET_STRATEGY.md](../../../docs/d
 ### Belt Assets
 
 **Location:** `public/belts/`
-**Pattern:** `belt-{level}.svg`
+**Pattern:** `{color}-belt.webp`
+**Format:** WebP (3D rendered character illustrations)
 
 | File | Belt |
 |------|------|
-| `belt-white.svg` | WHITE |
-| `belt-yellow.svg` | YELLOW |
-| `belt-orange.svg` | ORANGE |
-| `belt-green.svg` | GREEN |
-| `belt-blue.svg` | BLUE |
-| `belt-purple.svg` | PURPLE |
-| `belt-brown.svg` | BROWN |
-| `belt-black.svg` | BLACK |
+| `white-belt.webp` | WHITE (Beginner) |
+| `yellow-belt.webp` | YELLOW (Learner) |
+| `orange-belt.webp` | ORANGE (Improving) |
+| `green-belt.webp` | GREEN (Committed) |
+| `blue-belt.webp` | BLUE (Advanced) |
+| `purple-belt.webp` | PURPLE (Expert) |
+| `brown-belt.webp` | BROWN (Master) |
+| `black-belt.webp` | BLACK (Dad Sensei) |
+
+Each belt image is a 3D character wearing a white martial arts gi with the corresponding colored belt.
 
 **Usage in code:**
 ```typescript
-const beltAssetPath = `/belts/belt-${beltLevel.toLowerCase()}.svg`;
+const beltAssetPath = `/belts/${beltLevel.toLowerCase()}-belt.webp`;
 ```
 
 ### Achievement Assets
 
 **Location:** `public/achievements/`
-**Pattern:** `achievement-{slug}.svg`
+**Pattern:** `{slug}.webp`
+**Format:** WebP (3D rendered badge illustrations)
 
-Slug derived from achievement name: lowercase, spaces replaced with hyphens.
-
-| Achievement Name | File |
-|-----------------|------|
-| First Steps | `achievement-first-steps.svg` |
-| Mission Master 10 | `achievement-mission-master-10.svg` |
-| Week Warrior | `achievement-week-warrior.svg` |
-| Goal Getter | `achievement-goal-getter.svg` |
-| Deep Talker | `achievement-deep-talker.svg` |
-| Rising Star | `achievement-rising-star.svg` |
-| Green Machine | `achievement-green-machine.svg` |
-| Grandmaster | `achievement-grandmaster.svg` |
+| Achievement | File |
+|-------------|------|
+| Great Listener | `great-listener.webp` |
+| Quality Time Champion | `quality-time-champion.webp` |
+| First Mission | `first-mission.webp` |
+| 7-Day Streak | `streak-7-days.webp` |
+| 30-Day Streak | `streak-30-days.webp` |
+| Deep Conversation | `deep-conversation.webp` |
+| Patience Master | `patience-master.webp` |
+| Playful Dad | `playful-dad.webp` |
+| Bedtime Hero | `bedtime-hero.webp` |
+| Growth Milestone | `growth-milestone.webp` |
 
 **Usage in code:**
 ```typescript
 // icon_key from backend maps directly to filename
-const achievementAssetPath = `/achievements/achievement-${iconKey}.svg`;
+const achievementAssetPath = `/achievements/${iconKey}.webp`;
 ```
 
 ### Navigation Icons
@@ -525,23 +744,100 @@ const achievementAssetPath = `/achievements/achievement-${iconKey}.svg`;
 
 ### Illustration Assets
 
-**Location:** `public/illustrations/`
-**Pattern:** `{context}-{descriptor}.svg`
+**Location:** `public/illustrations/`, `public/dashboard/`, `public/landing/`
+**Format:** WebP (3D rendered illustrations)
 
-| Context | File |
-|---------|------|
-| Empty dashboard | `empty-dashboard.svg` |
-| Empty achievements | `empty-achievements.svg` |
-| Celebration generic | `celebration-generic.svg` |
-| Error state | `error-general.svg` |
-| Offline state | `offline.svg` |
+| Context | File | Location |
+|---------|------|----------|
+| Dashboard empty state | `dashboard-empty.webp` | `public/dashboard/` |
+| Growth empty state | `growth-empty.webp` | `public/dashboard/` |
+| Insights empty state | `insights-empty.webp` | `public/dashboard/` |
+| Celebration confetti | `celebration-confetti.webp` | `public/illustrations/` |
+| Error state | `error-state.webp` | `public/illustrations/` |
+| Offline state | `offline-state.webp` | `public/illustrations/` |
+| Session expired | `session-expired.webp` | `public/illustrations/` |
+
+### Dashboard Assets
+
+**Location:** `public/dashboard/`
+
+| Asset | File | Description |
+|-------|------|-------------|
+| Coach avatar | `coach-avatar.webp` | AI coach portrait (judo gi + black belt) |
+| Coach greeting | `coach-greeting.webp` | Coach waving hello |
+| Coach thinking | `coach-thinking.webp` | Coach in thoughtful pose |
+| Coach celebrating | `coach-celebrating.webp` | Coach celebrating with you |
+| Motivation: Doing great | `motivation-doing-great.webp` | Father thumbs up |
+| Motivation: Small steps | `motivation-small-steps.webp` | Father stepping forward |
+| Motivation: Mission complete | `motivation-mission-complete.webp` | Father fists raised |
+| Motivation: Stronger together | `motivation-stronger-together.webp` | Father with daughter on shoulders |
+| Mission: Quality time | `mission-quality-time.webp` | Father and child together |
+| Mission: Listening | `mission-listening.webp` | Father kneeling to child |
+| Mission: Play | `mission-play.webp` | Father and child playing |
+| Mission: Conversation | `mission-conversation.webp` | Father walking with child |
+| Mission: Routine | `mission-routine.webp` | Father helping with morning routine |
+
+### Landing Page Assets
+
+**Location:** `public/landing/`
+
+| Asset | File |
+|-------|------|
+| Hero | `landing-hero.webp` |
+| Feature: Relationships | `landing-feature-relationships.webp` |
+| Feature: Guidance | `landing-feature-guidance.webp` |
+| Feature: Achievements | `landing-feature-achievements.webp` |
+| Feature: Memories | `landing-feature-memories.webp` |
+
+### Logo Assets
+
+**Location:** `public/logos/`
+
+| Asset | File |
+|-------|------|
+| Full logo | `dad-coach-logo-full.webp` |
+| Icon only | `dad-coach-logo-icon.webp` |
+
+### Brand Assets
+
+**Location:** `public/brand/`
+
+| Asset | File |
+|-------|------|
+| Open Graph image | `og-image.webp` |
 
 ### Fallback Strategy
 
-If an SVG asset is not yet available (assets are pending from design), components render a text-based fallback:
+If a WebP asset fails to load, components render a text-based fallback:
 
-- Belts: display belt name in a styled badge
-- Achievements: display achievement name with category icon
+- Belts: display belt name in a styled badge with the belt color
+- Achievements: display achievement name with a generic medal icon
 - Icons: use text labels without icons
+- Illustrations: show a solid dark navy background with subtle text
 
-This ensures implementation can proceed independently of asset delivery.
+**Usage pattern:**
+```tsx
+import Image from 'next/image';
+
+<Image
+  src="/belts/green-belt.webp"
+  alt="Green Belt - Committed"
+  width={64}
+  height={64}
+/>
+
+<Image
+  src="/dashboard/coach-avatar.webp"
+  alt="Your Coach"
+  width={48}
+  height={48}
+  className="rounded-full"
+/>
+
+<Image
+  src="/dashboard/dashboard-empty.webp"
+  alt="Start your journey"
+  width={200}
+  height={200}
+/>
+```

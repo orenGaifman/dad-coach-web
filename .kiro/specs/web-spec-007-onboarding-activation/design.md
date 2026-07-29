@@ -321,6 +321,426 @@ Reuse the same analytics abstraction from WEB-SPEC-008. Events defined in the pr
 - Phone input: lightweight country code component (or custom)
 - No new heavy libraries required
 
+## Screen Visual Layouts
+
+This section describes the exact visual layout of every onboarding screen. The implementation must follow these layouts precisely.
+
+### Global Design Rules
+
+- **Background:** All screens use dark navy gradient (`bg-gradient-to-b from-[#0F172A] to-[#1E293B]`)
+- **Max width:** Content constrained to `max-w-md` (448px) centered on desktop
+- **Mobile:** Full width, single column, minimum padding `px-6`
+- **Typography:** Inter/Noto Sans. Headings white, body text `text-gray-300`
+- **Buttons:** Primary = indigo-500 rounded-full with arrow icon. Full width on mobile.
+- **Cards:** `bg-white/5 backdrop-blur border border-white/10 rounded-2xl`
+- **Spacing:** Generous vertical spacing `space-y-6` between sections
+- **Illustrations:** Centered, `max-w-[280px]` on mobile, `max-w-[320px]` on desktop
+
+---
+
+### Screen O1: Language Selection (`/join/[token]/language`)
+
+```
+┌─────────────────────────────────┐
+│         [Logo Icon 32px]         │  ← /logos/dad-coach-logo-icon.webp
+│                                  │
+│    ┌──────────────────────┐      │
+│    │                      │      │
+│    │   [Illustration]     │      │  ← /illustrations/onboarding-language-selection.webp
+│    │     280x280          │      │     Centered, rounded
+│    │                      │      │
+│    └──────────────────────┘      │
+│                                  │
+│     "Choose your language"       │  ← h1, text-2xl, font-bold, white, center
+│     "בחר את השפה שלך"           │  ← subtitle, text-gray-400, center
+│                                  │
+│  ┌────────────┐ ┌────────────┐   │
+│  │ 🇬🇧         │ │ 🇮🇱         │   │  ← Two language cards, side by side
+│  │  English   │ │   עברית    │   │     Selected: border-indigo-500 bg-indigo-500/10
+│  │ [selected] │ │            │   │     Unselected: border-white/10 bg-white/5
+│  └────────────┘ └────────────┘   │     Size: flex-1, py-4, rounded-xl
+│                                  │
+│  ┌──────────────────────────┐    │
+│  │     Continue →            │    │  ← Primary button, full width
+│  └──────────────────────────┘    │
+│                                  │
+└─────────────────────────────────┘
+```
+
+**Key details:**
+- English preselected by default (border-indigo-500)
+- Language cards are equal width, `gap-4`
+- No step indicator on this screen (first step)
+- `dir="ltr"` until Hebrew selected, then `dir="rtl"`
+
+---
+
+### Screen O2: Welcome (`/join/[token]`)
+
+```
+┌─────────────────────────────────┐
+│                                  │
+│    ┌──────────────────────┐      │
+│    │                      │      │
+│    │   [Hero Illustration]│      │  ← /illustrations/onboarding-welcome.webp
+│    │   Father + child on  │      │     Full width, aspect-[4/3], rounded-2xl
+│    │   starlit path       │      │     priority loading
+│    │                      │      │
+│    └──────────────────────┘      │
+│                                  │
+│  "Become the Father              │  ← h1, text-3xl, font-bold, white
+│   You Want to Be"                │
+│                                  │
+│  "Small daily actions.           │  ← p, text-gray-300, text-lg
+│   Big lifelong impact."          │
+│                                  │
+│  ┌────┐ ┌────┐ ┌────┐ ┌────┐    │
+│  │ 🔗 │ │ 🌱 │ │ 🏆 │ │ 💛 │    │  ← 4 feature icons in a row
+│  │Rel.│ │Grow│ │Ach.│ │Mem.│    │     /landing/landing-feature-*.webp (48x48)
+│  └────┘ └────┘ └────┘ └────┘    │     grid grid-cols-4 gap-2
+│                                  │     Below each: tiny label text-xs text-gray-400
+│  ┌──────────────────────────┐    │
+│  │  Start Your Journey →     │    │  ← Primary CTA button, rounded-full
+│  └──────────────────────────┘    │     bg-amber-500 hover:bg-amber-600
+│                                  │     text-black font-semibold
+└─────────────────────────────────┘
+```
+
+**Key details:**
+- No step indicator (entry screen)
+- CTA button is golden/amber (stands out against dark navy)
+- Feature icons are small thumbnails from landing features
+- If `inviter_display_name` available: show "Invited by {name}" above CTA
+
+---
+
+### Screen O3: Father Profile (`/join/[token]/profile`)
+
+```
+┌─────────────────────────────────┐
+│  [Step 2 of 6]  ●●○○○○          │  ← StepIndicator component
+│                                  │
+│    ┌──────────────────────┐      │
+│    │  [Illustration 160px]│      │  ← /illustrations/onboarding-father-info.webp
+│    └──────────────────────┘      │     Centered, smaller than welcome
+│                                  │
+│  "Let's start your journey"      │  ← h2, text-xl, font-semibold, white
+│  "Just a few quick questions"    │  ← p, text-gray-400
+│                                  │
+│  ┌──────────────────────────┐    │
+│  │ Display Name              │    │  ← Label + Input
+│  │ ┌──────────────────────┐ │    │     Input: bg-white/5 border-white/10
+│  │ │ "Daniel"              │ │    │     rounded-xl py-3 px-4
+│  │ └──────────────────────┘ │    │     Focus: border-indigo-500
+│  └──────────────────────────┘    │
+│                                  │
+│  ┌──────────────────────────┐    │
+│  │ WhatsApp Number           │    │
+│  │ ┌─────┐┌───────────────┐ │    │  ← Country code dropdown + phone input
+│  │ │+972 ▾││ 50-123-4567   │ │    │     Side by side: w-20 + flex-1
+│  │ └─────┘└───────────────┘ │    │
+│  └──────────────────────────┘    │
+│                                  │
+│  ┌──────────────────────────┐    │
+│  │ Email (optional)          │    │
+│  │ ┌──────────────────────┐ │    │
+│  │ │                      │ │    │
+│  │ └──────────────────────┘ │    │
+│  └──────────────────────────┘    │
+│                                  │
+│  ┌──────────────────────────┐    │
+│  │ Timezone                  │    │  ← Auto-detected, shown as select
+│  │ ┌──────────────────────┐ │    │
+│  │ │ Asia/Jerusalem    ▾  │ │    │
+│  │ └──────────────────────┘ │    │
+│  └──────────────────────────┘    │
+│                                  │
+│  ┌──────────────────────────┐    │
+│  │      Continue →           │    │  ← Primary button
+│  └──────────────────────────┘    │
+│                                  │
+└─────────────────────────────────┘
+```
+
+**Key details:**
+- Validation errors appear below each field in `text-red-400 text-sm`
+- Error fields get `border-red-400`
+- Phone field always LTR even in RTL mode
+
+---
+
+### Screen O4: Children Setup (`/join/[token]/children`)
+
+```
+┌─────────────────────────────────┐
+│  [Step 3 of 6]  ●●●○○○          │
+│                                  │
+│    ┌──────────────────────┐      │
+│    │  [Illustration 160px]│      │  ← /illustrations/onboarding-children.webp
+│    └──────────────────────┘      │
+│                                  │
+│  "How many children             │  ← h2, text-xl
+│   do you have?"                  │
+│                                  │
+│  ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌──┐          │  ← Number selector: 1-4+ buttons
+│  │1│ │2│ │3│ │4│ │4+│          │     Selected: bg-indigo-500 text-white
+│  └─┘ └─┘ └─┘ └─┘ └──┘          │     Size: w-12 h-12 rounded-full
+│                                  │
+│  ── Child 1 ──────────────────   │  ← Child card with border-l-2 border-indigo-500
+│  │ Name:    [______________] │   │
+│  │ Birth:   [__/__/____]     │   │
+│  │ Gender:  ○Boy ○Girl ○Skip │   │
+│  └───────────────────────────┘   │
+│                                  │
+│  ── Child 2 ──────────────────   │
+│  │ Name:    [______________] │   │
+│  │ Birth:   [__/__/____]     │   │
+│  │ Gender:  ○Boy ○Girl ○Skip │   │
+│  └───────────────────────────┘   │
+│                                  │
+│  [+ Add another child]           │  ← text-indigo-400, if < 8
+│                                  │
+│  ┌────────────┐ ┌────────────┐   │
+│  │ Skip for now│ │ Continue → │   │  ← Skip (ghost) + Continue (primary)
+│  └────────────┘ └────────────┘   │
+│                                  │
+└─────────────────────────────────┘
+```
+
+---
+
+### Screen O5: Goals (`/join/[token]/goals`)
+
+```
+┌─────────────────────────────────┐
+│  [Step 4 of 6]  ●●●●○○          │
+│                                  │
+│    ┌──────────────────────┐      │
+│    │  [Illustration 140px]│      │  ← /illustrations/onboarding-goals.webp
+│    └──────────────────────┘      │
+│                                  │
+│  "What would you like to        │  ← h2, text-xl
+│   improve as a father?"          │
+│  "(Choose up to 5)"             │  ← text-gray-400, text-sm
+│                                  │
+│  ┌──────────────────────────┐    │  ← Goal cards: selectable
+│  │ ☑ Build stronger connection│   │     Selected: bg-indigo-500/10 border-indigo-500
+│  │   with my children        │    │     Unselected: bg-white/5 border-white/10
+│  └──────────────────────────┘    │     Each: rounded-xl p-4, checkbox left
+│  ┌──────────────────────────┐    │
+│  │ ☑ Communicate better      │    │
+│  └──────────────────────────┘    │
+│  ┌──────────────────────────┐    │
+│  │ □ Spend more quality time │    │
+│  └──────────────────────────┘    │
+│  ┌──────────────────────────┐    │
+│  │ □ Be more patient         │    │
+│  └──────────────────────────┘    │
+│  ┌──────────────────────────┐    │
+│  │ □ Lead by example         │    │
+│  └──────────────────────────┘    │
+│                                  │
+│  ┌────────────┐ ┌────────────┐   │
+│  │ Skip for now│ │ Continue → │   │
+│  └────────────┘ └────────────┘   │
+│                                  │
+└─────────────────────────────────┘
+```
+
+---
+
+### Screen O6: Preferences (`/join/[token]/preferences`)
+
+```
+┌─────────────────────────────────┐
+│  [Step 5 of 6]  ●●●●●○          │
+│                                  │
+│  "How would you like             │  ← h2, text-xl
+│   to be coached?"                │
+│                                  │
+│  ┌──────────────────────────┐    │  ← Coaching style cards (radio)
+│  │ ○ Encouraging              │    │     Selected: border-indigo-500
+│  │   "Positive focus, gentle" │    │     Each has title + description
+│  └──────────────────────────┘    │
+│  ┌──────────────────────────┐    │
+│  │ ● Direct                   │    │
+│  │   "Clear, honest feedback"│    │
+│  └──────────────────────────┘    │
+│  ┌──────────────────────────┐    │
+│  │ ○ Balanced                 │    │
+│  │   "Mix of both styles"    │    │
+│  └──────────────────────────┘    │
+│                                  │
+│  "Best time for coaching?"       │  ← Label
+│  ┌──────────────────────────┐    │
+│  │  08:00 AM            ▾   │    │  ← Time picker (30min intervals)
+│  └──────────────────────────┘    │
+│                                  │
+│  ┌────────────┐ ┌────────────┐   │
+│  │ Skip for now│ │ Continue → │   │
+│  └────────────┘ └────────────┘   │
+│                                  │
+└─────────────────────────────────┘
+```
+
+---
+
+### Screen O7: Review (`/join/[token]/review`)
+
+```
+┌─────────────────────────────────┐
+│  [Step 6 of 6]  ●●●●●●          │
+│                                  │
+│  "Review your information"       │  ← h2
+│                                  │
+│  ┌──────────────────────────┐    │  ← Summary card sections
+│  │ Profile             [Edit]│    │     Each section: bg-white/5 rounded-xl p-4
+│  │ Name: Daniel              │    │     [Edit] = text-indigo-400, navigates back
+│  │ Phone: ****4567           │    │     Phone always masked
+│  │ Timezone: Asia/Jerusalem  │    │
+│  └──────────────────────────┘    │
+│                                  │
+│  ┌──────────────────────────┐    │
+│  │ Children            [Edit]│    │
+│  │ • Yoav (5 years)         │    │
+│  │ • Maya (3 years)         │    │
+│  └──────────────────────────┘    │
+│                                  │
+│  ┌──────────────────────────┐    │
+│  │ Goals               [Edit]│    │
+│  │ • Build stronger connect. │    │
+│  │ • Communicate better      │    │
+│  └──────────────────────────┘    │
+│                                  │
+│  ┌──────────────────────────┐    │
+│  │ Preferences         [Edit]│    │
+│  │ Style: Direct             │    │
+│  │ Time: 08:00 AM           │    │
+│  └──────────────────────────┘    │
+│                                  │
+│  ┌──────────────────────────┐    │
+│  │   Confirm & Start →       │    │  ← Primary button, amber/gold
+│  └──────────────────────────┘    │
+│                                  │
+└─────────────────────────────────┘
+```
+
+---
+
+### Screen O8: Activation (`/join/[token]/activate`)
+
+```
+┌─────────────────────────────────┐
+│                                  │
+│    ┌──────────────────────┐      │
+│    │  [Illustration 200px]│      │  ← /illustrations/onboarding-activation.webp
+│    │  Father + phone +    │      │
+│    │  coach hologram      │      │
+│    └──────────────────────┘      │
+│                                  │
+│  "Welcome to Dad Coach!"        │  ← h2, text-2xl, white
+│                                  │
+│  "Your coach is already          │  ← p, text-gray-300
+│   waiting for you on WhatsApp.   │
+│   Let's do this together!"       │
+│                                  │
+│  ┌──────────────────────────┐    │
+│  │ 💬 Open WhatsApp →        │    │  ← Green button (#25D366)
+│  └──────────────────────────┘    │     Opens wa.me deep link
+│                                  │
+│  "or copy this message:"        │  ← text-sm, text-gray-400
+│  ┌──────────────────────────┐    │
+│  │ "Hi Coach, I'm ready!" 📋│    │  ← Copy-to-clipboard box
+│  └──────────────────────────┘    │
+│                                  │
+│  [◌ Waiting for connection...]   │  ← Polling indicator, subtle pulse
+│                                  │
+│  "The journey begins now."       │  ← footer text, text-gray-500, italic
+│                                  │
+└─────────────────────────────────┘
+```
+
+**Success state (replaces above):**
+```
+┌─────────────────────────────────┐
+│                                  │
+│    ┌──────────────────────┐      │
+│    │  [Success Illust.]   │      │  ← /illustrations/onboarding-success.webp
+│    │  Father celebrating  │      │
+│    └──────────────────────┘      │
+│                                  │
+│  "You're connected! 🎉"         │  ← h2, text-2xl, white
+│                                  │
+│  "Your coaching journey          │
+│   starts now."                   │
+│                                  │
+│  ┌──────────────────────────┐    │
+│  │   Go to Dashboard →       │    │  ← Primary button
+│  └──────────────────────────┘    │
+│                                  │
+└─────────────────────────────────┘
+```
+
+---
+
+### StepIndicator Component
+
+```
+Mobile:  ● ● ● ○ ○ ○   Step 3 of 6
+Desktop: Same, centered above content
+```
+
+- Filled dots: `bg-indigo-500 w-2.5 h-2.5 rounded-full`
+- Empty dots: `bg-white/20 w-2.5 h-2.5 rounded-full`
+- Current step text: `text-gray-400 text-sm`
+- `aria-current="step"` on active dot
+- Gap between dots: `gap-1.5`
+
+---
+
+## Visual Assets
+
+All onboarding illustrations are pre-generated and available in the `public/` folder. Use Next.js `<Image>` component with the paths below.
+
+### Onboarding Screen Illustrations
+
+| Screen | Asset Path | Description |
+|--------|-----------|-------------|
+| Language Selection | `/illustrations/onboarding-language-selection.webp` | Welcoming father figure, warm atmosphere |
+| Welcome | `/illustrations/onboarding-welcome.webp` | Father and child on starlit path toward torii gate |
+| Registration | `/illustrations/onboarding-register.webp` | Father with phone, modern connected feel |
+| Father Profile | `/illustrations/onboarding-father-info.webp` | Father with golden aura, identity being recognized |
+| Children Setup | `/illustrations/onboarding-children.webp` | Father with 2-3 happy children |
+| Goals | `/illustrations/onboarding-goals.webp` | Father at base of mountain path with glowing waypoints |
+| Activation | `/illustrations/onboarding-activation.webp` | Father with phone, coach appearing as hologram |
+| Success | `/illustrations/onboarding-success.webp` | Father celebrating, arms raised, golden light |
+
+### State Illustrations
+
+| State | Asset Path | Description |
+|-------|-----------|-------------|
+| Celebration | `/illustrations/celebration-confetti.webp` | Golden confetti, sparkles |
+| Error | `/illustrations/error-state.webp` | Paper airplane off course |
+| Offline | `/illustrations/offline-state.webp` | Glowing lantern in fog |
+| Session Expired | `/illustrations/session-expired.webp` | Hourglass with golden sand |
+
+### Usage Pattern
+
+```tsx
+import Image from 'next/image';
+
+// In a step page component:
+<Image
+  src="/illustrations/onboarding-welcome.webp"
+  alt="Welcome to Dad Coach"
+  width={400}
+  height={400}
+  priority // for above-the-fold images
+/>
+```
+
+---
+
 ## Open Questions
 
 1. **Authentication handoff:** After activation succeeds and the father clicks "Go to Dashboard," how is the authenticated session established? Does the onboarding cookie transform into an auth token? Or does the father need to "log in" separately? (Depends on WEB-SPEC-002)
