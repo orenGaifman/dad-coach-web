@@ -45,6 +45,8 @@ export default function LanguagePage() {
         await apiClient.put(`/onboarding/sessions/${sid}/steps/LANGUAGE`, {
           language: selectedLanguage,
         });
+      } else {
+        console.warn('No session ID available — skipping server step submission');
       }
       setLanguage(selectedLanguage);
       setCurrentStep(WizardStep.FATHER_PROFILE);
