@@ -136,7 +136,16 @@ export default function ReviewPage() {
     setProvisionError(null);
 
     try {
-      await completeOnboarding(sid);
+      const response = await completeOnboarding(sid);
+      // Store deep link for the activation page
+      if (typeof window !== 'undefined' && response) {
+        if (response.whatsapp_deep_link) {
+          localStorage.setItem('dadcoach_deep_link', response.whatsapp_deep_link);
+        }
+        if (response.activation_message) {
+          localStorage.setItem('dadcoach_activation_message', response.activation_message);
+        }
+      }
       markStepCompleted(WizardStep.REVIEW);
       goForward(); // → activate
     } catch (err) {

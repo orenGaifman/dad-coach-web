@@ -32,10 +32,19 @@ export default function ActivatePage() {
   const { isAllowed } = useStepGuard(WizardStep.ACTIVATION);
   const { sessionId } = useOnboarding();
 
-  // Activation data — placeholder values until wired end-to-end with provisioning.
-  // These will ultimately come from ProvisioningResponse stored in context or session.
-  const [deepLink] = useState('https://wa.me/972500000000?text=%F0%9F%9A%80%20START');
-  const [activationMessage] = useState('🚀 START');
+  // Activation data — read from localStorage (set by review page after provisioning)
+  const [deepLink] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('dadcoach_deep_link') || 'https://wa.me/15551944820?text=%F0%9F%9A%80%20START';
+    }
+    return 'https://wa.me/15551944820?text=%F0%9F%9A%80%20START';
+  });
+  const [activationMessage] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('dadcoach_activation_message') || '🚀 START';
+    }
+    return '🚀 START';
+  });
 
   // Retry state
   const [showGiveUp, setShowGiveUp] = useState(false);
