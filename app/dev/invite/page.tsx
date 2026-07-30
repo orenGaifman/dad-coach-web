@@ -13,8 +13,9 @@ export default function DevInvitePage() {
     setLink(null);
 
     try {
-      // 1. Create invitation
-      const res = await fetch('/api/v1/invitations', {
+      // Call the backend API to create an invitation
+      const backendUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '/api/v1';
+      const res = await fetch(`${backendUrl}/invitations`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -31,12 +32,16 @@ export default function DevInvitePage() {
       const data = await res.json();
       const token = data.token;
 
-      // 2. Mark as SENT and clear rate limits so the onboarding flow works
-      await fetch('/api/dev/invitations/mark-sent', {
+      // Mark as SENT via backend endpoint
+      const sentRes = await fetch(`${backendUrl}/invitations/${token}/mark-sent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, clearRateLimits: true }),
       });
+
+      // If mark-sent endpoint doesn't exist yet, still show the link
+      if (!sentRes.ok) {
+        console.warn('mark-sent failed, invitation may need manual status update');
+      }
 
       setLink(`${window.location.origin}/join/${token}`);
     } catch (err: unknown) {
