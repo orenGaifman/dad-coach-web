@@ -132,6 +132,9 @@ export default function InvitationPage() {
   // Session creation handler
   // ---------------------------------------------------------------------------
   const handleGetStarted = useCallback(async () => {
+    // Guard against double submission
+    if (isCreatingSession) return;
+    
     setIsCreatingSession(true);
     setSessionError(null);
 
@@ -154,7 +157,7 @@ export default function InvitationPage() {
         setSessionError('server');
       }
     }
-  }, [token, router]);
+  }, [isCreatingSession, token, router, setSessionId, setCurrentStep]);
 
   // ---------------------------------------------------------------------------
   // Loading skeleton

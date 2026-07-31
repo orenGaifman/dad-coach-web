@@ -28,6 +28,9 @@ export default function GoalsPage() {
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const handleSubmit = useCallback(async (data: GoalsData) => {
+    // Guard against double submission
+    if (isSubmitting) return;
+    
     setIsSubmitting(true);
     setFormError(null);
 
@@ -44,7 +47,7 @@ export default function GoalsPage() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [sessionId, setIsSubmitting, markStepCompleted, goForward]);
+  }, [isSubmitting, sessionId, setIsSubmitting, markStepCompleted, goForward]);
 
   const handleContinue = useCallback(() => {
     formRef.current?.requestSubmit();

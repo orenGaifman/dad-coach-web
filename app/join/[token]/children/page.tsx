@@ -29,6 +29,9 @@ export default function ChildrenPage() {
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const handleSubmit = useCallback(async (children: ChildData[]) => {
+    // Guard against double submission
+    if (isSubmitting) return;
+    
     if (children.length === 0) {
       // No children added — treat as skip
       goForward();
@@ -51,7 +54,7 @@ export default function ChildrenPage() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [sessionId, setIsSubmitting, markStepCompleted, goForward]);
+  }, [isSubmitting, sessionId, setIsSubmitting, markStepCompleted, goForward]);
 
   const handleContinue = useCallback(() => {
     formRef.current?.requestSubmit();

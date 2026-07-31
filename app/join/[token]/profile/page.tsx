@@ -44,6 +44,9 @@ export default function ProfilePage() {
 
   const handleProfileSubmit = useCallback(
     async (data: ProfileFormData) => {
+      // Guard against double submission
+      if (isSubmitting) return;
+      
       setIsSubmitting(true);
       setServerErrors({});
       setDuplicatePhone(false);
@@ -71,7 +74,7 @@ export default function ProfilePage() {
         setIsSubmitting(false);
       }
     },
-    [sessionId, setIsSubmitting, markStepCompleted, goForward],
+    [isSubmitting, sessionId, setIsSubmitting, markStepCompleted, goForward],
   );
 
   // Trigger the hidden form submit button from OnboardingLayout's Continue
