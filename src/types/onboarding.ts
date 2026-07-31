@@ -133,9 +133,14 @@ export interface StepResponse {
  * Response from POST /api/v1/onboarding/sessions/{id}/complete (Req 8).
  */
 export interface ProvisioningResponse {
-  success: boolean;
-  whatsapp_deep_link: string; // e.g. https://wa.me/{number}?text=...
-  activation_message: string; // Fallback copy message
+  father_id?: number;
+  activation_id?: string;
+  deep_link?: string;
+  whatsapp_deep_link?: string; // alias for deep_link
+  activation_message?: string; // Fallback copy message, e.g. "🚀 START"
+  activation_status?: string;
+  whatsapp_number?: string;
+  already_provisioned?: boolean;
 }
 
 /**

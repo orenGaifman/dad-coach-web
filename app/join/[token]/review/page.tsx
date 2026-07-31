@@ -139,8 +139,10 @@ export default function ReviewPage() {
       const response = await completeOnboarding(sid);
       // Store deep link for the activation page
       if (typeof window !== 'undefined' && response) {
-        if (response.whatsapp_deep_link) {
-          localStorage.setItem('dadcoach_deep_link', response.whatsapp_deep_link);
+        // Try whatsapp_deep_link first, fall back to deep_link
+        const deepLink = response.whatsapp_deep_link || response.deep_link;
+        if (deepLink) {
+          localStorage.setItem('dadcoach_deep_link', deepLink);
         }
         if (response.activation_message) {
           localStorage.setItem('dadcoach_activation_message', response.activation_message);
