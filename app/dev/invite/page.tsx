@@ -11,6 +11,17 @@ interface FatherSummary {
   createdAt: string;
 }
 
+interface WhatsAppStatus {
+  configured: boolean;
+  api_status?: string;
+  verified_name?: string;
+  display_phone_number?: string;
+  quality_rating?: string;
+  code_verification_status?: string;
+  name_status?: string;
+  error?: string;
+}
+
 export default function DevInvitePage() {
   const [link, setLink] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -18,13 +29,35 @@ export default function DevInvitePage() {
   const [fathers, setFathers] = useState<FatherSummary[]>([]);
   const [loadingFathers, setLoadingFathers] = useState(true);
   const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
+  const [whatsappStatus, setWhatsappStatus] = useState<WhatsAppStatus | null>(null);
+  const [loadingStatus, setLoadingStatus] = useState(true);
 
   const MAX_TEST_RECIPIENTS = 5;
 
-  // Load fathers on mount
+  // Load fathers and WhatsApp status on mount
   useEffect(() => {
     loadFathers();
+    loadWhatsAppStatus();
   }, []);
+
+  async function loadWhatsAppStatus() {
+    setLoadingStatus(true);
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '/api/v1';
+      // phone-status is on webhook path, not api path
+      const baseUrl = backendUrl.replace('/api/v1', '');
+      const res = await fetch(`${baseUrl}/webhook/whatsapp/phone-status`);
+      if (res.ok) {
+        const data = await res.json();
+        setWhatsappStatus(data);
+      }
+    } catch (err) {
+      console.error('Failed to load WhatsApp status:', err);
+      setWhatsappStatus({ configured: false, error: 'Failed to connect' });
+    } finally {
+      setLoadingStatus(false);
+    }
+  }
 
   async function loadFathers() {
     setLoadingFathers(true);
@@ -140,6 +173,65 @@ export default function DevInvitePage() {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* WhatsApp Status */}
+        <div className="rounded-xl bg-white/5 border border-white/10 p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+              <span>📱</span> WhatsApp Status
+            </h2>
+            <button 
+              onClick={loadWhatsAppStatus}
+              disabled={loadingStatus}
+              className="text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-gray-300 transition-colors disabled:opacity-50"
+            >
+              {loadingStatus ? '...' : '🔄 Refresh'}
+            </button>
+          </div>
+
+          {loadingStatus ? (
+            <div className="text-center py-3 text-gray-400">Loading WhatsApp status...</div>
+          ) : whatsappStatus?.error ? (
+            <div className="text-red-300 text-sm">❌ {whatsappStatus.error}</div>
+          ) : whatsappStatus?.configured ? (
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="bg-white/5 rounded-lg p-3">
+                <div className="text-gray-400 text-xs mb-1">Status</div>
+                <div className={`font-medium ${
+                  whatsappStatus.api_status === 'connected' ? 'text-green-400' : 'text-red-400'
+                }`}>
+                  {whatsappStatus.api_status === 'connected' ? '✅ Connected' : '❌ ' + whatsappStatus.api_status}
+                </div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-3">
+                <div className="text-gray-400 text-xs mb-1">Quality</div>
+                <div className={`font-medium ${
+                  whatsappStatus.quality_rating === 'GREEN' ? 'text-green-400' :
+                  whatsappStatus.quality_rating === 'YELLOW' ? 'text-yellow-400' : 'text-red-400'
+                }`}>
+                  {whatsappStatus.quality_rating === 'GREEN' ? '🟢' :
+                   whatsappStatus.quality_rating === 'YELLOW' ? '🟡' : '🔴'} {whatsappStatus.quality_rating || 'Unknown'}
+                </div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-3">
+                <div className="text-gray-400 text-xs mb-1">Verified Name</div>
+                <div className="text-white font-medium truncate">{whatsappStatus.verified_name || 'Not verified'}</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-3">
+                <div className="text-gray-400 text-xs mb-1">Phone Number</div>
+                <div className="text-white font-medium">{whatsappStatus.display_phone_number || 'N/A'}</div>
+              </div>
+              {whatsappStatus.name_status && (
+                <div className="bg-white/5 rounded-lg p-3 col-span-2">
+                  <div className="text-gray-400 text-xs mb-1">Name Status</div>
+                  <div className="text-white font-medium">{whatsappStatus.name_status}</div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-gray-400 text-sm">WhatsApp not configured</div>
+          )}
         </div>
 
         {/* Registered Users Section */}
