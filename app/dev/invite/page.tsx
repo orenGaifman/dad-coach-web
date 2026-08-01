@@ -19,6 +19,17 @@ interface WhatsAppStatus {
   quality_rating?: string;
   code_verification_status?: string;
   name_status?: string;
+  messaging_limit_tier?: string;
+  current_limit?: string;
+  error?: string;
+}
+
+interface WabaStatus {
+  configured: boolean;
+  api_status?: string;
+  name?: string;
+  account_review_status?: string;
+  business_verification_status?: string;
   error?: string;
 }
 
@@ -30,9 +41,8 @@ export default function DevInvitePage() {
   const [loadingFathers, setLoadingFathers] = useState(true);
   const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
   const [whatsappStatus, setWhatsappStatus] = useState<WhatsAppStatus | null>(null);
+  const [wabaStatus, setWabaStatus] = useState<WabaStatus | null>(null);
   const [loadingStatus, setLoadingStatus] = useState(true);
-
-  const MAX_TEST_RECIPIENTS = 5;
 
   // Load fathers and WhatsApp status on mount
   useEffect(() => {
@@ -46,10 +56,21 @@ export default function DevInvitePage() {
       const backendUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '/api/v1';
       // phone-status is on webhook path, not api path
       const baseUrl = backendUrl.replace('/api/v1', '');
-      const res = await fetch(`${baseUrl}/webhook/whatsapp/phone-status`);
-      if (res.ok) {
-        const data = await res.json();
+      
+      // Load both phone status and WABA status
+      const [phoneRes, wabaRes] = await Promise.all([
+        fetch(`${baseUrl}/webhook/whatsapp/phone-status`),
+        fetch(`${baseUrl}/webhook/whatsapp/waba-status`)
+      ]);
+      
+      if (phoneRes.ok) {
+        const data = await phoneRes.json();
         setWhatsappStatus(data);
+      }
+      
+      if (wabaRes.ok) {
+        const data = await wabaRes.json();
+        setWabaStatus(data);
       }
     } catch (err) {
       console.error('Failed to load WhatsApp status:', err);
@@ -143,37 +164,25 @@ export default function DevInvitePage() {
     }
   }
 
-  const remainingSlots = MAX_TEST_RECIPIENTS - fathers.length;
+  // Helper to get messaging limit description
+  function getMessagingLimitInfo(tier?: string): { limit: string; color: string } {
+    switch (tier) {
+      case 'TIER_1K': return { limit: '1,000/day', color: 'text-yellow-400' };
+      case 'TIER_10K': return { limit: '10,000/day', color: 'text-green-400' };
+      case 'TIER_100K': return { limit: '100,000/day', color: 'text-green-400' };
+      case 'UNLIMITED': return { limit: 'Unlimited', color: 'text-green-400' };
+      default: return { limit: '250/day (unverified)', color: 'text-orange-400' };
+    }
+  }
+
+  const messagingLimit = getMessagingLimitInfo(whatsappStatus?.messaging_limit_tier);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0F172A] to-[#1E293B] p-6">
-      <div className="max-w-2xl mx-auto space-y-8">
+      <div className="max-w-2xl mx-auto space-y-6">
         <h1 className="text-2xl font-bold text-white text-center">
-          Dev: Invite Management
+          🛠️ Dev Dashboard
         </h1>
-
-        {/* Test Recipients Warning */}
-        <div className="rounded-xl bg-amber-500/10 border border-amber-500/30 p-4">
-          <div className="flex items-start gap-3">
-            <span className="text-2xl">⚠️</span>
-            <div>
-              <h3 className="font-semibold text-amber-300">Test Mode Limitation</h3>
-              <p className="text-amber-200/80 text-sm mt-1">
-                Using Meta test number - limited to <strong>{MAX_TEST_RECIPIENTS} recipients</strong>.
-                <br />
-                Each phone must be added to{' '}
-                <a 
-                  href="https://developers.facebook.com/apps/1025161893458583/use_cases/customize/api-testing-v2/?use_case_enum=WHATSAPP_BUSINESS_MESSAGING"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline hover:text-amber-100"
-                >
-                  Meta Test Recipients →
-                </a>
-              </p>
-            </div>
-          </div>
-        </div>
 
         {/* WhatsApp Status */}
         <div className="rounded-xl bg-white/5 border border-white/10 p-4">
@@ -197,7 +206,7 @@ export default function DevInvitePage() {
           ) : whatsappStatus?.configured ? (
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div className="bg-white/5 rounded-lg p-3">
-                <div className="text-gray-400 text-xs mb-1">Status</div>
+                <div className="text-gray-400 text-xs mb-1">API Status</div>
                 <div className={`font-medium ${
                   whatsappStatus.api_status === 'connected' ? 'text-green-400' : 'text-red-400'
                 }`}>
@@ -205,7 +214,7 @@ export default function DevInvitePage() {
                 </div>
               </div>
               <div className="bg-white/5 rounded-lg p-3">
-                <div className="text-gray-400 text-xs mb-1">Quality</div>
+                <div className="text-gray-400 text-xs mb-1">Quality Rating</div>
                 <div className={`font-medium ${
                   whatsappStatus.quality_rating === 'GREEN' ? 'text-green-400' :
                   whatsappStatus.quality_rating === 'YELLOW' ? 'text-yellow-400' : 'text-red-400'
@@ -215,18 +224,34 @@ export default function DevInvitePage() {
                 </div>
               </div>
               <div className="bg-white/5 rounded-lg p-3">
-                <div className="text-gray-400 text-xs mb-1">Verified Name</div>
-                <div className="text-white font-medium truncate">{whatsappStatus.verified_name || 'Not verified'}</div>
+                <div className="text-gray-400 text-xs mb-1">Messaging Limit</div>
+                <div className={`font-medium ${messagingLimit.color}`}>
+                  📊 {messagingLimit.limit}
+                </div>
               </div>
               <div className="bg-white/5 rounded-lg p-3">
                 <div className="text-gray-400 text-xs mb-1">Phone Number</div>
                 <div className="text-white font-medium">{whatsappStatus.display_phone_number || 'N/A'}</div>
               </div>
-              {whatsappStatus.name_status && (
-                <div className="bg-white/5 rounded-lg p-3 col-span-2">
-                  <div className="text-gray-400 text-xs mb-1">Name Status</div>
-                  <div className="text-white font-medium">{whatsappStatus.name_status}</div>
-                </div>
+              <div className="bg-white/5 rounded-lg p-3 col-span-2">
+                <div className="text-gray-400 text-xs mb-1">Verified Name</div>
+                <div className="text-white font-medium">{whatsappStatus.verified_name || 'Not verified'}</div>
+              </div>
+              {wabaStatus?.configured && wabaStatus.api_status === 'connected' && (
+                <>
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <div className="text-gray-400 text-xs mb-1">Business Account</div>
+                    <div className="text-white font-medium truncate">{wabaStatus.name || 'N/A'}</div>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <div className="text-gray-400 text-xs mb-1">Business Verification</div>
+                    <div className={`font-medium ${
+                      wabaStatus.business_verification_status === 'verified' ? 'text-green-400' : 'text-yellow-400'
+                    }`}>
+                      {wabaStatus.business_verification_status === 'verified' ? '✅ Verified' : '⏳ ' + (wabaStatus.business_verification_status || 'Pending')}
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           ) : (
@@ -234,19 +259,44 @@ export default function DevInvitePage() {
           )}
         </div>
 
+        {/* App Stats */}
+        <div className="rounded-xl bg-white/5 border border-white/10 p-4">
+          <h2 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+            <span>📊</span> App Statistics
+          </h2>
+          <div className="grid grid-cols-3 gap-3 text-center">
+            <div className="bg-white/5 rounded-lg p-4">
+              <div className="text-3xl font-bold text-white">{fathers.length}</div>
+              <div className="text-gray-400 text-xs mt-1">Total Users</div>
+            </div>
+            <div className="bg-white/5 rounded-lg p-4">
+              <div className="text-3xl font-bold text-green-400">
+                {fathers.filter(f => f.status === 'ACTIVE').length}
+              </div>
+              <div className="text-gray-400 text-xs mt-1">Active</div>
+            </div>
+            <div className="bg-white/5 rounded-lg p-4">
+              <div className="text-3xl font-bold text-blue-400">
+                {fathers.filter(f => f.locale === 'he').length}
+              </div>
+              <div className="text-gray-400 text-xs mt-1">Hebrew 🇮🇱</div>
+            </div>
+          </div>
+        </div>
+
         {/* Registered Users Section */}
         <div className="rounded-xl bg-white/5 border border-white/10 p-4">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-white">
-              Registered Users ({fathers.length}/{MAX_TEST_RECIPIENTS})
+            <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+              <span>👥</span> Registered Users
             </h2>
-            <span className={`px-3 py-1 rounded-full text-sm ${
-              remainingSlots > 0 
-                ? 'bg-green-500/20 text-green-300' 
-                : 'bg-red-500/20 text-red-300'
-            }`}>
-              {remainingSlots > 0 ? `${remainingSlots} slots left` : 'Full'}
-            </span>
+            <button
+              onClick={loadFathers}
+              disabled={loadingFathers}
+              className="text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-gray-300 transition-colors disabled:opacity-50"
+            >
+              {loadingFathers ? '...' : '🔄'}
+            </button>
           </div>
 
           {loadingFathers ? (
@@ -287,7 +337,7 @@ export default function DevInvitePage() {
                     disabled={deleteLoading === father.id}
                     className="ml-2 px-3 py-1 rounded bg-red-500/20 hover:bg-red-500/30 text-red-300 text-sm transition-colors disabled:opacity-50"
                   >
-                    {deleteLoading === father.id ? '...' : '🗑️ Delete'}
+                    {deleteLoading === father.id ? '...' : '🗑️'}
                   </button>
                 </div>
               ))}
@@ -296,54 +346,90 @@ export default function DevInvitePage() {
         </div>
 
         {/* Generate Invite Section */}
-        <div className="space-y-4">
-          <button
-            onClick={generateInvite}
-            disabled={loading || remainingSlots <= 0}
-            className="w-full py-3 px-6 rounded-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-indigo-500/50 disabled:cursor-not-allowed text-white font-semibold transition-colors"
-          >
-            {loading ? 'Generating...' : remainingSlots <= 0 ? 'No Slots Available' : 'Generate New Invite Link'}
-          </button>
+        <div className="rounded-xl bg-white/5 border border-white/10 p-4">
+          <h2 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+            <span>🔗</span> Invite New User
+          </h2>
+          
+          <div className="space-y-4">
+            <button
+              onClick={generateInvite}
+              disabled={loading}
+              className="w-full py-3 px-6 rounded-xl bg-indigo-500 hover:bg-indigo-600 disabled:bg-indigo-500/50 disabled:cursor-not-allowed text-white font-semibold transition-colors"
+            >
+              {loading ? 'Generating...' : 'Generate Invite Link'}
+            </button>
 
-          {error && (
-            <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-center">
-              <p className="text-red-300 text-sm">{error}</p>
-            </div>
-          )}
-
-          {link && (
-            <div className="space-y-3">
-              <div className="rounded-xl bg-white/5 border border-white/10 p-4 break-all">
-                <a
-                  href={link}
-                  className="text-indigo-400 hover:text-indigo-300 underline text-sm"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {link}
-                </a>
+            {error && (
+              <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-3 text-center">
+                <p className="text-red-300 text-sm">{error}</p>
               </div>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(link);
-                }}
-                className="w-full py-2 px-4 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 text-sm transition-colors"
-              >
-                📋 Copy to Clipboard
-              </button>
-            </div>
-          )}
+            )}
+
+            {link && (
+              <div className="space-y-3">
+                <div className="rounded-xl bg-white/5 border border-white/10 p-3 break-all">
+                  <a
+                    href={link}
+                    className="text-indigo-400 hover:text-indigo-300 underline text-sm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {link}
+                  </a>
+                </div>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(link);
+                  }}
+                  className="w-full py-2 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-gray-300 text-sm transition-colors"
+                >
+                  📋 Copy to Clipboard
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Instructions */}
+        {/* Quick Links */}
         <div className="rounded-xl bg-white/5 border border-white/10 p-4">
-          <h3 className="font-semibold text-white mb-2">📋 How to add a new user:</h3>
-          <ol className="text-gray-300 text-sm space-y-2 list-decimal list-inside">
-            <li>First add their phone to <a href="https://developers.facebook.com/apps/1025161893458583/use_cases/customize/api-testing-v2/?use_case_enum=WHATSAPP_BUSINESS_MESSAGING" target="_blank" rel="noopener noreferrer" className="text-indigo-400 underline">Meta Test Recipients</a></li>
-            <li>Generate an invite link above</li>
-            <li>Share the link with your friend</li>
-            <li>They complete the onboarding wizard</li>
-          </ol>
+          <h2 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+            <span>🔗</span> Quick Links
+          </h2>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <a 
+              href="https://developers.facebook.com/apps/1025161893458583/dashboard/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition-colors"
+            >
+              📱 Meta App Dashboard
+            </a>
+            <a 
+              href="https://business.facebook.com/latest/whatsapp_manager"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition-colors"
+            >
+              💼 WhatsApp Manager
+            </a>
+            <a 
+              href="https://dashboard.render.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition-colors"
+            >
+              🚀 Render Dashboard
+            </a>
+            <a 
+              href="https://vercel.com/dashboard"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition-colors"
+            >
+              ▲ Vercel Dashboard
+            </a>
+          </div>
         </div>
       </div>
     </div>
