@@ -176,6 +176,10 @@ export default function DevInvitePage() {
   }
 
   const messagingLimit = getMessagingLimitInfo(whatsappStatus?.messaging_limit_tier);
+  
+  // Check if in sandbox/test mode (unverified business = sandbox)
+  const isInSandboxMode = wabaStatus?.configured && 
+    wabaStatus.business_verification_status !== 'verified';
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0F172A] to-[#1E293B] p-6">
@@ -258,6 +262,43 @@ export default function DevInvitePage() {
             <div className="text-gray-400 text-sm">WhatsApp not configured</div>
           )}
         </div>
+
+        {/* Sandbox Mode Warning */}
+        {isInSandboxMode && (
+          <div className="rounded-xl bg-orange-500/10 border border-orange-500/30 p-4">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">⚠️</span>
+              <div className="flex-1">
+                <h3 className="text-orange-300 font-semibold mb-2">WhatsApp Sandbox Mode</h3>
+                <p className="text-orange-200/80 text-sm mb-3">
+                  Your WhatsApp Business is in <strong>test/sandbox mode</strong>. 
+                  Messages can only be sent to phone numbers you manually add to the allowed list.
+                </p>
+                <p className="text-orange-200/60 text-xs mb-3">
+                  Error you may see: <code className="bg-black/30 px-1 rounded">#131030 Recipient phone number not in allowed list</code>
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <a 
+                    href="https://developers.facebook.com/apps/1025161893458583/use_cases/customize/?use_case_enum=WHATSAPP_BUSINESS_MESSAGING"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-3 py-2 rounded-lg bg-orange-500/20 hover:bg-orange-500/30 text-orange-200 text-sm transition-colors"
+                  >
+                    ➕ Add Test Numbers
+                  </a>
+                  <a 
+                    href="https://developers.facebook.com/apps/1025161893458583/use_cases/customize/?use_case_enum=WHATSAPP_BUSINESS_MESSAGING&selected_tab=production_setup"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-3 py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 text-green-200 text-sm transition-colors"
+                  >
+                    🚀 Complete Production Setup
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* App Stats */}
         <div className="rounded-xl bg-white/5 border border-white/10 p-4">
