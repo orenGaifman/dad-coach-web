@@ -74,6 +74,9 @@ export const STALE_TIMES = {
 
   /** Profile - always fresh each view */
   PROFILE: 0,
+
+  /** Commitments - moderate refresh rate */
+  COMMITMENTS: 60 * 1000, // 60s
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -107,6 +110,11 @@ export const queryKeys = {
 
   // Profile
   profile: () => ['profile'] as const,
+
+  // Commitments
+  commitments: () => ['commitments'] as const,
+  commitmentsUpcoming: () => ['commitments-upcoming'] as const,
+  commitmentStats: () => ['commitment-stats'] as const,
 } as const;
 
 // ---------------------------------------------------------------------------

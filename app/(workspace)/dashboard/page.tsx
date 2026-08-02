@@ -25,6 +25,7 @@ import { useWorkspaceSummary } from '@/src/hooks/useWorkspaceSummary';
 import { useCelebrations } from '@/src/hooks/useCelebrations';
 import { CelebrationModal } from '@/src/components/common/CelebrationModal';
 import { usePageView } from '@/src/hooks/usePageView';
+import { UpcomingCommitmentCard } from '@/src/components/dashboard/UpcomingCommitmentCard';
 import {
   SkeletonCard,
   SkeletonText,
@@ -565,6 +566,9 @@ export default function DashboardPage() {
           kidsCount={data.active_children_count}
           degradedSections={degradedSections}
         />
+
+        {/* Upcoming Commitment Card */}
+        <UpcomingCommitmentCard />
 
         {/* Active Mission Card */}
         <ActiveMissionCard
