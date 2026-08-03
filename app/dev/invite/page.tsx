@@ -9,6 +9,9 @@ interface FatherSummary {
   status: string;
   locale: string;
   createdAt: string;
+  currentWorkflowState: string | null;
+  workflowStateEnteredAt: string | null;
+  dashboardUrl: string | null;
 }
 
 interface WhatsAppStatus {
@@ -352,7 +355,7 @@ export default function DevInvitePage() {
                   className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-white font-medium truncate">
                         {father.displayName || 'Unknown'}
                       </span>
@@ -370,8 +373,30 @@ export default function DevInvitePage() {
                       }`}>
                         {father.status}
                       </span>
+                      {father.currentWorkflowState && (
+                        <span className={`px-2 py-0.5 rounded text-xs ${
+                          father.currentWorkflowState === 'WELCOME' 
+                            ? 'bg-yellow-500/20 text-yellow-300'
+                            : father.currentWorkflowState === 'SCHEDULE_QUALITY_TIME'
+                            ? 'bg-cyan-500/20 text-cyan-300'
+                            : father.currentWorkflowState === 'WAITING'
+                            ? 'bg-orange-500/20 text-orange-300'
+                            : father.currentWorkflowState === 'QUALITY_TIME_FOLLOW_UP'
+                            ? 'bg-pink-500/20 text-pink-300'
+                            : 'bg-indigo-500/20 text-indigo-300'
+                        }`}>
+                          🔄 {father.currentWorkflowState.replace(/_/g, ' ')}
+                        </span>
+                      )}
                     </div>
-                    <div className="text-gray-400 text-sm">{father.phoneNumber}</div>
+                    <div className="text-gray-400 text-sm flex items-center gap-2">
+                      <span>{father.phoneNumber}</span>
+                      {father.workflowStateEnteredAt && (
+                        <span className="text-gray-500 text-xs">
+                          • State since: {new Date(father.workflowStateEnteredAt).toLocaleDateString()}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <button
                     onClick={() => deleteFather(father.id)}
@@ -380,6 +405,17 @@ export default function DevInvitePage() {
                   >
                     {deleteLoading === father.id ? '...' : '🗑️'}
                   </button>
+                  {father.dashboardUrl && (
+                    <a
+                      href={father.dashboardUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ml-2 px-3 py-1 rounded bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-sm transition-colors"
+                      title="Open Dashboard"
+                    >
+                      📊
+                    </a>
+                  )}
                 </div>
               ))}
             </div>
