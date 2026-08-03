@@ -1,14 +1,36 @@
 'use client';
 
 /**
- * Coaching History Page — Screen C1
+ * @deprecated This page is deprecated as part of the Deterministic Workflow Engine migration.
  *
+ * DEPRECATION NOTICE (Deterministic Workflow Engine - Requirement 13.5):
+ * =====================================================================
+ * This Coaching History Page is DEPRECATED. The deterministic workflow engine
+ * does not include memory or conversation history displays.
+ *
+ * The frontend workspace focuses on:
+ * - Belt progression (current belt, progress to next)
+ * - Next Quality Time (scheduled date, time, child name)
+ * - Streak display (current streak, longest streak)
+ * - Recent activity feed (last 5 Quality Time completions)
+ * - Achievement badges
+ * - Schedule Quality Time action button
+ *
+ * The "Coaching" tab will be repurposed or removed in a future release.
+ * Activity logging (Log Quality Time, Log Positive Activity) remains active
+ * and should be accessible from the Dashboard or a simplified Coaching tab.
+ *
+ * @see deterministic-workflow-engine/requirements.md - Requirement 13.5
+ * @see design.md - Architecture Philosophy: "AI is NOT the orchestrator"
+ *
+ * Original purpose:
+ * Coaching History Page — Screen C1
  * Displays the father's coaching conversation history from WhatsApp.
  * Shows a list of past conversations with type, date, message count,
  * summary, and status. Conversations happen on WhatsApp - this is a
  * read-only view of the history.
  *
- * Features:
+ * Features (DEPRECATED):
  * - Conversation cards with type, date, message count, summary
  * - Status indicators (active, completed, paused)
  * - Related child indicator
@@ -16,7 +38,7 @@
  * - Loading skeleton
  * - Error handling
  *
- * Requirements: 9.1, 9.2, 9.3, 9.5 (Coaching History)
+ * Requirements: 9.1, 9.2, 9.3, 9.5 (Coaching History) - DEPRECATED
  * @see design.md - Screen C1: Coaching History
  */
 
@@ -228,6 +250,9 @@ function QuickActions() {
 
 /**
  * Coaching page component.
+ *
+ * @deprecated The conversation history section of this page is deprecated.
+ * Only the Quick Actions (Log Quality Time, Log Positive Activity) remain active.
  */
 export default function CoachingPage() {
   const { 
@@ -253,9 +278,24 @@ export default function CoachingPage() {
 
       {/* Main content */}
       <main className="max-w-lg mx-auto px-4 py-6 pb-24">
-        {/* Quick actions */}
+        {/* Quick actions - These remain active for logging Quality Time */}
         <QuickActions />
 
+        {/* DEPRECATION NOTICE: Conversation history is deprecated per Deterministic Workflow Engine */}
+        <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl">
+          <div className="flex items-start gap-3">
+            <span className="text-lg">ℹ️</span>
+            <div>
+              <p className="text-amber-300 text-sm font-medium mb-1">
+                Simplified Experience
+              </p>
+              <p className="text-amber-200/70 text-sm">
+                We&apos;re focusing on what matters most: scheduling Quality Time and tracking your progress.
+                Use the buttons above to log your activities, or visit the Dashboard for your belt progression and achievements.
+              </p>
+            </div>
+          </div>
+        </div>
         {/* Loading state */}
         {isLoading && <CoachingSkeleton />}
 

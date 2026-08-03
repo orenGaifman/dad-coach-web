@@ -3,6 +3,19 @@
  *
  * These types model conversations, activity logging, and
  * coaching history for the Coaching section (WEB-SPEC-008).
+ *
+ * DEPRECATION NOTICE (Deterministic Workflow Engine - Requirement 13.5):
+ * =====================================================================
+ * Conversation-related types (ConversationType, ConversationStatus, ConversationOverview,
+ * ConversationDetail, etc.) are DEPRECATED. The deterministic workflow engine does not include:
+ * - Free-form coaching chat interface
+ * - Memory or conversation history displays
+ * - AI-generated coaching tips
+ *
+ * Activity logging types remain ACTIVE and are aligned with the deterministic workflow
+ * for tracking Quality Time completions.
+ *
+ * @see deterministic-workflow-engine/requirements.md - Requirement 13.5
  */
 
 import type { BaseApiResponse, ISODateTime, ISODate, PaginationMeta } from './common';
@@ -121,10 +134,11 @@ export interface ActivityDuplicateError {
 }
 
 // ---------------------------------------------------------------------------
-// Conversations
+// Conversations (DEPRECATED - Deterministic Workflow Engine)
 // ---------------------------------------------------------------------------
 
 /**
+ * @deprecated Conversation types are deprecated as part of the Deterministic Workflow Engine migration.
  * Conversation type.
  */
 export type ConversationType =
@@ -135,6 +149,7 @@ export type ConversationType =
   | 'SUPPORT';
 
 /**
+ * @deprecated Conversation types are deprecated as part of the Deterministic Workflow Engine migration.
  * Conversation status.
  */
 export type ConversationStatus =
@@ -143,8 +158,9 @@ export type ConversationStatus =
   | 'PAUSED';
 
 /**
+ * @deprecated Conversation types are deprecated as part of the Deterministic Workflow Engine migration.
  * Conversation overview item for the history list.
- * @see Requirement 9.1: Coaching History display
+ * @see Requirement 9.1: Coaching History display (DEPRECATED)
  */
 export interface ConversationOverview {
   /** Conversation identifier */
@@ -169,8 +185,9 @@ export interface ConversationOverview {
 }
 
 /**
+ * @deprecated Conversation types are deprecated as part of the Deterministic Workflow Engine migration.
  * Response from GET /api/v1/workspace/conversations
- * @see Requirement 9: Coaching History
+ * @see Requirement 9: Coaching History (DEPRECATED)
  */
 export interface ConversationsResponse extends BaseApiResponse {
   /** List of conversations */
@@ -180,6 +197,7 @@ export interface ConversationsResponse extends BaseApiResponse {
 }
 
 /**
+ * @deprecated Conversation types are deprecated as part of the Deterministic Workflow Engine migration.
  * Query parameters for conversations list.
  */
 export interface ConversationsQueryParams {
@@ -192,6 +210,7 @@ export interface ConversationsQueryParams {
 }
 
 /**
+ * @deprecated Conversation types are deprecated as part of the Deterministic Workflow Engine migration.
  * Conversation insight from the AI summary.
  */
 export interface ConversationInsight {
@@ -202,6 +221,7 @@ export interface ConversationInsight {
 }
 
 /**
+ * @deprecated Conversation types are deprecated as part of the Deterministic Workflow Engine migration.
  * Key topic discussed in the conversation.
  */
 export interface ConversationTopic {
@@ -212,8 +232,9 @@ export interface ConversationTopic {
 }
 
 /**
+ * @deprecated Conversation types are deprecated as part of the Deterministic Workflow Engine migration.
  * Detailed conversation view.
- * @see Requirement 9.4: Conversation detail (summary only, no transcript)
+ * @see Requirement 9.4: Conversation detail (summary only, no transcript) (DEPRECATED)
  */
 export interface ConversationDetail {
   /** Conversation identifier */
@@ -251,6 +272,7 @@ export interface ConversationDetail {
 }
 
 /**
+ * @deprecated Conversation types are deprecated as part of the Deterministic Workflow Engine migration.
  * Response from GET /api/v1/workspace/conversations/{conversationId}
  */
 export interface ConversationDetailResponse extends BaseApiResponse {

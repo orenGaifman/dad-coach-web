@@ -22,3 +22,6 @@ export * from './coaching';
 
 // Notification types
 export * from './notifications';
+
+// Quality Time types (workflow engine, scheduling, progress)
+export * from './qualityTime';

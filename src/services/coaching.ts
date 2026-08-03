@@ -4,6 +4,19 @@
  * Wraps conversations and activity logging endpoints using the shared apiClient.
  * Each function is typed against the coaching type definitions.
  *
+ * DEPRECATION NOTICE (Deterministic Workflow Engine - Requirement 13.5):
+ * =====================================================================
+ * Conversation-related functions (getConversations, getConversationDetail) are
+ * DEPRECATED. The deterministic workflow engine does not include:
+ * - Free-form coaching chat interface
+ * - Memory or conversation history displays
+ * - AI-generated coaching tips
+ *
+ * Activity logging functions (logQualityTime, logPositiveActivity) remain
+ * ACTIVE and are aligned with the deterministic workflow for tracking
+ * Quality Time completions.
+ *
+ * @see deterministic-workflow-engine/requirements.md - Requirement 13.5
  * @see design.md - API Service Layer section
  */
 
@@ -18,14 +31,21 @@ import type {
 } from '@/src/types/coaching';
 
 // ---------------------------------------------------------------------------
-// Conversations
+// Conversations (DEPRECATED - Deterministic Workflow Engine)
 // ---------------------------------------------------------------------------
 
 /**
+ * @deprecated This function is deprecated as part of the Deterministic Workflow Engine migration.
+ *
+ * Conversation history display is not part of the deterministic workflow paradigm.
+ * The product focuses on: Quality Time scheduling, progress tracking, and celebrations.
+ *
+ * This function will be removed in a future release.
+ *
  * Fetch coaching conversation history.
  * GET /api/v1/workspace/conversations
  *
- * @see Requirement 9: Coaching History
+ * @see Requirement 9: Coaching History (DEPRECATED)
  */
 export async function getConversations(
   params?: ConversationsQueryParams,
@@ -47,12 +67,19 @@ export async function getConversations(
 }
 
 /**
+ * @deprecated This function is deprecated as part of the Deterministic Workflow Engine migration.
+ *
+ * Conversation history display is not part of the deterministic workflow paradigm.
+ * The product focuses on: Quality Time scheduling, progress tracking, and celebrations.
+ *
+ * This function will be removed in a future release.
+ *
  * Fetch details for a single conversation.
  * GET /api/v1/workspace/conversations/{conversationId}
  *
  * Note: Returns summary only, no full transcript per Requirement 9.2.
  *
- * @see Requirement 9.4: Conversation Detail
+ * @see Requirement 9.4: Conversation Detail (DEPRECATED)
  */
 export async function getConversationDetail(
   conversationId: string,
@@ -65,7 +92,7 @@ export async function getConversationDetail(
 }
 
 // ---------------------------------------------------------------------------
-// Activity Logging
+// Activity Logging (ACTIVE - Aligned with Deterministic Workflow)
 // ---------------------------------------------------------------------------
 
 /**

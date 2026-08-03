@@ -1,15 +1,36 @@
 'use client';
 
 /**
- * Conversation Detail Page — Screen C2
+ * @deprecated This page is deprecated as part of the Deterministic Workflow Engine migration.
  *
+ * DEPRECATION NOTICE (Deterministic Workflow Engine - Requirement 13.5):
+ * =====================================================================
+ * This Conversation Detail Page is DEPRECATED. The deterministic workflow engine
+ * does not include memory or conversation history displays.
+ *
+ * The frontend workspace focuses on:
+ * - Belt progression (current belt, progress to next)
+ * - Next Quality Time (scheduled date, time, child name)
+ * - Streak display (current streak, longest streak)
+ * - Recent activity feed (last 5 Quality Time completions)
+ * - Achievement badges
+ * - Schedule Quality Time action button
+ *
+ * This page will be removed in a future release. Users should be directed
+ * to the Dashboard instead.
+ *
+ * @see deterministic-workflow-engine/requirements.md - Requirement 13.5
+ * @see design.md - Architecture Philosophy: "AI is NOT the orchestrator"
+ *
+ * Original purpose:
+ * Conversation Detail Page — Screen C2
  * Displays detailed summary of a coaching conversation. Shows extended
  * summary, key topics discussed, and insights from the conversation.
- * 
+ *
  * IMPORTANT: This is a SUMMARY VIEW ONLY. No full message transcript
  * is shown per Requirement 9.2 to protect conversation privacy.
  *
- * Features:
+ * Features (DEPRECATED):
  * - Extended conversation summary
  * - Key topics discussed
  * - Insights (strengths, suggestions, observations)
@@ -18,7 +39,7 @@
  * - Loading skeleton
  * - Error handling
  *
- * Requirements: 9.4 (Conversation Detail - summary only)
+ * Requirements: 9.4 (Conversation Detail - summary only) - DEPRECATED
  * @see design.md - Screen C2: Conversation Detail
  */
 

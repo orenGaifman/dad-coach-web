@@ -77,6 +77,9 @@ export const STALE_TIMES = {
 
   /** Commitments - moderate refresh rate */
   COMMITMENTS: 60 * 1000, // 60s
+
+  /** Available time slots - refresh frequently as slots change quickly */
+  AVAILABLE_SLOTS: 30 * 1000, // 30s
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -115,6 +118,10 @@ export const queryKeys = {
   commitments: () => ['commitments'] as const,
   commitmentsUpcoming: () => ['commitments-upcoming'] as const,
   commitmentStats: () => ['commitment-stats'] as const,
+
+  // Quality Time
+  availableSlots: (daysAhead?: number, minDuration?: number) =>
+    ['available-slots', { daysAhead, minDuration }] as const,
 } as const;
 
 // ---------------------------------------------------------------------------
