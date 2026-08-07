@@ -18,6 +18,7 @@
  */
 
 import { API_BASE_URL, REQUEST_TIMEOUT } from '@/src/config/api';
+import { AUTH_TOKEN_KEY } from '@/src/config/auth';
 import type {
   ApiError as ApiErrorType,
   HttpErrorCategory,
@@ -200,6 +201,32 @@ export function getStoredSessionId(): string | null {
 }
 
 // ---------------------------------------------------------------------------
+// Auth Token Management
+// ---------------------------------------------------------------------------
+
+/**
+ * Gets the auth token from localStorage.
+ */
+export function getAuthToken(): string | null {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem(AUTH_TOKEN_KEY);
+  }
+  return null;
+}
+
+/**
+ * Clears auth token and redirects to login.
+ * Called when we receive a 401 Unauthorized response.
+ */
+function handleUnauthorized() {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+    // Redirect to login page
+    window.location.href = '/join';
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Timeout utility
 // ---------------------------------------------------------------------------
 
@@ -252,10 +279,16 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     headers['Content-Type'] = 'application/json';
   }
 
+  // Include auth token for authenticated requests
+  const authToken = getAuthToken();
+  if (authToken) {
+    headers['Authorization'] = `Bearer ${authToken}`;
+  }
+
   // Include CSRF token for state-changing requests
-  const token = getCsrfToken();
-  if (token && method !== 'GET') {
-    headers['X-CSRF-Token'] = token;
+  const csrfTokenValue = getCsrfToken();
+  if (csrfTokenValue && method !== 'GET') {
+    headers['X-CSRF-Token'] = csrfTokenValue;
   }
 
   // Create timeout signal
@@ -282,6 +315,12 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
       }
 
       const status = res.status;
+      
+      // Handle 401 Unauthorized - clear token and redirect to login
+      if (status === 401) {
+        handleUnauthorized();
+      }
+      
       const code = errorBody.code ?? getDefaultErrorCode(status);
       const message = errorBody.message ?? `API error ${status}`;
       const category = classifyHttpError(status);
