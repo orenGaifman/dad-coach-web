@@ -137,7 +137,7 @@ export default function ReviewPage() {
 
     try {
       const response = await completeOnboarding(sid);
-      // Store deep link for the activation page
+      // Store data for subsequent pages (activation and calendar)
       if (typeof window !== 'undefined' && response) {
         // Try whatsapp_deep_link first, fall back to deep_link
         const deepLink = response.whatsapp_deep_link || response.deep_link;
@@ -146,6 +146,10 @@ export default function ReviewPage() {
         }
         if (response.activation_message) {
           localStorage.setItem('dadcoach_activation_message', response.activation_message);
+        }
+        // Store father_id for calendar connection step
+        if (response.father_id) {
+          localStorage.setItem('dadcoach_father_id', String(response.father_id));
         }
       }
       markStepCompleted(WizardStep.REVIEW);

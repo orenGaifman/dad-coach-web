@@ -70,9 +70,11 @@ export function CalendarConnect({
     setIsConnecting(true);
     setError(null);
 
-    // Redirect to backend OAuth endpoint
+    // Redirect to backend OAuth endpoint with redirect URL back to this page
     const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://dad-coach.onrender.com/api/v1';
-    const connectUrl = `${apiBaseUrl}/calendar/connect/${fatherId}`;
+    const currentUrl = window.location.origin + window.location.pathname;
+    const redirectParam = encodeURIComponent(currentUrl);
+    const connectUrl = `${apiBaseUrl}/calendar/connect/${fatherId}?redirectUrl=${redirectParam}`;
     
     // Open in same window - will redirect back after OAuth
     window.location.href = connectUrl;

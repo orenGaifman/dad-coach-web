@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { OnboardingLayout } from '@/src/components/onboarding/OnboardingLayout';
 import { useOnboarding } from '@/src/components/onboarding/OnboardingProvider';
@@ -10,6 +11,8 @@ import { WizardStep } from '@/src/types/onboarding';
 
 /**
  * Calendar connection page — connects Google Calendar for scheduling.
+ * This step comes AFTER activation, so father_id is available from localStorage.
+ * This is the FINAL step - after completion, user is redirected to dashboard.
  *
  * Handles:
  * - Google OAuth flow for calendar access
@@ -18,19 +21,22 @@ import { WizardStep } from '@/src/types/onboarding';
  * @see Requirement: Calendar integration for automatic slot detection
  */
 export default function CalendarPage() {
+  const router = useRouter();
   const { isAllowed } = useStepGuard(WizardStep.CALENDAR);
-  const { 
-    sessionId, 
-    isSubmitting, 
-    setIsSubmitting, 
-    markStepCompleted, 
-    goForward,
-    skipStep,
-    language 
-  } = useOnboarding();
+  const { markStepCompleted } = useOnboarding();
   const [error, setError] = useState<string | null>(null);
   const [fatherId, setFatherId] = useState<number | undefined>(undefined);
   const [isConnected, setIsConnected] = useState(false);
+
+  // Get father_id from localStorage (set by review page after provisioning)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedFatherId = localStorage.getItem('dadcoach_father_id');
+      if (storedFatherId) {
+        setFatherId(Number(storedFatherId));
+      }
+    }
+  }, []);
 
   // Check URL params for OAuth callback result
   useEffect(() => {
@@ -49,49 +55,35 @@ export default function CalendarPage() {
     }
   }, []);
 
-  // Get father ID from session data
-  useEffect(() => {
-    const fetchFatherId = async () => {
-      if (!sessionId) return;
-      
-      try {
-        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://dad-coach.onrender.com/api/v1';
-        const response = await fetch(`${apiBaseUrl}/onboarding/sessions/${sessionId}`, {
-          credentials: 'include',
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          if (data.father_id) {
-            setFatherId(data.father_id);
-          }
-        }
-      } catch (err) {
-        console.error('Failed to fetch session data:', err);
-      }
-    };
-
-    fetchFatherId();
-  }, [sessionId]);
+  const goToDashboard = useCallback(() => {
+    // Clean up onboarding data from localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('dadcoach_deep_link');
+      localStorage.removeItem('dadcoach_activation_message');
+      // Keep father_id - might be useful for dashboard
+    }
+    router.push('/workspace');
+  }, [router]);
 
   const handleConnected = useCallback(() => {
     setIsConnected(true);
     markStepCompleted(WizardStep.CALENDAR);
-    goForward();
-  }, [markStepCompleted, goForward]);
+    goToDashboard();
+  }, [markStepCompleted, goToDashboard]);
 
   const handleSkip = useCallback(() => {
-    // Skip without connecting calendar
-    skipStep();
-  }, [skipStep]);
+    // Skip without connecting calendar - proceed to dashboard
+    markStepCompleted(WizardStep.CALENDAR);
+    goToDashboard();
+  }, [markStepCompleted, goToDashboard]);
 
   const handleContinue = useCallback(() => {
     if (isConnected) {
       markStepCompleted(WizardStep.CALENDAR);
-      goForward();
+      goToDashboard();
     }
     // If not connected, the CalendarConnect component handles the OAuth redirect
-  }, [isConnected, markStepCompleted, goForward]);
+  }, [isConnected, markStepCompleted, goToDashboard]);
 
   if (!isAllowed) return null;
 
@@ -99,7 +91,7 @@ export default function CalendarPage() {
     <OnboardingLayout 
       isStepValid={isConnected} 
       onContinue={handleContinue}
-      continueLabel={isConnected ? 'Continue' : 'Connect Calendar'}
+      continueLabel={isConnected ? 'Go to Dashboard' : 'Connect Calendar'}
     >
       <CalendarConnect
         onConnected={handleConnected}
