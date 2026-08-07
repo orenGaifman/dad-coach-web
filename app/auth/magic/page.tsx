@@ -80,6 +80,8 @@ function MagicLinkAuthContent() {
     const utmSource = searchParams.get('utm_source');
     const utmCampaign = searchParams.get('utm_campaign');
 
+    console.log('[MagicLink] Starting validation', { token: token?.substring(0, 8) + '...', redirectPath });
+
     // Track magic link click
     analytics.track('page_view', {
       page_name: 'Magic Link Auth',
@@ -89,6 +91,7 @@ function MagicLinkAuthContent() {
     });
 
     if (!token) {
+      console.log('[MagicLink] No token provided');
       setStatus('invalid');
       setErrorMessage('No authentication token provided.');
       return;
@@ -97,10 +100,12 @@ function MagicLinkAuthContent() {
     // Validate the magic link token with the backend
     async function validateToken() {
       try {
+        console.log('[MagicLink] Calling API...');
         const response = await apiClient.post<MagicLinkResponse>(
           '/auth/magic-link/validate',
           { token }
         );
+        console.log('[MagicLink] API response:', response);
 
         if (response.response_status === 'OK' && response.access_token) {
           // Store the auth token
@@ -138,6 +143,7 @@ function MagicLinkAuthContent() {
           }
         }
       } catch (error) {
+        console.error('[MagicLink] Validation failed:', error);
         console.error('Magic link validation failed:', error);
         setStatus('error');
         setErrorMessage('Unable to connect. Please check your internet connection and try again.');
