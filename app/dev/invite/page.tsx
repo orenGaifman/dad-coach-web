@@ -4,14 +4,14 @@ import { useState, useEffect } from 'react';
 
 interface FatherSummary {
   id: string;
-  displayName: string | null;
-  phoneNumber: string;
+  display_name: string | null;
+  phone_number: string;
   status: string;
   locale: string;
-  createdAt: string;
-  currentWorkflowState: string | null;
-  workflowStateEnteredAt: string | null;
-  dashboardUrl: string | null;
+  created_at: string;
+  current_workflow_state: string | null;
+  workflow_state_entered_at: string | null;
+  dashboard_url: string | null;
 }
 
 interface WhatsAppStatus {
@@ -357,7 +357,7 @@ export default function DevInvitePage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-white font-medium truncate">
-                        {father.displayName || 'Unknown'}
+                        {father.display_name || 'Unknown'}
                       </span>
                       <span className={`px-2 py-0.5 rounded text-xs ${
                         father.locale === 'he' 
@@ -373,27 +373,27 @@ export default function DevInvitePage() {
                       }`}>
                         {father.status}
                       </span>
-                      {father.currentWorkflowState && (
+                      {father.current_workflow_state && (
                         <span className={`px-2 py-0.5 rounded text-xs ${
-                          father.currentWorkflowState === 'WELCOME' 
+                          father.current_workflow_state === 'WELCOME' 
                             ? 'bg-yellow-500/20 text-yellow-300'
-                            : father.currentWorkflowState === 'SCHEDULE_QUALITY_TIME'
+                            : father.current_workflow_state === 'SCHEDULE_QUALITY_TIME'
                             ? 'bg-cyan-500/20 text-cyan-300'
-                            : father.currentWorkflowState === 'WAITING'
+                            : father.current_workflow_state === 'WAITING'
                             ? 'bg-orange-500/20 text-orange-300'
-                            : father.currentWorkflowState === 'QUALITY_TIME_FOLLOW_UP'
+                            : father.current_workflow_state === 'QUALITY_TIME_FOLLOW_UP'
                             ? 'bg-pink-500/20 text-pink-300'
                             : 'bg-indigo-500/20 text-indigo-300'
                         }`}>
-                          🔄 {father.currentWorkflowState.replace(/_/g, ' ')}
+                          🔄 {father.current_workflow_state.replace(/_/g, ' ')}
                         </span>
                       )}
                     </div>
                     <div className="text-gray-400 text-sm flex items-center gap-2">
-                      <span>{father.phoneNumber}</span>
-                      {father.workflowStateEnteredAt && (
+                      <span>{father.phone_number}</span>
+                      {father.workflow_state_entered_at && (
                         <span className="text-gray-500 text-xs">
-                          • State since: {new Date(father.workflowStateEnteredAt).toLocaleDateString()}
+                          • State since: {new Date(father.workflow_state_entered_at).toLocaleDateString()}
                         </span>
                       )}
                     </div>
@@ -405,9 +405,9 @@ export default function DevInvitePage() {
                   >
                     {deleteLoading === father.id ? '...' : '🗑️'}
                   </button>
-                  {father.dashboardUrl && (
+                  {father.dashboard_url && (
                     <a
-                      href={father.dashboardUrl}
+                      href={father.dashboard_url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="ml-2 px-3 py-1 rounded bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-sm transition-colors"
