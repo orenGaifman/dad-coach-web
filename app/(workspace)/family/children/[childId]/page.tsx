@@ -130,7 +130,7 @@ function GoalCard({ goal }: { goal: GoalSummary }) {
       </p>
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs text-gray-500 capitalize">
-          {goal.category.toLowerCase().replace('_', ' ')}
+          {(goal.category ?? '').toLowerCase().replace('_', ' ')}
         </span>
         <span className="text-xs text-gray-400">
           {goal.progress_percentage}%
@@ -177,7 +177,7 @@ function ChildDetailContent({ child }: { child: ChildDetail }) {
           {/* Avatar */}
           <div className="w-16 h-16 bg-teal-500/20 rounded-full flex items-center justify-center flex-shrink-0">
             <span className="text-teal-400 text-2xl font-semibold">
-              {child.name.charAt(0).toUpperCase()}
+              {(child.name ?? 'C').charAt(0).toUpperCase()}
             </span>
           </div>
           

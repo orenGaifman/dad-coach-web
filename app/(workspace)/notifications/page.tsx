@@ -123,7 +123,7 @@ function NotificationCard({
                   notification.priority
                 )}`}
               >
-                {notification.priority.toLowerCase()}
+                {(notification.priority ?? 'normal').toLowerCase()}
               </span>
             </div>
 

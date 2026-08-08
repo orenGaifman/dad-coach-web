@@ -172,7 +172,7 @@ function InsightCard({ insight }: { insight: ConversationInsight }) {
         </span>
         <div>
           <p className="text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">
-            {insight.type.charAt(0) + insight.type.slice(1).toLowerCase()}
+            {(insight.type ?? 'INFO').charAt(0) + (insight.type ?? 'INFO').slice(1).toLowerCase()}
           </p>
           <p className="text-white text-sm">
             {insight.text}

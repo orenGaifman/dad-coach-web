@@ -123,7 +123,7 @@ function GoalCard({ goal }: { goal: GoalOverview }) {
                 goal.status === 'ARCHIVED' && 'text-gray-400'
               )}
             >
-              {goal.status.charAt(0) + goal.status.slice(1).toLowerCase()}
+              {(goal.status ?? 'PENDING').charAt(0) + (goal.status ?? 'PENDING').slice(1).toLowerCase()}
             </span>
           </div>
           

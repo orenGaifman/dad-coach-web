@@ -70,7 +70,7 @@ function ChildCard({ child }: ChildCardProps) {
         {/* Avatar/Initial */}
         <div className="w-12 h-12 bg-teal-500/20 rounded-full flex items-center justify-center flex-shrink-0">
           <span className="text-teal-400 text-lg font-semibold">
-            {child.name.charAt(0).toUpperCase()}
+            {(child.name ?? 'C').charAt(0).toUpperCase()}
           </span>
         </div>
         
@@ -128,9 +128,9 @@ function ChildCard({ child }: ChildCardProps) {
           )}
           
           {/* Interests preview */}
-          {child.interests.length > 0 && (
+          {(child.interests?.length ?? 0) > 0 && (
             <div className="mt-2 flex flex-wrap gap-1.5">
-              {child.interests.slice(0, 3).map((interest) => (
+              {(child.interests ?? []).slice(0, 3).map((interest) => (
                 <span
                   key={interest}
                   className="px-2 py-0.5 bg-white/5 rounded-full text-xs text-gray-400"
@@ -138,9 +138,9 @@ function ChildCard({ child }: ChildCardProps) {
                   {interest}
                 </span>
               ))}
-              {child.interests.length > 3 && (
+              {(child.interests?.length ?? 0) > 3 && (
                 <span className="px-2 py-0.5 text-xs text-gray-500">
-                  +{child.interests.length - 3} more
+                  +{(child.interests?.length ?? 0) - 3} more
                 </span>
               )}
             </div>

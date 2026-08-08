@@ -293,7 +293,7 @@ export default function GoalDetailPage({
                   goal.status === 'COMPLETED' && 'bg-emerald-500/20 text-emerald-400',
                   goal.status === 'ARCHIVED' && 'bg-gray-500/20 text-gray-400'
                 )}>
-                  {goal.status.charAt(0) + goal.status.slice(1).toLowerCase()}
+                  {(goal.status ?? 'PENDING').charAt(0) + (goal.status ?? 'PENDING').slice(1).toLowerCase()}
                 </span>
               </div>
               

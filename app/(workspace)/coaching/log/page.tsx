@@ -233,7 +233,7 @@ function ConfirmationView({
       
       {/* Total score */}
       <p className="text-gray-500 text-sm mb-8">
-        Total Score: {response.updated_total_score.toLocaleString()} XP
+        Total Score: {(response.updated_total_score ?? 0).toLocaleString()} XP
       </p>
       
       {/* Done button */}

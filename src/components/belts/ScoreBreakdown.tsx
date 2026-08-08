@@ -182,7 +182,7 @@ export function ScoreBreakdown({
                         {info.name}
                       </span>
                       <span className="text-gray-400 text-sm">
-                        {signal.points.toLocaleString()} pts
+                        {(signal.points ?? 0).toLocaleString()} pts
                       </span>
                     </div>
                     

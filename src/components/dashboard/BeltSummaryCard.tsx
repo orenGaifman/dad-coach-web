@@ -146,9 +146,11 @@ export interface BeltSummaryCardProps {
  * <BeltSummaryCard belt="YELLOW" score={650} className="mt-4" />
  */
 export function BeltSummaryCard({ belt, score, className }: BeltSummaryCardProps) {
-  const threshold = BELT_THRESHOLDS[belt];
-  const progress = calculateBeltProgress(belt, score);
-  const isMaxBelt = belt === 'BLACK';
+  const safeBelt = belt ?? 'WHITE';
+  const safeScore = score ?? 0;
+  const threshold = BELT_THRESHOLDS[safeBelt];
+  const progress = calculateBeltProgress(safeBelt, safeScore);
+  const isMaxBelt = safeBelt === 'BLACK';
 
   return (
     <Link
@@ -159,7 +161,7 @@ export function BeltSummaryCard({ belt, score, className }: BeltSummaryCardProps
         'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-[#0F172A]',
         className
       )}
-      aria-label={`View growth details. Current belt: ${BELT_DISPLAY_NAMES[belt]}, ${score.toLocaleString()} XP`}
+      aria-label={`View growth details. Current belt: ${BELT_DISPLAY_NAMES[safeBelt]}, ${safeScore.toLocaleString()} XP`}
     >
       {/* Label */}
       <p className="text-sm text-gray-400 mb-3">Your Belt</p>
@@ -169,8 +171,8 @@ export function BeltSummaryCard({ belt, score, className }: BeltSummaryCardProps
         {/* Belt image */}
         <div className="relative w-12 h-12 flex-shrink-0">
           <Image
-            src={getBeltImagePath(belt)}
-            alt={BELT_DISPLAY_NAMES[belt]}
+            src={getBeltImagePath(safeBelt)}
+            alt={BELT_DISPLAY_NAMES[safeBelt]}
             width={48}
             height={48}
             className="object-contain"
@@ -181,8 +183,8 @@ export function BeltSummaryCard({ belt, score, className }: BeltSummaryCardProps
         {/* Belt details */}
         <div className="flex-1 min-w-0">
           {/* Belt name */}
-          <p className={classNames('font-semibold', BELT_TEXT_COLORS[belt])}>
-            {BELT_DISPLAY_NAMES[belt]}
+          <p className={classNames('font-semibold', BELT_TEXT_COLORS[safeBelt])}>
+            {BELT_DISPLAY_NAMES[safeBelt]}
           </p>
 
           {/* Progress bar */}
