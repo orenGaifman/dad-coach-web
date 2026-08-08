@@ -28,7 +28,8 @@ import type {
  * Mask phone number for display (show only last 4 digits).
  * Format: +1****1234
  */
-function maskPhoneNumber(phone: string): string {
+function maskPhoneNumber(phone: string | undefined | null): string {
+  if (!phone) return '****';
   if (phone.length <= 4) return phone;
   const lastFour = phone.slice(-4);
   const prefix = phone.slice(0, phone.length - 4);
