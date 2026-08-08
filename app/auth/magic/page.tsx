@@ -134,10 +134,11 @@ function MagicLinkAuthContent() {
 
           setStatus('success');
 
-          // Redirect to the intended destination
+          // Redirect to the intended destination with full page reload
+          // This ensures the new auth token is picked up by all components
           const finalRedirect = response.redirect_path ?? redirectPath;
           setTimeout(() => {
-            router.replace(finalRedirect);
+            window.location.href = finalRedirect;
           }, 1000);
         } else {
           // Handle specific error codes
