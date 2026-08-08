@@ -26,6 +26,9 @@ import { useCelebrations } from '@/src/hooks/useCelebrations';
 import { CelebrationModal } from '@/src/components/common/CelebrationModal';
 import { usePageView } from '@/src/hooks/usePageView';
 import { UpcomingCommitmentCard } from '@/src/components/dashboard/UpcomingCommitmentCard';
+import { WeeklyGoalProgressCard } from '@/src/components/dashboard/WeeklyGoalProgressCard';
+import { StreakDisplay } from '@/src/components/dashboard/StreakDisplay';
+import { useStreak } from '@/src/hooks/useStreak';
 import {
   SkeletonCard,
   SkeletonText,
@@ -226,7 +229,8 @@ function BeltSummaryCard({ belt, score, isDegraded }: BeltSummaryCardProps) {
 }
 
 /**
- * Stats Row - 3 equal cards showing streak, score, kids count
+ * Stats Row - 3 equal cards showing weekly streak, score, kids count
+ * Hebrew language, RTL direction
  */
 interface StatsRowProps {
   streak: number;
@@ -241,12 +245,12 @@ function StatsRow({ streak, score, kidsCount, degradedSections }: StatsRowProps)
   const isChildrenDegraded = isSectionDegraded('children', degradedSections);
 
   return (
-    <div className="grid grid-cols-3 gap-3" role="list" aria-label="Stats overview">
-      {/* Streak card */}
+    <div className="grid grid-cols-3 gap-3" role="list" aria-label="סטטיסטיקות" dir="rtl">
+      {/* Streak card - now in weeks */}
       <div
         className="bg-[#1E293B] rounded-xl p-3 text-center"
         role="listitem"
-        aria-label={isStreakDegraded ? 'Streak data unavailable' : `${streak} day streak`}
+        aria-label={isStreakDegraded ? 'נתוני רצף לא זמינים' : `${streak} שבועות רצף`}
       >
         {isStreakDegraded ? (
           <SkeletonBlock className="h-8 w-8 mx-auto mb-1" />
@@ -255,14 +259,14 @@ function StatsRow({ streak, score, kidsCount, degradedSections }: StatsRowProps)
             <span aria-hidden="true">🔥</span> {streak}
           </p>
         )}
-        <p className="text-xs text-gray-500">Streak</p>
+        <p className="text-xs text-gray-500">רצף שבועות</p>
       </div>
 
       {/* Score card */}
       <div
         className="bg-[#1E293B] rounded-xl p-3 text-center"
         role="listitem"
-        aria-label={isGrowthDegraded ? 'Score data unavailable' : `${score} points`}
+        aria-label={isGrowthDegraded ? 'נתוני ניקוד לא זמינים' : `${score} נקודות`}
       >
         {isGrowthDegraded ? (
           <SkeletonBlock className="h-8 w-8 mx-auto mb-1" />
@@ -271,14 +275,14 @@ function StatsRow({ streak, score, kidsCount, degradedSections }: StatsRowProps)
             <span aria-hidden="true">⭐</span> {score >= 1000 ? `${(score / 1000).toFixed(1)}k` : score}
           </p>
         )}
-        <p className="text-xs text-gray-500">Score</p>
+        <p className="text-xs text-gray-500">ניקוד</p>
       </div>
 
       {/* Kids count card */}
       <div
         className="bg-[#1E293B] rounded-xl p-3 text-center"
         role="listitem"
-        aria-label={isChildrenDegraded ? 'Children data unavailable' : `${kidsCount} kids`}
+        aria-label={isChildrenDegraded ? 'נתוני ילדים לא זמינים' : `${kidsCount} ילדים`}
       >
         {isChildrenDegraded ? (
           <SkeletonBlock className="h-8 w-8 mx-auto mb-1" />
@@ -287,7 +291,7 @@ function StatsRow({ streak, score, kidsCount, degradedSections }: StatsRowProps)
             <span aria-hidden="true">👨‍👧</span> {kidsCount}
           </p>
         )}
-        <p className="text-xs text-gray-500">Kids</p>
+        <p className="text-xs text-gray-500">ילדים</p>
       </div>
     </div>
   );
@@ -399,22 +403,22 @@ function ActiveMissionCard({ mission, isDegraded }: ActiveMissionCardProps) {
 }
 
 /**
- * Quick Actions Grid - placeholder for navigation shortcuts
+ * Quick Actions Grid - navigation shortcuts in Hebrew
  */
 function QuickActionsGrid() {
   const actions = [
-    { icon: '⏰', label: 'Report Quality Time', href: '/coaching/log' },
-    { icon: '💜', label: 'Report Positive Action', href: '/coaching/log' },
-    { icon: '💬', label: 'Chat with Coach', href: '#whatsapp' },
-    { icon: '🎯', label: 'View Missions', href: '/coaching' },
+    { icon: '⏰', label: 'דווח זמן איכות', href: '/coaching/log' },
+    { icon: '💜', label: 'דווח פעולה חיובית', href: '/coaching/log' },
+    { icon: '💬', label: 'שוחח עם המאמן', href: '#whatsapp' },
+    { icon: '🎯', label: 'צפה במשימות', href: '/coaching' },
   ];
 
   return (
-    <div>
+    <div dir="rtl">
       <p className="text-sm text-gray-500 uppercase tracking-wide mb-3">
-        Quick Actions
+        פעולות מהירות
       </p>
-      <div className="grid grid-cols-2 gap-3" role="navigation" aria-label="Quick actions">
+      <div className="grid grid-cols-2 gap-3" role="navigation" aria-label="פעולות מהירות">
         {actions.map((action) => (
           <button
             key={action.label}
@@ -427,7 +431,6 @@ function QuickActionsGrid() {
             )}
             onClick={() => {
               // Navigation will be implemented with actual routing
-              // For now, this is a placeholder
               console.log(`Navigate to: ${action.href}`);
             }}
             aria-label={action.label}
@@ -543,14 +546,17 @@ export default function DashboardPage() {
         {hasDegradation && <DegradationBanner sections={degradedSections} />}
 
         {/* Greeting header */}
-        <header>
+        <header dir="rtl">
           <h1 className="text-xl font-semibold text-white">
-            Hey {data.father_display_name}! 👋
+            היי {data.father_display_name}! 👋
           </h1>
           <p className="text-gray-400 mt-1">
-            Keep going. You&apos;re making a real difference.
+            המשך כך. אתה עושה שינוי אמיתי.
           </p>
         </header>
+
+        {/* Weekly Goal Progress Card */}
+        <WeeklyGoalProgressCard />
 
         {/* Belt Summary Card */}
         <BeltSummaryCard

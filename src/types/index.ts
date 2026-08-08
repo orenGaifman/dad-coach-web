@@ -25,3 +25,6 @@ export * from './notifications';
 
 // Quality Time types (workflow engine, scheduling, progress)
 export * from './qualityTime';
+
+// Weekly Goal types (7-week program, goals, progress)
+export * from './weeklyGoal';

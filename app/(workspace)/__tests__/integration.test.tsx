@@ -64,6 +64,8 @@ const mockBeltProgression: BeltProgressionResponse = {
   points_to_next_belt: 150,
   progress_percentage_to_next_belt: 75,
   belt_earned_at: '2023-11-01T00:00:00Z',
+  weeks_to_black_belt: 4,
+  program_completed: false,
 };
 
 const mockChildren: ChildrenResponse = {

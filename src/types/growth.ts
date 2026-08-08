@@ -46,7 +46,7 @@ export interface BeltInfo {
 export interface BeltProgressionResponse extends BaseApiResponse {
   /** Current belt level */
   current_belt: BeltLevel;
-  /** Current total score */
+  /** Current total score (streak weeks in 7-week program context) */
   current_score: number;
   /** Next belt level (null if BLACK belt) */
   next_belt: BeltLevel | null;
@@ -56,6 +56,10 @@ export interface BeltProgressionResponse extends BaseApiResponse {
   progress_percentage_to_next_belt: number | null;
   /** When the current belt was earned */
   belt_earned_at: ISODateTime;
+  /** Weeks remaining until BLACK belt (program completion) */
+  weeks_to_black_belt: number;
+  /** Whether the 7-week program is complete */
+  program_completed: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -126,21 +130,25 @@ export type StreakMilestone = 7 | 14 | 21 | 30 | 60 | 90 | 180 | 365;
 /**
  * Response from GET /api/v1/workspace/growth/streak
  * @see Requirement 4.1: Streak display
+ * 
+ * Note: In the 7-week program context, streaks are measured in WEEKS
+ * (consecutive weeks meeting the weekly goal), not days.
  */
 export interface StreakResponse extends BaseApiResponse {
-  /** Current consecutive days of engagement */
-  current_streak_days: number;
-  /** Longest streak ever achieved */
-  longest_streak_days: number;
+  /** Current consecutive weeks of meeting the weekly goal */
+  current_streak_weeks: number;
+  /** Longest streak in weeks ever achieved */
+  longest_streak_weeks: number;
   /** When the current streak started (null if no streak) */
   streak_start_date: ISODate | null;
   /** Last qualifying interaction date */
   last_qualifying_interaction_date: ISODate | null;
-  /**
-   * Whether the streak is at risk of breaking.
-   * @internal This is tracked internally but NOT displayed in the UI per Requirement 4.2
-   */
-  streak_at_risk?: boolean;
+  
+  // Legacy fields for backwards compatibility (deprecated)
+  /** @deprecated Use current_streak_weeks instead */
+  current_streak_days?: number;
+  /** @deprecated Use longest_streak_weeks instead */
+  longest_streak_days?: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -266,6 +274,8 @@ export interface CelebrationsResponse extends BaseApiResponse {
   celebrations: Celebration[];
   /** Whether there are undisplayed celebrations */
   has_undisplayed: boolean;
+  /** Whether the 7-week program is complete (BLACK belt) */
+  program_completed: boolean;
 }
 
 /**

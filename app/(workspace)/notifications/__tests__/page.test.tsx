@@ -103,12 +103,14 @@ const mockCelebrationsResponse: CelebrationsResponse = {
     }),
   ],
   has_undisplayed: true,
+  program_completed: false,
 };
 
 const mockNoCelebrationsResponse: CelebrationsResponse = {
   response_status: 'OK',
   celebrations: [],
   has_undisplayed: false,
+  program_completed: false,
 };
 
 // ---------------------------------------------------------------------------

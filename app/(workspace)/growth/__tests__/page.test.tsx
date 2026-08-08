@@ -31,6 +31,8 @@ const mockBeltProgressionGreen: BeltProgressionResponse = {
   points_to_next_belt: 250,
   progress_percentage_to_next_belt: 75,
   belt_earned_at: '2024-01-10T10:00:00Z',
+  weeks_to_black_belt: 4,
+  program_completed: false,
 };
 
 const mockBeltProgressionBlack: BeltProgressionResponse = {
@@ -41,6 +43,8 @@ const mockBeltProgressionBlack: BeltProgressionResponse = {
   points_to_next_belt: null,
   progress_percentage_to_next_belt: null,
   belt_earned_at: '2024-01-15T10:00:00Z',
+  weeks_to_black_belt: 0,
+  program_completed: true,
 };
 
 const createMockAchievement = (
@@ -85,6 +89,8 @@ const mockAchievements: AchievementsResponse = {
 
 const mockStreakActive: StreakResponse = {
   response_status: 'OK',
+  current_streak_weeks: 3,
+  longest_streak_weeks: 5,
   current_streak_days: 12,
   longest_streak_days: 15,
   streak_start_date: '2024-01-03',
@@ -93,6 +99,8 @@ const mockStreakActive: StreakResponse = {
 
 const mockStreakZero: StreakResponse = {
   response_status: 'OK',
+  current_streak_weeks: 0,
+  longest_streak_weeks: 5,
   current_streak_days: 0,
   longest_streak_days: 15,
   streak_start_date: null,
