@@ -109,8 +109,19 @@ function MagicLinkAuthContent() {
 
         if (response.response_status === 'OK' && response.access_token) {
           // Store the auth token
+          console.log('[MagicLink] Saving token to localStorage...', { 
+            key: AUTH_TOKEN_KEY,
+            tokenLength: response.access_token.length,
+            tokenPreview: response.access_token.substring(0, 20) + '...'
+          });
           if (typeof window !== 'undefined') {
             localStorage.setItem(AUTH_TOKEN_KEY, response.access_token);
+            // Verify it was saved
+            const savedToken = localStorage.getItem(AUTH_TOKEN_KEY);
+            console.log('[MagicLink] Token saved verification:', {
+              saved: !!savedToken,
+              matches: savedToken === response.access_token
+            });
           }
 
           // Track successful authentication
