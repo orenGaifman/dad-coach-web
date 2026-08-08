@@ -217,9 +217,22 @@ export function getAuthToken(): string | null {
 /**
  * Clears auth token and redirects to login.
  * Called when we receive a 401 Unauthorized response.
+ * 
+ * Does NOT clear token or redirect if:
+ * - We're on the auth/magic page (token is being set)
+ * - We're on public pages (join, landing, etc.)
  */
 function handleUnauthorized() {
   if (typeof window !== 'undefined') {
+    const currentPath = window.location.pathname;
+    
+    // Don't clear token or redirect on auth pages - let them handle their own flow
+    const authPages = ['/auth/magic', '/join', '/'];
+    if (authPages.some(page => currentPath.startsWith(page) || currentPath === page)) {
+      console.log('[ApiClient] Skipping handleUnauthorized on auth page:', currentPath);
+      return;
+    }
+    
     localStorage.removeItem(AUTH_TOKEN_KEY);
     // Redirect to login page
     window.location.href = '/join';
