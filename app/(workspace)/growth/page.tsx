@@ -162,8 +162,9 @@ function BeltDetailCard({
   pointsToNextBelt,
   progressPercentage,
 }: BeltDetailCardProps) {
-  const beltInfo = BELT_INFO[currentBelt];
-  const isBlackBelt = currentBelt === 'BLACK';
+  const safeBelt = currentBelt ?? 'WHITE';
+  const beltInfo = BELT_INFO[safeBelt];
+  const isBlackBelt = safeBelt === 'BLACK';
   const nextBeltThreshold = nextBelt ? BELT_THRESHOLDS[nextBelt] : null;
 
   return (
@@ -175,8 +176,8 @@ function BeltDetailCard({
       {/* Large belt image */}
       <div className="flex justify-center mb-4">
         <Image
-          src={`/belts/${(currentBelt ?? 'WHITE').toLowerCase()}-belt.webp`}
-          alt={beltInfo?.name ?? 'Belt'}
+          src={`/belts/${safeBelt.toLowerCase()}-belt.webp`}
+          alt={beltInfo.name}
           width={120}
           height={120}
           className="object-contain"

@@ -159,8 +159,9 @@ export function BeltProgressDisplay({
   progressPercentage,
   className,
 }: BeltProgressDisplayProps) {
-  const beltInfo = BELT_INFO[currentBelt];
-  const isBlackBelt = currentBelt === 'BLACK';
+  const safeBelt = currentBelt ?? 'WHITE';
+  const beltInfo = BELT_INFO[safeBelt];
+  const isBlackBelt = safeBelt === 'BLACK';
   const nextBeltThreshold = nextBelt ? BELT_THRESHOLDS[nextBelt] : null;
 
   return (
@@ -175,8 +176,8 @@ export function BeltProgressDisplay({
       {/* Large belt image - centered */}
       <div className="flex justify-center mb-4">
         <Image
-          src={`/belts/${(currentBelt ?? 'WHITE').toLowerCase()}-belt.webp`}
-          alt={beltInfo?.name ?? 'Belt'}
+          src={`/belts/${safeBelt.toLowerCase()}-belt.webp`}
+          alt={beltInfo.name}
           width={150}
           height={150}
           className="object-contain"
