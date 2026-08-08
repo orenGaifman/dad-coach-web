@@ -212,7 +212,7 @@ function BeltDetailCard({
           <div className="flex justify-between text-sm">
             <span className="text-gray-400">Progress to {nextBelt ? BELT_INFO[nextBelt].name : 'next belt'}</span>
             <span className="text-white font-medium">
-              {currentScore.toLocaleString()} / {nextBeltThreshold?.toLocaleString()} XP
+              {(currentScore ?? 0).toLocaleString()} / {(nextBeltThreshold ?? 0).toLocaleString()} XP
             </span>
           </div>
           
@@ -225,7 +225,7 @@ function BeltDetailCard({
           />
           
           <p className="text-gray-500 text-sm text-center">
-            {pointsToNextBelt?.toLocaleString()} points to {nextBelt ? BELT_INFO[nextBelt].name : 'next belt'}
+            {(pointsToNextBelt ?? 0).toLocaleString()} points to {nextBelt ? BELT_INFO[nextBelt].name : 'next belt'}
           </p>
         </div>
       )}

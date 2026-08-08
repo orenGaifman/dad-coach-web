@@ -117,7 +117,7 @@ function calculateBeltProgress(belt: BeltLevel, score: number): number {
  * @returns Path to the belt image asset
  */
 function getBeltImagePath(belt: BeltLevel): string {
-  return `/belts/${belt.toLowerCase()}-belt.webp`;
+  return `/belts/${(belt ?? 'WHITE').toLowerCase()}-belt.webp`;
 }
 
 /**
@@ -205,7 +205,7 @@ export function BeltSummaryCard({ belt, score, className }: BeltSummaryCardProps
               "Dad Sensei - You've mastered it!"
             ) : (
               <>
-                {score.toLocaleString()}/{threshold.max.toLocaleString()} XP
+                {(score ?? 0).toLocaleString()}/{(threshold?.max ?? 0).toLocaleString()} XP
               </>
             )}
           </p>

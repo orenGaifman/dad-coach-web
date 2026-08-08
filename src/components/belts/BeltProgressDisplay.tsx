@@ -219,7 +219,7 @@ export function BeltProgressDisplay({
           <div className="mt-4 pt-4 border-t border-white/5">
             <p className="text-gray-500 text-sm">Total XP Earned</p>
             <p className="text-white text-2xl font-bold">
-              {currentScore.toLocaleString()} XP
+              {(currentScore ?? 0).toLocaleString()} XP
             </p>
           </div>
         </div>
@@ -229,10 +229,10 @@ export function BeltProgressDisplay({
           {/* Score display */}
           <div className="text-center">
             <p className="text-white text-3xl font-bold">
-              {currentScore.toLocaleString()}
+              {(currentScore ?? 0).toLocaleString()}
               <span className="text-gray-500 text-lg font-normal">
                 {' / '}
-                {nextBeltThreshold?.toLocaleString()} XP
+                {(nextBeltThreshold ?? 0).toLocaleString()} XP
               </span>
             </p>
           </div>
@@ -260,7 +260,7 @@ export function BeltProgressDisplay({
           <div className="text-center pt-2">
             <p className="text-gray-400">
               <span className="text-white font-semibold">
-                {pointsToNextBelt?.toLocaleString()}
+                {(pointsToNextBelt ?? 0).toLocaleString()}
               </span>
               {' points to '}
               <span className={nextBelt ? BELT_INFO[nextBelt].color : 'text-white'}>

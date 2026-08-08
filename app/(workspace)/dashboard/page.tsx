@@ -220,7 +220,7 @@ function BeltSummaryCard({ belt, score, isDegraded }: BeltSummaryCardProps) {
           <p className="text-xs text-gray-500 mt-1">
             {belt === 'BLACK'
               ? 'Dad Sensei - You\'ve mastered it!'
-              : `${score.toLocaleString()} XP`}
+              : `${(score ?? 0).toLocaleString()} XP`}
           </p>
         </div>
       </div>
