@@ -95,7 +95,7 @@ function classNames(...classes: (string | undefined | null | false)[]): string {
  * @returns Path to the belt image asset
  */
 function getBeltImagePath(belt: BeltLevel): string {
-  return `/belts/${belt.toLowerCase()}-belt.webp`;
+  return `/belts/${(belt ?? 'WHITE').toLowerCase()}-belt.webp`;
 }
 
 /**

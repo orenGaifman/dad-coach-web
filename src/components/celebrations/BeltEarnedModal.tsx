@@ -160,7 +160,7 @@ const BELT_GLOW_COLORS: Record<BeltLevel, string> = {
  * Get the belt image path.
  */
 function getBeltImagePath(belt: BeltLevel): string {
-  return `/belts/${belt.toLowerCase()}-belt.webp`;
+  return `/belts/${(belt ?? 'WHITE').toLowerCase()}-belt.webp`;
 }
 
 // ---------------------------------------------------------------------------

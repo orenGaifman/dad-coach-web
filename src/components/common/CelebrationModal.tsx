@@ -52,7 +52,7 @@ function getCelebrationTitle(type: CelebrationType): string {
  * Get belt image path based on belt level.
  */
 function getBeltImagePath(beltLevel: string): string {
-  return `/belts/${beltLevel.toLowerCase()}-belt.webp`;
+  return `/belts/${(beltLevel ?? 'WHITE').toLowerCase()}-belt.webp`;
 }
 
 export function CelebrationModal({ celebrations, onComplete }: CelebrationModalProps) {

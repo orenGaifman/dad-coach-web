@@ -175,8 +175,8 @@ function BeltDetailCard({
       {/* Large belt image */}
       <div className="flex justify-center mb-4">
         <Image
-          src={`/belts/${currentBelt.toLowerCase()}-belt.webp`}
-          alt={beltInfo.name}
+          src={`/belts/${(currentBelt ?? 'WHITE').toLowerCase()}-belt.webp`}
+          alt={beltInfo?.name ?? 'Belt'}
           width={120}
           height={120}
           className="object-contain"
