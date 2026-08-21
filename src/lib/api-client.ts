@@ -227,8 +227,10 @@ function handleUnauthorized() {
     const currentPath = window.location.pathname;
     
     // Don't clear token or redirect on auth pages - let them handle their own flow
-    const authPages = ['/auth/magic', '/join', '/'];
-    if (authPages.some(page => currentPath.startsWith(page) || currentPath === page)) {
+    // Check exact match for root '/', prefix match for other pages
+    const authPages = ['/auth/magic', '/join'];
+    const isAuthPage = currentPath === '/' || authPages.some(page => currentPath.startsWith(page));
+    if (isAuthPage) {
       console.log('[ApiClient] Skipping handleUnauthorized on auth page:', currentPath);
       return;
     }
