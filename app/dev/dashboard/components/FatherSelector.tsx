@@ -102,8 +102,8 @@ export function FatherSelector({ onSelect, onFatherIdChange }: FatherSelectorPro
       setIsLoading(true);
       setError(null);
       try {
-        // Fetch all fathers (using a large page size)
-        const response = await fetchFathers(undefined, 0, 500, controller.signal);
+        // Fetch all fathers (using max allowed page size)
+        const response = await fetchFathers(undefined, 0, 100, controller.signal);
         const items = response.items || [];
         setAllFathers(items);
 
@@ -241,7 +241,7 @@ export function FatherSelector({ onSelect, onFatherIdChange }: FatherSelectorPro
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetchFathers(undefined, 0, 500);
+      const response = await fetchFathers(undefined, 0, 100);
       const items = response.items || [];
       setAllFathers(items);
       
