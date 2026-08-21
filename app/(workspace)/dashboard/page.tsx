@@ -28,6 +28,7 @@ import { usePageView } from '@/src/hooks/usePageView';
 import { UpcomingCommitmentCard } from '@/src/components/dashboard/UpcomingCommitmentCard';
 import { WeeklyGoalProgressCard } from '@/src/components/dashboard/WeeklyGoalProgressCard';
 import { StreakDisplay } from '@/src/components/dashboard/StreakDisplay';
+import { BeltProgressHero } from '@/src/components/dashboard/BeltProgressHero';
 import { useStreak } from '@/src/hooks/useStreak';
 import {
   SkeletonCard,
@@ -555,7 +556,10 @@ export default function DashboardPage() {
           </p>
         </header>
 
-        {/* MOST IMPORTANT: Upcoming Quality Time Commitment - this is the core of the app! */}
+        {/* MOST IMPORTANT: Belt Progress Hero - Shows belt image and motivation */}
+        <BeltProgressHero />
+
+        {/* SECOND MOST IMPORTANT: Upcoming Quality Time Commitment */}
         <UpcomingCommitmentCard />
 
         {/* Weekly Goal Progress Card */}
@@ -567,13 +571,6 @@ export default function DashboardPage() {
           score={data.growth_score}
           kidsCount={data.active_children_count}
           degradedSections={degradedSections}
-        />
-
-        {/* Belt Summary Card - moved lower as it's secondary to quality times */}
-        <BeltSummaryCard
-          belt={data.current_belt}
-          score={data.growth_score}
-          isDegraded={isSectionDegraded('belt', degradedSections) || isSectionDegraded('growth', degradedSections)}
         />
 
         {/* Active Mission Card */}
