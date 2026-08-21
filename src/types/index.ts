@@ -28,3 +28,6 @@ export * from './qualityTime';
 
 // Weekly Goal types (7-week program, goals, progress)
 export * from './weeklyGoal';
+
+// Dev Dashboard types (debugging, state inspection)
+export * from './dev';
