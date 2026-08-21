@@ -3,8 +3,7 @@
 import { useState, useCallback } from 'react';
 import { FatherSelector } from './components/FatherSelector';
 import { FatherStatePanel } from './components/FatherStatePanel';
-import { MessageLogPanel } from './components/MessageLogPanel';
-import { TransitionTimeline } from './components/TransitionTimeline';
+import { UnifiedConversationTimeline } from './components/UnifiedConversationTimeline';
 import { AutoRefreshToggle } from './components/AutoRefreshToggle';
 import { TimezoneIndicator } from './components/TimezoneIndicator';
 import type { DevFatherListItem } from '@/src/types/dev';
@@ -122,14 +121,10 @@ export default function DevDashboardPage() {
               <QualityTimePanelPlaceholder />
             </div>
 
-            {/* Right Column (60%) - Message Log, Transitions */}
+            {/* Right Column (60%) - Unified Conversation Timeline */}
             <div className="space-y-4">
-              <MessageLogPanel 
+              <UnifiedConversationTimeline 
                 fatherId={selectedFather.id} 
-                autoRefreshEnabled={autoRefreshEnabled}
-              />
-              <TransitionTimeline 
-                fatherId={selectedFather.id}
                 autoRefreshEnabled={autoRefreshEnabled}
               />
             </div>
