@@ -216,25 +216,17 @@ export interface PaginatedResponse<T> {
 
 /**
  * Response wrapper for message list endpoint.
+ * Note: The backend returns a raw array, this type adapts to that.
  * @see Requirement 3.1: Get Message Log
  */
-export interface DevMessagesResponse {
-  /** List of messages */
-  messages: DevMessage[];
-  /** Number of messages returned */
-  count: number;
-}
+export type DevMessagesResponse = DevMessage[];
 
 /**
  * Response wrapper for transitions list endpoint.
+ * Note: The backend returns a raw array, this type adapts to that.
  * @see Requirement 4.1: Get State Transitions
  */
-export interface DevTransitionsResponse {
-  /** List of transitions */
-  transitions: DevTransition[];
-  /** Number of transitions returned */
-  count: number;
-}
+export type DevTransitionsResponse = DevTransition[];
 
 // ---------------------------------------------------------------------------
 // Error Types

@@ -320,7 +320,7 @@ export function TransitionTimeline({
         if (isMounted) {
           // Transitions come ordered by created_at descending (newest first)
           // Keep this order for timeline display (newest at top)
-          setTransitions(data.transitions || []);
+          setTransitions(data || []);
           setLastRefreshed(new Date());
         }
       } catch (err) {
@@ -358,7 +358,7 @@ export function TransitionTimeline({
 
     try {
       const data: DevTransitionsResponse = await fetchTransitions(fatherId, 100, controller.signal);
-      setTransitions(data.transitions || []);
+      setTransitions(data || []);
       setLastRefreshed(new Date());
     } catch (err) {
       // Ignore abort errors (expected when component unmounts or polling stops)
@@ -391,7 +391,7 @@ export function TransitionTimeline({
         controller.signal
       );
 
-      setTransitions(data.transitions || []);
+      setTransitions(data || []);
       setLastRefreshed(new Date());
     } catch (err) {
       // Ignore abort errors (expected when component unmounts or polling stops)
@@ -413,7 +413,7 @@ export function TransitionTimeline({
 
     try {
       const data: DevTransitionsResponse = await fetchTransitions(fatherId, 100);
-      setTransitions(data.transitions || []);
+      setTransitions(data || []);
       setLastRefreshed(new Date());
     } catch (err) {
       setError(

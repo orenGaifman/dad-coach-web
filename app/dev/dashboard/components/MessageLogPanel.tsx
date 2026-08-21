@@ -246,7 +246,7 @@ export function MessageLogPanel({ fatherId, autoRefreshEnabled = true }: Message
       );
 
       // Only update if we got new messages
-      const messages = data.messages || [];
+      const messages = data || [];
       if (messages.length > 0) {
         // API returns messages in descending order (newest first)
         // Reverse to get chronological order, then append to existing messages
@@ -299,7 +299,7 @@ export function MessageLogPanel({ fatherId, autoRefreshEnabled = true }: Message
         if (isMounted) {
           // Messages come ordered by created_at descending (newest first)
           // We reverse them for display (oldest at top, newest at bottom)
-          const messages = data.messages || [];
+          const messages = data || [];
           const chronologicalMessages = [...messages].reverse();
           setMessages(chronologicalMessages);
           setLastRefreshed(new Date());
@@ -358,7 +358,7 @@ export function MessageLogPanel({ fatherId, autoRefreshEnabled = true }: Message
       const data: DevMessagesResponse = await fetchMessages(fatherId, 100);
       // Messages come ordered by created_at descending (newest first)
       // We reverse them for display (oldest at top, newest at bottom)
-      const messages = data.messages || [];
+      const messages = data || [];
       const chronologicalMessages = [...messages].reverse();
       setMessages(chronologicalMessages);
       setLastRefreshed(new Date());
@@ -379,7 +379,7 @@ export function MessageLogPanel({ fatherId, autoRefreshEnabled = true }: Message
 
     try {
       const data: DevMessagesResponse = await fetchMessages(fatherId, 100);
-      const messages = data.messages || [];
+      const messages = data || [];
       const chronologicalMessages = [...messages].reverse();
       setMessages(chronologicalMessages);
       setLastRefreshed(new Date());
