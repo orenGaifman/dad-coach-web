@@ -4,50 +4,27 @@
  * FatherSelector — searchable dropdown for selecting a father in the Dev Dashboard.
  *
  * Features:
+ * - Loads all fathers once on mount and filters client-side
  * - Searchable dropdown/input field for filtering fathers
- * - 300ms debounce on search input to avoid excessive API calls
- * - Filters by phone number or display_name
+ * - Filters by phone number or display_name (case-insensitive)
  * - Stores selected father ID in localStorage
  * - Auto-loads stored father ID on page load
  *
  * @see Requirements 6.1, 6.2, 6.3, 6.4, 6.5
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { fetchFathers } from '@/src/api/dev';
 import type { DevFatherListItem } from '@/src/types/dev';
 
 /** localStorage key for persisting the selected father ID */
 const LOCAL_STORAGE_KEY = 'dev-dashboard-selected-father';
 
-/** Debounce delay in milliseconds for search input */
-const DEBOUNCE_DELAY_MS = 300;
-
 interface FatherSelectorProps {
   /** Callback when a father is selected */
   onSelect?: (father: DevFatherListItem | null) => void;
   /** Callback when father ID changes (includes initial load from localStorage) */
   onFatherIdChange?: (fatherId: number | null) => void;
-}
-
-/**
- * Custom hook for debouncing a value.
- * Returns the debounced value after the specified delay.
- */
-function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
 }
 
 /**
@@ -93,12 +70,11 @@ function storeFatherId(fatherId: number | null): void {
 export function FatherSelector({ onSelect, onFatherIdChange }: FatherSelectorProps) {
   // Search input state
   const [searchQuery, setSearchQuery] = useState('');
-  const debouncedSearch = useDebounce(searchQuery, DEBOUNCE_DELAY_MS);
 
   // Dropdown state
   const [isOpen, setIsOpen] = useState(false);
-  const [fathers, setFathers] = useState<DevFatherListItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [allFathers, setAllFathers] = useState<DevFatherListItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Selected father state
@@ -118,87 +94,64 @@ export function FatherSelector({ onSelect, onFatherIdChange }: FatherSelectorPro
     }
   }, [onFatherIdChange]);
 
-  // Fetch fathers when debounced search changes or dropdown opens
-  const fetchFathersData = useCallback(async (search: string, signal?: AbortSignal) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await fetchFathers(search || undefined, 0, 20, signal);
-      setFathers(response.items);
-
-      // If we have a stored father ID and no selection yet, try to find and select it
-      if (storedFatherId !== null && selectedFather === null) {
-        const storedFatherInList = response.items.find((f) => f.id === storedFatherId);
-        if (storedFatherInList) {
-          setSelectedFather(storedFatherInList);
-          onSelect?.(storedFatherInList);
-        }
-      }
-    } catch (err) {
-      if (err instanceof Error && err.name === 'AbortError') {
-        return; // Request was cancelled
-      }
-      setError(err instanceof Error ? err.message : 'Failed to load fathers');
-      setFathers([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [storedFatherId, selectedFather, onSelect]);
-
-  // Fetch when debounced search changes and dropdown is open
+  // Fetch ALL fathers once on mount
   useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    const controller = new AbortController();
-    fetchFathersData(debouncedSearch, controller.signal);
-
-    return () => {
-      controller.abort();
-    };
-  }, [debouncedSearch, isOpen, fetchFathersData]);
-
-  // Auto-load stored father on initial mount (if stored ID exists)
-  useEffect(() => {
-    if (storedFatherId === null || selectedFather !== null) {
-      return;
-    }
-
     const controller = new AbortController();
     
-    const loadStoredFather = async () => {
+    const loadAllFathers = async () => {
       setIsLoading(true);
+      setError(null);
       try {
-        // Fetch with no search to get the stored father
-        const response = await fetchFathers(undefined, 0, 100, controller.signal);
-        const storedFatherInList = response.items.find((f) => f.id === storedFatherId);
-        if (storedFatherInList) {
-          setSelectedFather(storedFatherInList);
-          onSelect?.(storedFatherInList);
-        } else {
-          // Father not found - clear the stored ID
-          storeFatherId(null);
-          setStoredFatherId(null);
-          onFatherIdChange?.(null);
+        // Fetch all fathers (using a large page size)
+        const response = await fetchFathers(undefined, 0, 500, controller.signal);
+        const items = response.items || [];
+        setAllFathers(items);
+
+        // If we have a stored father ID, try to find and select it
+        const storedId = loadStoredFatherId();
+        if (storedId !== null) {
+          const storedFatherInList = items.find((f) => f.id === storedId);
+          if (storedFatherInList) {
+            setSelectedFather(storedFatherInList);
+            onSelect?.(storedFatherInList);
+          } else {
+            // Father not found - clear the stored ID
+            storeFatherId(null);
+            setStoredFatherId(null);
+            onFatherIdChange?.(null);
+          }
         }
-        setFathers(response.items);
       } catch (err) {
         if (err instanceof Error && err.name === 'AbortError') {
-          return;
+          return; // Request was cancelled
         }
         setError(err instanceof Error ? err.message : 'Failed to load fathers');
+        setAllFathers([]);
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadStoredFather();
+    loadAllFathers();
 
     return () => {
       controller.abort();
     };
-  }, [storedFatherId, selectedFather, onSelect, onFatherIdChange]);
+  }, [onSelect, onFatherIdChange]);
+
+  // Client-side filtering of fathers based on search query
+  const filteredFathers = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return allFathers;
+    }
+    
+    const query = searchQuery.toLowerCase().trim();
+    return allFathers.filter((father) => {
+      const name = (father.display_name || '').toLowerCase();
+      const phone = (father.phone || '').toLowerCase();
+      return name.includes(query) || phone.includes(query);
+    });
+  }, [allFathers, searchQuery]);
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -283,14 +236,67 @@ export function FatherSelector({ onSelect, onFatherIdChange }: FatherSelectorPro
     );
   };
 
+  // Handle refresh
+  const handleRefresh = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetchFathers(undefined, 0, 500);
+      const items = response.items || [];
+      setAllFathers(items);
+      
+      // Update selected father if it still exists
+      if (selectedFather) {
+        const updatedFather = items.find((f) => f.id === selectedFather.id);
+        if (updatedFather) {
+          setSelectedFather(updatedFather);
+          onSelect?.(updatedFather);
+        }
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to refresh');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [selectedFather, onSelect]);
+
   return (
     <div ref={containerRef} className="relative">
-      <label
-        htmlFor="father-selector-input"
-        className="block text-sm text-gray-400 mb-1"
-      >
-        Select Father
-      </label>
+      <div className="flex items-center justify-between mb-1">
+        <label
+          htmlFor="father-selector-input"
+          className="block text-sm text-gray-400"
+        >
+          Select Father
+        </label>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-500">
+            {allFathers.length} fathers
+          </span>
+          <button
+            type="button"
+            onClick={handleRefresh}
+            disabled={isLoading}
+            className="p-1 text-gray-400 hover:text-white transition-colors disabled:opacity-50"
+            aria-label="Refresh fathers list"
+            title="Refresh list"
+          >
+            <svg
+              className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
 
       {/* Selected Father Display / Search Input */}
       <div className="relative">
@@ -416,13 +422,17 @@ export function FatherSelector({ onSelect, onFatherIdChange }: FatherSelectorPro
               <span className="mr-2">⚠️</span>
               {error}
             </div>
-          ) : fathers.length === 0 && !isLoading ? (
+          ) : isLoading ? (
             <div className="p-3 text-gray-400 text-sm text-center">
-              {debouncedSearch ? 'No fathers found' : 'Type to search...'}
+              Loading fathers...
+            </div>
+          ) : filteredFathers.length === 0 ? (
+            <div className="p-3 text-gray-400 text-sm text-center">
+              {searchQuery ? 'No fathers found matching your search' : 'No fathers available'}
             </div>
           ) : (
             <ul role="listbox" aria-label="Father options">
-              {fathers.map((father) => (
+              {filteredFathers.map((father) => (
                 <li
                   key={father.id}
                   role="option"
