@@ -7,6 +7,7 @@
  * - Merges messages and state transitions into a unified timeline
  * - Shows state change markers between messages
  * - Highlights AI agent invocations (trigger_reason starting with "AI_AGENT_")
+ * - Highlights scheduler-triggered actions (QUALITY_TIME_ENDED, FOLLOW_UP_TIMEOUT, SCHEDULER_REMINDER, COMMITMENT_REMINDER)
  * - Displays in chronological order (oldest at top, newest at bottom)
  * - Auto-refresh polling when enabled
  *
@@ -18,6 +19,7 @@
  * 👤 User: message
  * [🧠 AI invoked for understanding]
  * 🤖 Bot: response
+ * [STATE: QUALITY_TIME_FOLLOW_UP] [⏰ SCHEDULER: QT ended]
  */
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
@@ -63,6 +65,37 @@ function isAiInvocation(triggerReason: string): boolean {
 }
 
 /**
+ * Check if a trigger reason indicates a scheduler-initiated action
+ */
+function isSchedulerTrigger(triggerReason: string): boolean {
+  const schedulerTriggers = [
+    'QUALITY_TIME_ENDED',
+    'FOLLOW_UP_TIMEOUT', 
+    'SCHEDULER_REMINDER',
+    'COMMITMENT_REMINDER',
+  ];
+  return schedulerTriggers.includes(triggerReason) || false;
+}
+
+/**
+ * Get scheduler label for display
+ */
+function getSchedulerLabel(triggerReason: string): { emoji: string; label: string } {
+  switch (triggerReason) {
+    case 'QUALITY_TIME_ENDED':
+      return { emoji: '⏰', label: 'QT ended' };
+    case 'FOLLOW_UP_TIMEOUT':
+      return { emoji: '⏰', label: 'follow-up timeout' };
+    case 'SCHEDULER_REMINDER':
+      return { emoji: '⏰', label: 'morning reminder' };
+    case 'COMMITMENT_REMINDER':
+      return { emoji: '⏰', label: 'commitment reminder' };
+    default:
+      return { emoji: '⏰', label: triggerReason.replace(/_/g, ' ').toLowerCase() };
+  }
+}
+
+/**
  * Extract AI tool name from trigger reason
  */
 function getAiToolName(triggerReason: string): string {
@@ -78,6 +111,8 @@ function getAiToolName(triggerReason: string): string {
 function StateTransitionMarker({ transition }: { transition: DevTransition }) {
   const toStateColor = WORKFLOW_STATE_COLORS[transition.to_state] || 'bg-gray-500/30 text-gray-300 border-gray-500/50';
   const isAi = isAiInvocation(transition.trigger_reason);
+  const isScheduler = isSchedulerTrigger(transition.trigger_reason);
+  const schedulerLabel = isScheduler ? getSchedulerLabel(transition.trigger_reason) : null;
   
   return (
     <div className="flex items-center justify-center py-3 my-2">
@@ -87,6 +122,13 @@ function StateTransitionMarker({ transition }: { transition: DevTransition }) {
           📍 {transition.to_state.replace(/_/g, ' ')}
         </span>
         
+        {/* Scheduler trigger indicator */}
+        {isScheduler && schedulerLabel && (
+          <span className="px-3 py-1 rounded-full text-xs font-medium bg-orange-500/30 text-orange-300 border border-orange-500/50">
+            {schedulerLabel.emoji} SCHEDULER: {schedulerLabel.label}
+          </span>
+        )}
+        
         {/* AI invocation indicator */}
         {isAi && (
           <span className="px-3 py-1 rounded-full text-xs font-medium bg-amber-500/30 text-amber-300 border border-amber-500/50">
@@ -94,8 +136,8 @@ function StateTransitionMarker({ transition }: { transition: DevTransition }) {
           </span>
         )}
         
-        {/* Non-AI trigger reason */}
-        {!isAi && transition.trigger_reason && (
+        {/* Non-AI, non-scheduler trigger reason (e.g., USER_MESSAGE) */}
+        {!isAi && !isScheduler && transition.trigger_reason && (
           <span className="px-2 py-0.5 rounded text-xs text-gray-500">
             ({transition.trigger_reason.replace(/_/g, ' ')})
           </span>
@@ -390,6 +432,7 @@ export function UnifiedConversationTimeline({ fatherId, autoRefreshEnabled = tru
   const messageCount = messages.length;
   const transitionCount = transitions.length;
   const aiInvocationCount = transitions.filter(t => isAiInvocation(t.trigger_reason)).length;
+  const schedulerCount = transitions.filter(t => isSchedulerTrigger(t.trigger_reason)).length;
 
   return (
     <div className="bg-white/5 border border-white/10 rounded-xl p-4 min-h-[400px] flex flex-col">
@@ -398,7 +441,7 @@ export function UnifiedConversationTimeline({ fatherId, autoRefreshEnabled = tru
         <h3 className="text-white font-semibold flex items-center gap-2">
           <span>📋</span> Conversation Timeline
           <span className="text-xs text-gray-500 font-normal">
-            ({messageCount} msgs, {transitionCount} transitions, {aiInvocationCount} AI calls)
+            ({messageCount} msgs, {transitionCount} transitions, {aiInvocationCount} AI, {schedulerCount} scheduled)
           </span>
           {autoRefreshEnabled && (
             <span className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full animate-pulse">
@@ -422,6 +465,7 @@ export function UnifiedConversationTimeline({ fatherId, autoRefreshEnabled = tru
         <span className="px-2 py-1 rounded bg-blue-600/50 text-blue-300">🤖 Bot message</span>
         <span className="px-2 py-1 rounded bg-purple-500/30 text-purple-300 border border-purple-500/50">📍 State change</span>
         <span className="px-2 py-1 rounded bg-amber-500/30 text-amber-300 border border-amber-500/50">🧠 AI invoked</span>
+        <span className="px-2 py-1 rounded bg-orange-500/30 text-orange-300 border border-orange-500/50">⏰ Scheduler</span>
       </div>
 
       {/* Timeline container */}
