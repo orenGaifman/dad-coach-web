@@ -555,15 +555,11 @@ export default function DashboardPage() {
           </p>
         </header>
 
+        {/* MOST IMPORTANT: Upcoming Quality Time Commitment - this is the core of the app! */}
+        <UpcomingCommitmentCard />
+
         {/* Weekly Goal Progress Card */}
         <WeeklyGoalProgressCard />
-
-        {/* Belt Summary Card */}
-        <BeltSummaryCard
-          belt={data.current_belt}
-          score={data.growth_score}
-          isDegraded={isSectionDegraded('belt', degradedSections) || isSectionDegraded('growth', degradedSections)}
-        />
 
         {/* Stats Row */}
         <StatsRow
@@ -573,8 +569,12 @@ export default function DashboardPage() {
           degradedSections={degradedSections}
         />
 
-        {/* Upcoming Commitment Card */}
-        <UpcomingCommitmentCard />
+        {/* Belt Summary Card - moved lower as it's secondary to quality times */}
+        <BeltSummaryCard
+          belt={data.current_belt}
+          score={data.growth_score}
+          isDegraded={isSectionDegraded('belt', degradedSections) || isSectionDegraded('growth', degradedSections)}
+        />
 
         {/* Active Mission Card */}
         <ActiveMissionCard

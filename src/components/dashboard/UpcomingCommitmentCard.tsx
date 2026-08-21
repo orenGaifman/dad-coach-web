@@ -147,18 +147,21 @@ export function UpcomingCommitmentCard({ className }: UpcomingCommitmentCardProp
     );
   }
 
-  // No commitments - encouraging message
+  // No commitments - encouraging message with stronger CTA
   if (!nextCommitment) {
     return (
-      <div className={classNames('bg-[#1E293B] rounded-2xl p-4 border border-white/5', className)}>
-        <div className="text-center py-2">
-          <span className="text-2xl mb-2 block" aria-hidden="true">📅</span>
-          <p className="text-gray-400 text-sm">
-            אין התחייבויות קרובות
+      <div className={classNames('bg-gradient-to-br from-teal-900/30 to-blue-900/30 rounded-2xl p-6 border border-teal-500/20', className)}>
+        <div className="text-center" dir="rtl">
+          <span className="text-4xl mb-3 block" aria-hidden="true">📅</span>
+          <h3 className="text-lg font-bold text-white mb-2">אין זמן איכות מתוכנן</h3>
+          <p className="text-gray-300 text-sm mb-4">
+            קביעת זמן איכות עם הילדים היא הבסיס להצלחה!
           </p>
-          <p className="text-gray-500 text-xs mt-1">
-            שתף את הצ׳אט מתי תבלה עם הילדים
-          </p>
+          <div className="bg-[#1E293B]/50 rounded-lg p-3">
+            <p className="text-gray-400 text-xs">
+              💬 שלח הודעה בוואטסאפ למאמן וקבע זמן איכות
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -171,8 +174,10 @@ export function UpcomingCommitmentCard({ className }: UpcomingCommitmentCardProp
   return (
     <div
       className={classNames(
-        'bg-[#1E293B] rounded-2xl p-4 border',
-        isSoon ? 'border-teal-500/50 ring-1 ring-teal-500/30' : 'border-white/5',
+        'rounded-2xl p-5 border',
+        isSoon 
+          ? 'bg-gradient-to-br from-teal-900/40 to-emerald-900/40 border-teal-400/50 ring-2 ring-teal-500/40 shadow-lg shadow-teal-500/10' 
+          : 'bg-gradient-to-br from-teal-900/20 to-blue-900/20 border-teal-500/20',
         className
       )}
       role="region"
@@ -180,38 +185,43 @@ export function UpcomingCommitmentCard({ className }: UpcomingCommitmentCardProp
       dir="rtl"
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <p className="text-sm text-gray-400">זמן איכות מתוכנן</p>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <span className="text-xl">⏰</span>
+          <p className="text-sm font-medium text-teal-400">זמן איכות מתוכנן</p>
+        </div>
         {isSoon && (
-          <span className="text-xs text-teal-400 bg-teal-500/10 px-2 py-1 rounded-full animate-pulse">
+          <span className="text-xs text-teal-300 bg-teal-500/20 px-3 py-1.5 rounded-full animate-pulse font-medium">
             🔔 בקרוב!
           </span>
         )}
       </div>
 
-      {/* Countdown */}
-      <div className="flex items-center gap-3 mb-3">
-        <div className="w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center flex-shrink-0">
-          <span className="text-2xl" aria-hidden="true">⏰</span>
+      {/* Countdown - Made more prominent */}
+      <div className="flex items-center gap-4 mb-4">
+        <div className="w-16 h-16 rounded-2xl bg-teal-500/20 flex items-center justify-center flex-shrink-0">
+          <span className="text-3xl" aria-hidden="true">👨‍👧</span>
         </div>
         <div>
-          <p className="text-xl font-bold text-white">{relativeTime}</p>
-          <p className="text-xs text-gray-500">{fullTime}</p>
+          <p className="text-2xl font-bold text-white">{relativeTime}</p>
+          <p className="text-sm text-gray-400">{fullTime}</p>
         </div>
       </div>
 
-      {/* Activity note (if exists) */}
-      {nextCommitment.activityNote && (
-        <div className="bg-[#0F172A] rounded-lg p-3 mb-3">
-          <p className="text-sm text-gray-300">{nextCommitment.activityNote}</p>
+      {/* Child name (if specified) - Made more prominent */}
+      {nextCommitment.childName && (
+        <div className="bg-[#0F172A]/50 rounded-xl p-3 mb-4">
+          <p className="text-base text-white font-medium">
+            👦 זמן איכות עם {nextCommitment.childName}
+          </p>
         </div>
       )}
 
-      {/* Child name (if specified) */}
-      {nextCommitment.childName && (
-        <p className="text-sm text-gray-400 mb-3">
-          👦 עם {nextCommitment.childName}
-        </p>
+      {/* Activity note (if exists) */}
+      {nextCommitment.activityNote && (
+        <div className="bg-[#0F172A]/50 rounded-xl p-3 mb-4">
+          <p className="text-sm text-gray-300">💡 {nextCommitment.activityNote}</p>
+        </div>
       )}
 
       {/* Action buttons */}
