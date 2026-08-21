@@ -157,8 +157,20 @@ function MagicLinkAuthContent() {
       } catch (error) {
         console.error('[MagicLink] Validation failed:', error);
         console.error('Magic link validation failed:', error);
-        setStatus('error');
-        setErrorMessage('Unable to connect. Please check your internet connection and try again.');
+        
+        // Check if it's an ApiError with TOKEN_EXPIRED
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const apiError = error as any;
+        if (apiError?.status === 401 || apiError?.code === 'TOKEN_EXPIRED') {
+          setStatus('expired');
+          setErrorMessage('This link has expired. Please request a new one from your coach.');
+        } else if (apiError?.code === 'TOKEN_INVALID') {
+          setStatus('invalid');
+          setErrorMessage('This link is invalid. Please check the link or request a new one.');
+        } else {
+          setStatus('error');
+          setErrorMessage('Unable to connect. Please check your internet connection and try again.');
+        }
       }
     }
 
