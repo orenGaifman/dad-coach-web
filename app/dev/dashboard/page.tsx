@@ -6,6 +6,7 @@ import { FatherStatePanel } from './components/FatherStatePanel';
 import { UnifiedConversationTimeline } from './components/UnifiedConversationTimeline';
 import { AutoRefreshToggle } from './components/AutoRefreshToggle';
 import { TimezoneIndicator } from './components/TimezoneIndicator';
+import { StatusDictionaryPanel } from './components/StatusDictionaryPanel';
 import type { DevFatherListItem } from '@/src/types/dev';
 
 /**
@@ -119,6 +120,7 @@ export default function DevDashboardPage() {
             <div className="space-y-4">
               <FatherStatePanel fatherId={selectedFather.id} />
               <QualityTimePanelPlaceholder />
+              <StatusDictionaryPanel />
             </div>
 
             {/* Right Column (60%) - Unified Conversation Timeline */}

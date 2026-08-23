@@ -12,14 +12,15 @@
  * - Display children list with empty state handling
  * - Show partial data indicator when _partial is true
  * - Show error indicators for failed components
+ * - Show contextual status description for better debugging (Requirements 2.17, 2.18)
  *
- * @see Requirements 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7
+ * @see Requirements 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 2.17, 2.18
  */
 
 import { useState, useEffect, useCallback } from 'react';
 import { fetchFatherState } from '@/src/api/dev';
 import { formatIsraelDateTime } from '@/src/utils/timezone';
-import type { DevFatherState, DevChild } from '@/src/types/dev';
+import type { DevFatherState, DevChild, DevQualityTime } from '@/src/types/dev';
 
 interface FatherStatePanelProps {
   /** Father ID to display state for */
@@ -57,9 +58,130 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 /**
- * Renders a workflow state badge with appropriate colors.
+ * Formats a quality time's scheduled start for display.
+ * Returns a human-readable string like "today at 3:00 PM" or "tomorrow at 10:00 AM".
+ * 
+ * @see Requirement 2.18: Show meaningful context like "Quality Time scheduled for tomorrow at 3pm"
  */
-function WorkflowStateBadge({ state, label }: { state: string | null; label?: string }) {
+function formatNextQTTime(scheduledStart: string): string {
+  const qtDate = new Date(scheduledStart);
+  const now = new Date();
+  
+  // Get dates in Israel timezone for comparison
+  const qtDateStr = qtDate.toLocaleDateString('en-IL', { timeZone: 'Asia/Jerusalem' });
+  const todayStr = now.toLocaleDateString('en-IL', { timeZone: 'Asia/Jerusalem' });
+  
+  // Calculate tomorrow
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = tomorrow.toLocaleDateString('en-IL', { timeZone: 'Asia/Jerusalem' });
+  
+  // Format the time
+  const timeStr = qtDate.toLocaleTimeString('en-IL', {
+    timeZone: 'Asia/Jerusalem',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+  
+  if (qtDateStr === todayStr) {
+    return `today at ${timeStr}`;
+  } else if (qtDateStr === tomorrowStr) {
+    return `tomorrow at ${timeStr}`;
+  } else {
+    // Format as date + time for further dates
+    const dateStr = qtDate.toLocaleDateString('en-IL', {
+      timeZone: 'Asia/Jerusalem',
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+    });
+    return `${dateStr} at ${timeStr}`;
+  }
+}
+
+/**
+ * Gets the next scheduled quality time (status = SCHEDULED, start time in future).
+ */
+function getNextScheduledQT(qualityTimes: DevQualityTime[]): DevQualityTime | null {
+  const now = new Date();
+  return qualityTimes
+    .filter(qt => qt.status === 'SCHEDULED' && new Date(qt.scheduled_start) > now)
+    .sort((a, b) => new Date(a.scheduled_start).getTime() - new Date(b.scheduled_start).getTime())[0] || null;
+}
+
+/**
+ * Gets a contextual status description based on the workflow state and father data.
+ * Provides meaningful context beyond just the state name for better debugging.
+ * 
+ * @param state - The current workflow state
+ * @param fatherData - The complete father state data including scheduled QTs
+ * @returns A human-readable contextual description of the current state
+ * 
+ * @see Requirement 2.17: Include WorkflowState and relevant sub-state or action context
+ * @see Requirement 2.18: Show meaningful context like "Waiting - Quality Time scheduled for tomorrow at 3pm"
+ */
+function getStatusContext(state: string | null, fatherData: DevFatherState | null): string {
+  if (!state) {
+    return 'No state set';
+  }
+
+  const nextQT = fatherData?.scheduled_quality_times 
+    ? getNextScheduledQT(fatherData.scheduled_quality_times) 
+    : null;
+
+  switch (state) {
+    case 'WELCOME':
+      return 'New father - onboarding in progress';
+    
+    case 'SCHEDULE_QUALITY_TIME':
+      return 'Needs to schedule Quality Time';
+    
+    case 'WAITING':
+      if (nextQT) {
+        const timeStr = formatNextQTTime(nextQT.scheduled_start);
+        return `Quality Time scheduled for ${timeStr}`;
+      }
+      return 'Waiting - No QT scheduled';
+    
+    case 'QUALITY_TIME_PREPARATION':
+      if (nextQT) {
+        const timeStr = formatNextQTTime(nextQT.scheduled_start);
+        return `Quality Time starting ${timeStr}`;
+      }
+      return 'Quality Time starting soon';
+    
+    case 'QUALITY_TIME_IN_PROGRESS':
+      return 'Quality Time in progress';
+    
+    case 'QUALITY_TIME_FOLLOW_UP':
+      return 'Following up on completed Quality Time';
+    
+    case 'BELT_PROMOTION':
+      return 'Belt promotion achieved!';
+    
+    case 'ACTIVITY_IDEAS':
+      return 'Browsing activity ideas';
+    
+    default:
+      return state.replace(/_/g, ' ');
+  }
+}
+
+/**
+ * Renders a workflow state badge with appropriate colors and optional context.
+ * 
+ * @see Requirement 2.18: Show meaningful context alongside state name
+ */
+function WorkflowStateBadge({ 
+  state, 
+  label, 
+  context 
+}: { 
+  state: string | null; 
+  label?: string; 
+  context?: string;
+}) {
   if (!state) {
     return (
       <span className="text-xs px-2 py-1 rounded-full bg-gray-500/10 text-gray-500 border border-gray-500/20">
@@ -69,11 +191,19 @@ function WorkflowStateBadge({ state, label }: { state: string | null; label?: st
   }
 
   const colorClass = WORKFLOW_STATE_COLORS[state] || 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+  const displayState = state.replace(/_/g, ' ');
 
   return (
-    <span className={`text-xs px-2 py-1 rounded-full border ${colorClass}`}>
-      {label ? `${label}: ` : ''}{state.replace(/_/g, ' ')}
-    </span>
+    <div className="flex flex-col items-end gap-1">
+      <span className={`text-xs px-2 py-1 rounded-full border ${colorClass}`}>
+        {label ? `${label}: ` : ''}{displayState}
+      </span>
+      {context && (
+        <span className="text-xs text-gray-400 italic max-w-[200px] text-right">
+          {context}
+        </span>
+      )}
+    </div>
   );
 }
 
@@ -303,10 +433,13 @@ export function FatherStatePanel({ fatherId }: FatherStatePanelProps) {
       <div className="space-y-3 mb-4">
         <h4 className="text-gray-300 text-sm font-medium">Workflow</h4>
 
-        {/* Current State */}
+        {/* Current State with Contextual Description */}
         <div className="flex items-center justify-between">
           <span className="text-gray-400 text-sm">Current</span>
-          <WorkflowStateBadge state={fatherState.workflow.current_state} />
+          <WorkflowStateBadge 
+            state={fatherState.workflow.current_state} 
+            context={getStatusContext(fatherState.workflow.current_state, fatherState)}
+          />
         </div>
 
         {/* Previous State */}
