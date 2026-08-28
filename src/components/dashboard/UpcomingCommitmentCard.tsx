@@ -1,29 +1,77 @@
 'use client';
 
 /**
- * UpcomingCommitmentCard — Shows the father's next scheduled quality time commitment.
+ * UpcomingCommitmentCard — Shows the father's next scheduled quality time commitment
+ * and upcoming calendar events from Google Calendar.
  *
- * Displays a countdown and details of the upcoming commitment to remind the father
+ * Displays a countdown and details of the upcoming commitment/event to remind the father
  * of their promise to spend quality time with their children.
  *
  * Key features:
  * - Shows relative time countdown (e.g., "in 2 hours", "tomorrow at 5pm")
  * - Displays activity note if available
- * - Allows marking as complete or canceling
+ * - Shows Google Calendar events synced to the dashboard
+ * - Allows marking commitments as complete or canceling
  * - Links to full commitments view
  *
- * Requirements: Quality Time Commitment System
+ * Requirements: Quality Time Commitment System, Google Calendar Sync
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useUpcomingCommitments, useCompleteCommitment, useCancelCommitment } from '@/src/hooks/useCommitments';
+import { useCalendarEvents } from '@/src/hooks/useCalendar';
+import { useProfile } from '@/src/hooks/useProfile';
 import type { Commitment } from '@/src/types/commitment';
+import type { CalendarEvent } from '@/src/types/calendar';
 
 /**
  * Helper function to combine class names.
  */
 function classNames(...classes: (string | undefined | null | false)[]): string {
   return classes.filter(Boolean).join(' ');
+}
+
+/**
+ * Unified item type that can represent either a commitment or a calendar event.
+ */
+interface UpcomingItem {
+  type: 'commitment' | 'calendar';
+  id: string | number;
+  scheduledAt: string;
+  title: string;
+  childName?: string | null;
+  activityNote?: string | null;
+  location?: string | null;
+  commitment?: Commitment; // Original commitment for actions
+}
+
+/**
+ * Convert a commitment to an UpcomingItem.
+ */
+function commitmentToItem(c: Commitment): UpcomingItem {
+  return {
+    type: 'commitment',
+    id: c.id,
+    scheduledAt: c.scheduledAt,
+    title: c.activityType || 'זמן איכות',
+    childName: c.childName,
+    activityNote: c.activityNote,
+    commitment: c,
+  };
+}
+
+/**
+ * Convert a calendar event to an UpcomingItem.
+ */
+function calendarEventToItem(e: CalendarEvent): UpcomingItem {
+  return {
+    type: 'calendar',
+    id: e.eventId,
+    scheduledAt: e.startTime,
+    title: e.title,
+    activityNote: e.description,
+    location: e.location,
+  };
 }
 
 /**
@@ -97,10 +145,17 @@ export interface UpcomingCommitmentCardProps {
 /**
  * UpcomingCommitmentCard component.
  *
- * Shows the next scheduled quality time commitment with countdown and actions.
+ * Shows the next scheduled quality time commitment or calendar event with countdown and actions.
+ * Merges commitments and Google Calendar events, sorted by time.
  */
 export function UpcomingCommitmentCard({ className }: UpcomingCommitmentCardProps) {
-  const { data: commitments, isLoading } = useUpcomingCommitments();
+  const { data: profile } = useProfile();
+  const { data: commitments, isLoading: commitmentsLoading } = useUpcomingCommitments();
+  const { data: calendarData, isLoading: calendarLoading } = useCalendarEvents(
+    profile?.father_id,
+    7, // 7 days ahead
+    false // Only Dad Coach related events
+  );
   const completeCommitment = useCompleteCommitment();
   const cancelCommitment = useCancelCommitment();
   
@@ -111,28 +166,51 @@ export function UpcomingCommitmentCard({ className }: UpcomingCommitmentCardProp
     return () => clearInterval(interval);
   }, []);
 
-  // Get the next commitment
-  const nextCommitment: Commitment | null = commitments && commitments.length > 0 ? commitments[0] : null;
+  // Merge commitments and calendar events, sorted by scheduled time
+  const upcomingItems = useMemo(() => {
+    const items: UpcomingItem[] = [];
+    
+    // Add commitments
+    if (commitments) {
+      items.push(...commitments.map(commitmentToItem));
+    }
+    
+    // Add calendar events (if connected and available)
+    if (calendarData?.connected && calendarData.events) {
+      items.push(...calendarData.events.map(calendarEventToItem));
+    }
+    
+    // Sort by scheduled time and filter out past events
+    const now = new Date();
+    return items
+      .filter(item => new Date(item.scheduledAt) >= now)
+      .sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime());
+  }, [commitments, calendarData]);
 
-  // Handle complete action
+  // Get the next item
+  const nextItem = upcomingItems.length > 0 ? upcomingItems[0] : null;
+
+  // Handle complete action (only for commitments)
   const handleComplete = async () => {
-    if (!nextCommitment) return;
+    if (!nextItem || nextItem.type !== 'commitment' || !nextItem.commitment) return;
     try {
-      await completeCommitment.mutateAsync({ commitmentId: nextCommitment.id });
+      await completeCommitment.mutateAsync({ commitmentId: nextItem.commitment.id });
     } catch (error) {
       console.error('Failed to complete commitment:', error);
     }
   };
 
-  // Handle cancel action
+  // Handle cancel action (only for commitments)
   const handleCancel = async () => {
-    if (!nextCommitment) return;
+    if (!nextItem || nextItem.type !== 'commitment' || !nextItem.commitment) return;
     try {
-      await cancelCommitment.mutateAsync(nextCommitment.id);
+      await cancelCommitment.mutateAsync(nextItem.commitment.id);
     } catch (error) {
       console.error('Failed to cancel commitment:', error);
     }
   };
+
+  const isLoading = commitmentsLoading || calendarLoading;
 
   // Loading state
   if (isLoading) {
@@ -147,8 +225,8 @@ export function UpcomingCommitmentCard({ className }: UpcomingCommitmentCardProp
     );
   }
 
-  // No commitments - encouraging message with stronger CTA
-  if (!nextCommitment) {
+  // No items - encouraging message with stronger CTA
+  if (!nextItem) {
     return (
       <div className={classNames('bg-gradient-to-br from-teal-900/30 to-blue-900/30 rounded-2xl p-6 border border-teal-500/20', className)}>
         <div className="text-center" dir="rtl">
@@ -167,9 +245,10 @@ export function UpcomingCommitmentCard({ className }: UpcomingCommitmentCardProp
     );
   }
 
-  const isSoon = isHappeningSoon(nextCommitment.scheduledAt);
-  const relativeTime = formatRelativeTime(nextCommitment.scheduledAt);
-  const fullTime = formatScheduledTime(nextCommitment.scheduledAt);
+  const isSoon = isHappeningSoon(nextItem.scheduledAt);
+  const relativeTime = formatRelativeTime(nextItem.scheduledAt);
+  const fullTime = formatScheduledTime(nextItem.scheduledAt);
+  const isCommitment = nextItem.type === 'commitment';
 
   return (
     <div
@@ -187,8 +266,10 @@ export function UpcomingCommitmentCard({ className }: UpcomingCommitmentCardProp
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-xl">⏰</span>
-          <p className="text-sm font-medium text-teal-400">זמן איכות מתוכנן</p>
+          <span className="text-xl">{isCommitment ? '⏰' : '📅'}</span>
+          <p className="text-sm font-medium text-teal-400">
+            {isCommitment ? 'זמן איכות מתוכנן' : 'אירוע מהיומן'}
+          </p>
         </div>
         {isSoon && (
           <span className="text-xs text-teal-300 bg-teal-500/20 px-3 py-1.5 rounded-full animate-pulse font-medium">
@@ -208,51 +289,69 @@ export function UpcomingCommitmentCard({ className }: UpcomingCommitmentCardProp
         </div>
       </div>
 
-      {/* Child name (if specified) - Made more prominent */}
-      {nextCommitment.childName && (
+      {/* Title for calendar events */}
+      {!isCommitment && (
         <div className="bg-[#0F172A]/50 rounded-xl p-3 mb-4">
           <p className="text-base text-white font-medium">
-            👦 זמן איכות עם {nextCommitment.childName}
+            🎯 {nextItem.title}
+          </p>
+        </div>
+      )}
+
+      {/* Child name (if specified) - Made more prominent */}
+      {nextItem.childName && (
+        <div className="bg-[#0F172A]/50 rounded-xl p-3 mb-4">
+          <p className="text-base text-white font-medium">
+            👦 זמן איכות עם {nextItem.childName}
           </p>
         </div>
       )}
 
       {/* Activity note (if exists) */}
-      {nextCommitment.activityNote && (
+      {nextItem.activityNote && (
         <div className="bg-[#0F172A]/50 rounded-xl p-3 mb-4">
-          <p className="text-sm text-gray-300">💡 {nextCommitment.activityNote}</p>
+          <p className="text-sm text-gray-300">💡 {nextItem.activityNote}</p>
         </div>
       )}
 
-      {/* Action buttons */}
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={handleComplete}
-          disabled={completeCommitment.isPending}
-          className={classNames(
-            'flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors',
-            'bg-teal-500 text-white hover:bg-teal-600',
-            'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-[#1E293B]',
-            completeCommitment.isPending && 'opacity-50 cursor-not-allowed'
-          )}
-        >
-          {completeCommitment.isPending ? '...' : '✓ בוצע!'}
-        </button>
-        <button
-          type="button"
-          onClick={handleCancel}
-          disabled={cancelCommitment.isPending}
-          className={classNames(
-            'py-2 px-3 rounded-lg text-sm font-medium transition-colors',
-            'bg-gray-700 text-gray-300 hover:bg-gray-600',
-            'focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-[#1E293B]',
-            cancelCommitment.isPending && 'opacity-50 cursor-not-allowed'
-          )}
-        >
-          {cancelCommitment.isPending ? '...' : 'ביטול'}
-        </button>
-      </div>
+      {/* Location (for calendar events) */}
+      {nextItem.location && (
+        <div className="bg-[#0F172A]/50 rounded-xl p-3 mb-4">
+          <p className="text-sm text-gray-300">📍 {nextItem.location}</p>
+        </div>
+      )}
+
+      {/* Action buttons - only for commitments */}
+      {isCommitment && (
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={handleComplete}
+            disabled={completeCommitment.isPending}
+            className={classNames(
+              'flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors',
+              'bg-teal-500 text-white hover:bg-teal-600',
+              'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-[#1E293B]',
+              completeCommitment.isPending && 'opacity-50 cursor-not-allowed'
+            )}
+          >
+            {completeCommitment.isPending ? '...' : '✓ בוצע!'}
+          </button>
+          <button
+            type="button"
+            onClick={handleCancel}
+            disabled={cancelCommitment.isPending}
+            className={classNames(
+              'py-2 px-3 rounded-lg text-sm font-medium transition-colors',
+              'bg-gray-700 text-gray-300 hover:bg-gray-600',
+              'focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-[#1E293B]',
+              cancelCommitment.isPending && 'opacity-50 cursor-not-allowed'
+            )}
+          >
+            {cancelCommitment.isPending ? '...' : 'ביטול'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

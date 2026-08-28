@@ -90,6 +90,7 @@ export type WorkspaceErrorCode =
   // Rate limiting
   | 'RATE_LIMITED'
   | 'DAILY_LIMIT_REACHED'
+  | 'AI_CREDITS_EXHAUSTED'
   // Validation errors
   | 'VALIDATION_ERROR'
   | 'INVALID_DATE'

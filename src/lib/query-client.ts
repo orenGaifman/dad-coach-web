@@ -80,6 +80,9 @@ export const STALE_TIMES = {
 
   /** Available time slots - refresh frequently as slots change quickly */
   AVAILABLE_SLOTS: 30 * 1000, // 30s
+
+  /** Calendar events - moderate refresh rate */
+  CALENDAR: 60 * 1000, // 60s
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -122,6 +125,11 @@ export const queryKeys = {
   // Quality Time
   availableSlots: (daysAhead?: number, minDuration?: number) =>
     ['available-slots', { daysAhead, minDuration }] as const,
+
+  // Calendar
+  calendarStatus: (fatherId: number) => ['calendar-status', fatherId] as const,
+  calendarEvents: (fatherId: number, days?: number, allEvents?: boolean) =>
+    ['calendar-events', { fatherId, days, allEvents }] as const,
 } as const;
 
 // ---------------------------------------------------------------------------
