@@ -2,16 +2,18 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from '@/src/i18n';
+import type { TranslationKey } from '@/src/i18n';
 
 /**
  * Navigation tab configuration.
  * Routes defined per task requirements.
  */
 interface NavTab {
-  name: string;
+  nameKey: TranslationKey;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
-  ariaLabel: string;
+  ariaLabelKey: TranslationKey;
 }
 
 /**
@@ -118,37 +120,38 @@ function ProfileIcon({ className }: { className?: string }) {
 /**
  * Navigation tabs configuration.
  * 5 tabs as specified in Task 1.2 requirements.
+ * Uses translation keys instead of hardcoded strings.
  */
 const navTabs: NavTab[] = [
   {
-    name: 'Home',
+    nameKey: 'nav.home',
     href: '/dashboard',
     icon: HomeIcon,
-    ariaLabel: 'Go to dashboard home',
+    ariaLabelKey: 'nav.aria.home',
   },
   {
-    name: 'Growth',
+    nameKey: 'nav.growth',
     href: '/growth',
     icon: GrowthIcon,
-    ariaLabel: 'View growth and achievements',
+    ariaLabelKey: 'nav.aria.growth',
   },
   {
-    name: 'Family',
+    nameKey: 'nav.family',
     href: '/family',
     icon: FamilyIcon,
-    ariaLabel: 'View family and children',
+    ariaLabelKey: 'nav.aria.family',
   },
   {
-    name: 'Coaching',
+    nameKey: 'nav.coaching',
     href: '/coaching',
     icon: CoachingIcon,
-    ariaLabel: 'View coaching history',
+    ariaLabelKey: 'nav.aria.coaching',
   },
   {
-    name: 'Profile',
+    nameKey: 'nav.profile',
     href: '/profile',
     icon: ProfileIcon,
-    ariaLabel: 'View and edit profile',
+    ariaLabelKey: 'nav.aria.profile',
   },
 ];
 
@@ -190,6 +193,7 @@ interface TabNavigationProps {
  */
 export default function TabNavigation({ whatsAppLink }: TabNavigationProps) {
   const pathname = usePathname();
+  const { t } = useTranslations();
 
   return (
     <>
@@ -213,11 +217,11 @@ export default function TabNavigation({ whatsAppLink }: TabNavigationProps) {
                     transition-colors duration-150
                     ${isActive ? 'text-indigo-400' : 'text-gray-500 hover:text-gray-400'}
                   `}
-                  aria-label={tab.ariaLabel}
+                  aria-label={t(tab.ariaLabelKey)}
                   aria-current={isActive ? 'page' : undefined}
                 >
                   <Icon className="h-6 w-6" />
-                  <span className="text-xs font-medium">{tab.name}</span>
+                  <span className="text-xs font-medium">{t(tab.nameKey)}</span>
                 </Link>
               </li>
             );
@@ -233,7 +237,7 @@ export default function TabNavigation({ whatsAppLink }: TabNavigationProps) {
       >
         {/* Logo/Brand */}
         <div className="flex h-16 items-center border-b border-white/10 px-4">
-          <span className="text-xl font-bold text-white">Dad Coach</span>
+          <span className="text-xl font-bold text-white">{t('nav.brand')}</span>
         </div>
 
         {/* Navigation Links */}
@@ -255,11 +259,11 @@ export default function TabNavigation({ whatsAppLink }: TabNavigationProps) {
                         : 'text-gray-400 hover:bg-white/5 hover:text-white'
                     }
                   `}
-                  aria-label={tab.ariaLabel}
+                  aria-label={t(tab.ariaLabelKey)}
                   aria-current={isActive ? 'page' : undefined}
                 >
                   <Icon className="h-5 w-5" />
-                  <span className="font-medium">{tab.name}</span>
+                  <span className="font-medium">{t(tab.nameKey)}</span>
                 </Link>
               </li>
             );

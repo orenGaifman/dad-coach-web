@@ -13,6 +13,7 @@
  * - Warm, supportive headline and copy
  * - Primary CTA to open WhatsApp
  * - Optional secondary "Learn how it works" link
+ * - Full localization support (Hebrew/English)
  *
  * Requirements: 1.4 - IF the father has never completed a coaching session,
  * THEN the dashboard SHALL show a warm empty state explaining the coaching
@@ -27,6 +28,7 @@ import {
   WHATSAPP_DEFAULT_MESSAGE,
   getWhatsAppDeepLink,
 } from '@/src/config/whatsapp';
+import { useTranslations } from '@/src/i18n';
 
 /**
  * Helper function to combine class names.
@@ -100,6 +102,7 @@ export function EmptyDashboard({ onOpenWhatsApp, className }: EmptyDashboardProp
     WHATSAPP_PHONE_NUMBER,
     WHATSAPP_DEFAULT_MESSAGE
   );
+  const { t, isRTL } = useTranslations();
 
   /**
    * Handle WhatsApp button click.
@@ -123,7 +126,8 @@ export function EmptyDashboard({ onOpenWhatsApp, className }: EmptyDashboardProp
         className
       )}
       role="region"
-      aria-label="Welcome to your dashboard"
+      aria-label={t('dashboard.empty.aria.welcome')}
+      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Coach greeting image - personal connection */}
       <div className="mb-4">
@@ -151,12 +155,12 @@ export function EmptyDashboard({ onOpenWhatsApp, className }: EmptyDashboardProp
 
       {/* Headline - warm, inviting */}
       <h2 className="text-lg font-semibold text-white mb-2">
-        Your journey begins on WhatsApp
+        {t('dashboard.empty.title')}
       </h2>
 
       {/* Supporting text - explains the model */}
       <p className="text-gray-400 text-sm max-w-xs mb-8">
-        This dashboard will come alive as you grow. For now, head to WhatsApp to start your coaching sessions.
+        {t('dashboard.empty.description')}
       </p>
 
       {/* Primary CTA - Open WhatsApp */}
@@ -171,11 +175,11 @@ export function EmptyDashboard({ onOpenWhatsApp, className }: EmptyDashboardProp
           'transition-colors duration-200',
           'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-[#0F172A]'
         )}
-        aria-label="Open WhatsApp to start your coaching journey"
+        aria-label={t('dashboard.empty.aria.cta')}
       >
         <WhatsAppIcon className="h-5 w-5" />
-        Open WhatsApp
-        <span aria-hidden="true">→</span>
+        {t('dashboard.empty.cta')}
+        <span aria-hidden="true">{isRTL ? '←' : '→'}</span>
       </button>
 
       {/* Secondary link - Learn how it works */}
@@ -189,7 +193,7 @@ export function EmptyDashboard({ onOpenWhatsApp, className }: EmptyDashboardProp
             'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-[#0F172A] rounded'
           )}
         >
-          Learn how it works
+          {t('dashboard.empty.howItWorks')}
         </a>
       </p>
     </div>
