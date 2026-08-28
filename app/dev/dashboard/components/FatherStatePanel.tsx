@@ -17,14 +17,19 @@
  * @see Requirements 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 2.17, 2.18
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { fetchFatherState } from '@/src/api/dev';
 import { formatIsraelDateTime } from '@/src/utils/timezone';
 import type { DevFatherState, DevChild, DevQualityTime } from '@/src/types/dev';
 
+/** Polling interval for auto-refresh (2 seconds) */
+const POLLING_INTERVAL_MS = 2000;
+
 interface FatherStatePanelProps {
   /** Father ID to display state for */
   fatherId: number;
+  /** Whether auto-refresh polling is enabled (default: true) */
+  autoRefreshEnabled?: boolean;
 }
 
 /** Color mapping for workflow states */
@@ -338,14 +343,19 @@ function LoadingState() {
  *
  * @see Requirements 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7
  */
-export function FatherStatePanel({ fatherId }: FatherStatePanelProps) {
+export function FatherStatePanel({ fatherId, autoRefreshEnabled = true }: FatherStatePanelProps) {
   const [fatherState, setFatherState] = useState<DevFatherState | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Fetch father state data
-  const loadFatherState = useCallback(async (signal?: AbortSignal) => {
-    setIsLoading(true);
+  const loadFatherState = useCallback(async (signal?: AbortSignal, isPolling = false) => {
+    // Only show loading spinner on initial load, not during polling
+    if (!isPolling) {
+      setIsLoading(true);
+    }
     setError(null);
 
     try {
@@ -358,19 +368,40 @@ export function FatherStatePanel({ fatherId }: FatherStatePanelProps) {
       setError(err instanceof Error ? err.message : 'Failed to load father state');
       setFatherState(null);
     } finally {
-      setIsLoading(false);
+      if (!isPolling) {
+        setIsLoading(false);
+      }
     }
   }, [fatherId]);
 
-  // Load data when fatherId changes
+  // Initial load when fatherId changes
   useEffect(() => {
     const controller = new AbortController();
-    loadFatherState(controller.signal);
+    loadFatherState(controller.signal, false);
 
     return () => {
       controller.abort();
     };
   }, [loadFatherState]);
+
+  // Auto-refresh polling
+  useEffect(() => {
+    if (!autoRefreshEnabled || isLoading) {
+      return;
+    }
+
+    // Set up polling interval
+    pollingIntervalRef.current = setInterval(() => {
+      loadFatherState(undefined, true);
+    }, POLLING_INTERVAL_MS);
+
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
+    };
+  }, [autoRefreshEnabled, isLoading, loadFatherState]);
 
   // Handle retry
   const handleRetry = useCallback(() => {
