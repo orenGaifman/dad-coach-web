@@ -58,6 +58,10 @@ export default function LanguagePage() {
       
       setCurrentStep(WizardStep.FATHER_PROFILE);
       markStepCompleted(WizardStep.LANGUAGE);
+      
+      // Reset submitting state BEFORE navigating so next page doesn't show "Saving..."
+      setIsSubmitting(false);
+      
       router.push(`/join/${params.token}/profile`);
     } catch (err: unknown) {
       console.error('Language submit error:', err);
