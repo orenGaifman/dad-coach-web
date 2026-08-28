@@ -27,9 +27,7 @@ import { CelebrationModal } from '@/src/components/common/CelebrationModal';
 import { usePageView } from '@/src/hooks/usePageView';
 import { UpcomingCommitmentCard } from '@/src/components/dashboard/UpcomingCommitmentCard';
 import { WeeklyGoalProgressCard } from '@/src/components/dashboard/WeeklyGoalProgressCard';
-import { StreakDisplay } from '@/src/components/dashboard/StreakDisplay';
 import { BeltProgressHero } from '@/src/components/dashboard/BeltProgressHero';
-import { useStreak } from '@/src/hooks/useStreak';
 import {
   SkeletonCard,
   SkeletonText,
@@ -38,7 +36,6 @@ import {
 import { ErrorState } from '@/src/components/common/ErrorState';
 import { ProgressBar } from '@/src/components/common/ProgressBar';
 import type { ActiveMissionSummary, MissionCategory } from '@/src/types/workspace';
-import type { BeltLevel } from '@/src/types/growth';
 import type { DegradedSection } from '@/src/types/common';
 
 /**
@@ -46,57 +43,6 @@ import type { DegradedSection } from '@/src/types/common';
  */
 function classNames(...classes: (string | undefined | null | false)[]): string {
   return classes.filter(Boolean).join(' ');
-}
-
-/**
- * Get the belt display name with proper formatting
- */
-function getBeltDisplayName(belt: BeltLevel): string {
-  const beltNames: Record<BeltLevel, string> = {
-    WHITE: 'White Belt',
-    YELLOW: 'Yellow Belt',
-    ORANGE: 'Orange Belt',
-    GREEN: 'Green Belt',
-    BLUE: 'Blue Belt',
-    PURPLE: 'Purple Belt',
-    BROWN: 'Brown Belt',
-    BLACK: 'Black Belt',
-  };
-  return beltNames[belt];
-}
-
-/**
- * Get the belt color class for styling
- */
-function getBeltColorClass(belt: BeltLevel): string {
-  const colorClasses: Record<BeltLevel, string> = {
-    WHITE: 'text-gray-200',
-    YELLOW: 'text-yellow-400',
-    ORANGE: 'text-orange-400',
-    GREEN: 'text-emerald-400',
-    BLUE: 'text-blue-400',
-    PURPLE: 'text-purple-400',
-    BROWN: 'text-amber-700',
-    BLACK: 'text-gray-100',
-  };
-  return colorClasses[belt];
-}
-
-/**
- * Get the progress bar color for the belt
- */
-function getBeltProgressColor(belt: BeltLevel): string {
-  const progressColors: Record<BeltLevel, string> = {
-    WHITE: 'bg-gray-400',
-    YELLOW: 'bg-yellow-500',
-    ORANGE: 'bg-orange-500',
-    GREEN: 'bg-emerald-500',
-    BLUE: 'bg-blue-500',
-    PURPLE: 'bg-purple-500',
-    BROWN: 'bg-amber-700',
-    BLACK: 'bg-gray-200',
-  };
-  return progressColors[belt];
 }
 
 /**
@@ -142,87 +88,6 @@ function DashboardSkeleton() {
           <SkeletonCard className="h-20" />
           <SkeletonCard className="h-20" />
           <SkeletonCard className="h-20" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/**
- * Belt Summary Card - compact belt display for dashboard
- * Links to Growth tab for full details (implemented in Task 2.2)
- */
-interface BeltSummaryCardProps {
-  belt: BeltLevel;
-  score: number;
-  isDegraded?: boolean;
-}
-
-function BeltSummaryCard({ belt, score, isDegraded }: BeltSummaryCardProps) {
-  // If belt section is degraded, show placeholder
-  if (isDegraded) {
-    return (
-      <div className="bg-[#1E293B] rounded-2xl p-4 border border-white/5">
-        <div className="flex items-center gap-4">
-          <SkeletonBlock className="w-12 h-12 rounded-full" />
-          <div className="flex-1 space-y-2">
-            <SkeletonText width="w-24" />
-            <SkeletonBlock className="h-2 w-full rounded-full" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Calculate progress percentage (placeholder - will use belt hook in Task 2.2)
-  const beltThresholds: Record<BeltLevel, { min: number; max: number }> = {
-    WHITE: { min: 0, max: 500 },
-    YELLOW: { min: 500, max: 1000 },
-    ORANGE: { min: 1000, max: 1500 },
-    GREEN: { min: 1500, max: 2000 },
-    BLUE: { min: 2000, max: 3000 },
-    PURPLE: { min: 3000, max: 4000 },
-    BROWN: { min: 4000, max: 5000 },
-    BLACK: { min: 5000, max: 5000 },
-  };
-
-  const threshold = beltThresholds[belt];
-  const progress =
-    belt === 'BLACK'
-      ? 100
-      : Math.min(100, ((score - threshold.min) / (threshold.max - threshold.min)) * 100);
-
-  return (
-    <div
-      className="bg-[#1E293B] rounded-2xl p-4 border border-white/5"
-      role="region"
-      aria-label="Belt progress"
-    >
-      <p className="text-sm text-gray-400 mb-3">Your Belt</p>
-      <div className="flex items-center gap-4">
-        {/* Belt icon placeholder - will use actual image in Task 2.2 */}
-        <div className="w-12 h-12 rounded-full bg-[#0F172A] flex items-center justify-center">
-          <span className="text-2xl" aria-hidden="true">
-            🥋
-          </span>
-        </div>
-        <div className="flex-1">
-          <p className={classNames('font-semibold', getBeltColorClass(belt))}>
-            {getBeltDisplayName(belt)}
-          </p>
-          <div className="mt-2">
-            <ProgressBar
-              value={progress}
-              color={getBeltProgressColor(belt)}
-              height="sm"
-              label={`Belt progress: ${Math.round(progress)}%`}
-            />
-          </div>
-          <p className="text-xs text-gray-500 mt-1">
-            {belt === 'BLACK'
-              ? 'Dad Sensei - You\'ve mastered it!'
-              : `${(score ?? 0).toLocaleString()} XP`}
-          </p>
         </div>
       </div>
     </div>

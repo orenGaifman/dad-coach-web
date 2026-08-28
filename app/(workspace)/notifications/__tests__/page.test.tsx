@@ -139,7 +139,7 @@ let mockUseNotificationsReturn: MockNotificationsHookResult = {
   refetch: vi.fn(),
 };
 
-let mockUseCelebrationsReturn: MockCelebrationsHookResult = {
+const mockUseCelebrationsReturn: MockCelebrationsHookResult = {
   data: mockCelebrationsResponse,
   isLoading: false,
   error: null,

@@ -18,7 +18,7 @@ import Link from 'next/link';
 import { useChildren } from '@/src/hooks/useChildren';
 import { useProfile } from '@/src/hooks/useProfile';
 import { useAddChild, useUpdateChild, useArchiveChild } from '@/src/hooks/useChildMutations';
-import { SkeletonCard, SkeletonList } from '@/src/components/common/SkeletonScreen';
+import { SkeletonList } from '@/src/components/common/SkeletonScreen';
 import { ErrorState } from '@/src/components/common/ErrorState';
 import { EmptyState } from '@/src/components/common/EmptyState';
 import type { ChildOverview, ChildMutationRequest, ChildGender } from '@/src/types/family';

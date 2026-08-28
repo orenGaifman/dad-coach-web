@@ -170,11 +170,9 @@ function CurrentStreakCard({
  */
 function StreakStats({
   longestStreak,
-  lastInteractionDate,
   streakStartDate,
 }: {
   longestStreak: number;
-  lastInteractionDate: string | null;
   streakStartDate: string | null;
 }) {
   return (
@@ -366,7 +364,6 @@ export default function StreakPage() {
             {/* Stats */}
             <StreakStats
               longestStreak={longestStreak}
-              lastInteractionDate={streakData.last_qualifying_interaction_date}
               streakStartDate={streakData.streak_start_date}
             />
             

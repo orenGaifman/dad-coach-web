@@ -30,13 +30,6 @@ import { ProgressBar } from '@/src/components/common/ProgressBar';
 import type { ChildDetail, GoalSummary, RecentMissionSummary } from '@/src/types/family';
 
 /**
- * Helper function to combine class names, filtering out falsy values.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
-
-/**
  * Format birth date for display.
  */
 function formatBirthDate(dateString: string): string {

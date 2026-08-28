@@ -200,7 +200,7 @@ let mockAddChildMutation: MockChildMutationResult = {
   reset: vi.fn(),
 };
 
-let mockUpdateChildMutation: MockChildMutationResult = {
+const mockUpdateChildMutation: MockChildMutationResult = {
   mutate: vi.fn(),
   mutateAsync: mockUpdateChildMutateAsync,
   isPending: false,
