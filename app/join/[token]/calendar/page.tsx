@@ -11,11 +11,12 @@ import { WizardStep } from '@/src/types/onboarding';
 /**
  * Calendar connection page — connects Google Calendar for scheduling.
  * This step comes AFTER review (provisioning), so father_id is available from localStorage.
- * After calendar connection (or skip), user proceeds to WhatsApp activation.
+ * After calendar connection, user proceeds to WhatsApp activation.
+ *
+ * NOTE: Calendar connection is REQUIRED - no skip option.
  *
  * Handles:
  * - Google OAuth flow for calendar access
- * - Skip behavior: allows proceeding without calendar (scheduling will be manual)
  *
  * @see Requirement: Calendar integration for automatic slot detection
  */
@@ -63,11 +64,6 @@ export default function CalendarPage() {
     goToActivation();
   }, [goToActivation]);
 
-  const handleSkip = useCallback(() => {
-    // Skip without connecting calendar - proceed to activation
-    goToActivation();
-  }, [goToActivation]);
-
   const handleContinue = useCallback(() => {
     if (isConnected) {
       goToActivation();
@@ -81,13 +77,12 @@ export default function CalendarPage() {
     <OnboardingLayout 
       isStepValid={isConnected} 
       onContinue={handleContinue}
-      continueLabel={isConnected ? 'Go to Dashboard' : 'Connect Calendar'}
+      continueLabel={isConnected ? 'Continue' : 'Connect Calendar'}
     >
       <CalendarConnect
         onConnected={handleConnected}
-        onSkip={handleSkip}
         fatherId={fatherId}
-        allowSkip={true}
+        allowSkip={false}
       />
       {error && (
         <div className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-center" role="alert">

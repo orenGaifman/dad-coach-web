@@ -14,6 +14,9 @@ import type { SupportedLanguage } from '@/src/types/onboarding';
 
 /**
  * Language Selection page — first wizard step after welcome.
+ * 
+ * UX: Clicking a language automatically submits and navigates to the next step
+ * (no separate "Continue" button needed).
  */
 export default function LanguagePage() {
   const params = useParams<{ token: string }>();
@@ -30,16 +33,12 @@ export default function LanguagePage() {
   // Also get the global language setter to persist across the app
   const { setLanguage: setGlobalLanguage } = useLanguage();
 
-  const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSelect = useCallback((lang: SupportedLanguage) => {
-    setSelectedLanguage(lang);
-    setError(null);
-  }, []);
-
-  const handleContinue = useCallback(async () => {
-    if (!selectedLanguage || isSubmitting) return;
+  // When user clicks a language, immediately submit and navigate
+  const handleSelect = useCallback(async (lang: SupportedLanguage) => {
+    if (isSubmitting) return;
+    
     setIsSubmitting(true);
     setError(null);
 
@@ -47,35 +46,33 @@ export default function LanguagePage() {
       const sid = sessionId || getStoredSessionId();
       if (sid) {
         await apiClient.put(`/onboarding/sessions/${sid}/steps/LANGUAGE`, {
-          language: selectedLanguage,
+          language: lang,
         });
       } else {
         console.warn('No session ID available — skipping server step submission');
       }
       
       // Update both onboarding state AND global language provider
-      setLanguage(selectedLanguage);
-      setGlobalLanguage(selectedLanguage);
+      setLanguage(lang);
+      setGlobalLanguage(lang);
       
       setCurrentStep(WizardStep.FATHER_PROFILE);
       markStepCompleted(WizardStep.LANGUAGE);
       router.push(`/join/${params.token}/profile`);
     } catch (err: unknown) {
       console.error('Language submit error:', err);
-      setError('Something went wrong. Please try again.');
-    } finally {
+      setError(lang === 'he' ? 'משהו השתבש. אנא נסה שוב.' : 'Something went wrong. Please try again.');
       setIsSubmitting(false);
     }
-  }, [selectedLanguage, isSubmitting, sessionId, setIsSubmitting, setLanguage, setGlobalLanguage, setCurrentStep, markStepCompleted, router, params.token]);
+  }, [isSubmitting, sessionId, setIsSubmitting, setLanguage, setGlobalLanguage, setCurrentStep, markStepCompleted, router, params.token]);
 
   return (
     <OnboardingLayout
-      isStepValid={selectedLanguage !== null && !isSubmitting}
-      onContinue={handleContinue}
-      continueLabel="Continue"
+      isStepValid={false}
       hideStepIndicator
+      hideNavigation
     >
-      <LanguageSelector selected={selectedLanguage} onSelect={handleSelect} />
+      <LanguageSelector selected={null} onSelect={handleSelect} isSubmitting={isSubmitting} />
       {error && (
         <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm text-center">
           {error}

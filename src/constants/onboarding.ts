@@ -30,7 +30,7 @@ export const ONBOARDING_STEPS: readonly StepDefinition[] = [
   { name: WizardStep.GOALS, label: 'Goals', required: false, order: 4, path: 'goals' },
   { name: WizardStep.PREFERENCES, label: 'Preferences', required: false, order: 5, path: 'preferences' },
   { name: WizardStep.REVIEW, label: 'Review', required: true, order: 6, path: 'review' },
-  { name: WizardStep.CALENDAR, label: 'Calendar', required: false, order: 7, path: 'calendar' },
+  { name: WizardStep.CALENDAR, label: 'Calendar', required: true, order: 7, path: 'calendar' },
   { name: WizardStep.ACTIVATION, label: 'Activate', required: true, order: 8, path: 'activate' },
 ] as const;
 

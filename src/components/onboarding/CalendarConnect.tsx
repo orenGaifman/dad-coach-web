@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useOnboarding } from './OnboardingProvider';
+import { useTranslations } from '@/src/i18n/useTranslations';
 
 // ---------------------------------------------------------------------------
 // Props
@@ -27,6 +28,9 @@ export interface CalendarConnectProps {
  *
  * Shows a "Connect with Google" button that initiates the OAuth flow.
  * After successful connection, calls onConnected callback.
+ * 
+ * OAuth redirect: Returns to current page with ?calendar_connected=true parameter.
+ * The page then handles proceeding to the next step.
  */
 export function CalendarConnect({
   onConnected,
@@ -35,6 +39,7 @@ export function CalendarConnect({
   allowSkip = false,
 }: CalendarConnectProps) {
   const { language } = useOnboarding();
+  const { t } = useTranslations();
   const isHebrew = language === 'he';
   
   const [isConnecting, setIsConnecting] = useState(false);
@@ -71,11 +76,11 @@ export function CalendarConnect({
     setError(null);
 
     // Redirect to backend OAuth endpoint
-    // After OAuth completion, redirect to /workspace (dashboard) to avoid
-    // returning to onboarding pages that may try to access completed sessions
+    // After OAuth completion, redirect back to the current page with success parameter
+    // This keeps the user in the onboarding flow and allows proper progression
     const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://dad-coach.onrender.com/api/v1';
-    const redirectUrl = window.location.origin + '/workspace';
-    const redirectParam = encodeURIComponent(redirectUrl);
+    const currentUrl = window.location.origin + window.location.pathname;
+    const redirectParam = encodeURIComponent(currentUrl);
     const connectUrl = `${apiBaseUrl}/calendar/connect/${fatherId}?redirectUrl=${redirectParam}`;
     
     // Open in same window - will redirect back after OAuth
@@ -98,12 +103,10 @@ export function CalendarConnect({
           </svg>
         </div>
         <h2 className="text-2xl font-bold text-white">
-          {isHebrew ? '✅ לוח השנה מחובר!' : '✅ Calendar Connected!'}
+          {t('calendar.connected.title')}
         </h2>
         <p className="text-gray-400">
-          {isHebrew 
-            ? 'ממשיכים לשלב הבא...' 
-            : 'Continuing to next step...'}
+          {t('calendar.connected.nextStep')}
         </p>
       </div>
     );
@@ -117,12 +120,10 @@ export function CalendarConnect({
           <span className="text-3xl">📅</span>
         </div>
         <h2 className="text-2xl font-bold text-white">
-          {isHebrew ? 'חבר את לוח השנה' : 'Connect Your Calendar'}
+          {t('calendar.connect.title')}
         </h2>
         <p className="text-gray-400 max-w-md mx-auto">
-          {isHebrew 
-            ? 'חיבור לוח השנה שלך יעזור לנו למצוא זמנים פנויים לזמן איכות עם הילדים ולתאם אוטומטית.'
-            : 'Connecting your calendar helps us find available times for quality time with your kids and schedule automatically.'}
+          {t('calendar.connect.description')}
         </p>
       </div>
 
@@ -132,12 +133,10 @@ export function CalendarConnect({
           <span className="text-xl">🔍</span>
           <div>
             <p className="text-white text-sm font-medium">
-              {isHebrew ? 'מציאת זמנים פנויים' : 'Find available times'}
+              {t('calendar.connect.benefit1.title')}
             </p>
             <p className="text-gray-400 text-xs">
-              {isHebrew 
-                ? 'נראה מתי יש לך זמן פנוי בלוח' 
-                : "We'll see when you have free time"}
+              {t('calendar.connect.benefit1.description')}
             </p>
           </div>
         </div>
@@ -145,12 +144,10 @@ export function CalendarConnect({
           <span className="text-xl">📆</span>
           <div>
             <p className="text-white text-sm font-medium">
-              {isHebrew ? 'תזמון אוטומטי' : 'Automatic scheduling'}
+              {t('calendar.connect.benefit2.title')}
             </p>
             <p className="text-gray-400 text-xs">
-              {isHebrew 
-                ? 'זמן האיכות יתווסף אוטומטית ללוח שלך' 
-                : "Quality time gets added to your calendar automatically"}
+              {t('calendar.connect.benefit2.description')}
             </p>
           </div>
         </div>
@@ -158,12 +155,10 @@ export function CalendarConnect({
           <span className="text-xl">🔔</span>
           <div>
             <p className="text-white text-sm font-medium">
-              {isHebrew ? 'תזכורות' : 'Reminders'}
+              {t('calendar.connect.benefit3.title')}
             </p>
             <p className="text-gray-400 text-xs">
-              {isHebrew 
-                ? 'תקבל תזכורת לפני זמן האיכות' 
-                : "You'll get a reminder before quality time"}
+              {t('calendar.connect.benefit3.description')}
             </p>
           </div>
         </div>
@@ -190,7 +185,7 @@ export function CalendarConnect({
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
             </svg>
-            <span>{isHebrew ? 'מתחבר...' : 'Connecting...'}</span>
+            <span>{t('calendar.connect.connecting')}</span>
           </>
         ) : (
           <>
@@ -201,25 +196,23 @@ export function CalendarConnect({
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-            <span>{isHebrew ? 'התחבר עם Google' : 'Connect with Google'}</span>
+            <span>{t('calendar.connect.button')}</span>
           </>
         )}
       </button>
 
       {/* Privacy note */}
       <p className="text-center text-gray-500 text-xs">
-        {isHebrew 
-          ? 'אנחנו ניגש רק לאירועים בלוח השנה שלך. לא נשתף או נשנה שום מידע אחר.'
-          : "We only access your calendar events. We won't share or modify any other data."}
+        {t('calendar.connect.privacy')}
       </p>
 
-      {/* Skip option */}
+      {/* Skip option - only shown if allowSkip is true */}
       {allowSkip && onSkip && (
         <button
           onClick={handleSkip}
           className="w-full text-center text-gray-400 text-sm hover:text-white transition-colors"
         >
-          {isHebrew ? 'דלג לעכשיו' : 'Skip for now'}
+          {t('common.skipForNow')}
         </button>
       )}
     </div>

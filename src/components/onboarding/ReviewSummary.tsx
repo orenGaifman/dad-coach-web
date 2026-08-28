@@ -6,6 +6,7 @@ import {
   NOTIFICATION_FREQUENCY_OPTIONS,
   DEFAULTS,
 } from '@/src/constants/onboarding';
+import { useTranslations } from '@/src/i18n/useTranslations';
 import { maskPhone } from '@/src/utils/phone';
 import type { SessionState, WizardStep } from '@/src/types/onboarding';
 import { WizardStep as WizardStepEnum } from '@/src/types/onboarding';
@@ -19,6 +20,22 @@ export interface ReviewSummaryProps {
   language: string;
   onEdit: (step: WizardStep) => void;
 }
+
+// ---------------------------------------------------------------------------
+// Goal ID to translation key mapping
+// ---------------------------------------------------------------------------
+
+import type { TranslationStrings } from '@/src/i18n/translations';
+
+const GOAL_TRANSLATION_KEYS: Record<string, keyof TranslationStrings> = {
+  'spend_more_quality_time': 'onboarding.goals.spendMoreQualityTime',
+  'improve_communication': 'onboarding.goals.improveCommunication',
+  'build_stronger_emotional_connection': 'onboarding.goals.buildStrongerEmotionalConnection',
+  'handle_conflicts_better': 'onboarding.goals.handleConflictsBetter',
+  'create_family_routines': 'onboarding.goals.createFamilyRoutines',
+  'support_child_development': 'onboarding.goals.supportChildDevelopment',
+  'be_more_patient': 'onboarding.goals.beMorePatient',
+};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -46,24 +63,6 @@ function formatTime(time: string): string {
   return `${displayHour.toString().padStart(2, '0')}:${mins} ${period}`;
 }
 
-/** Look up goal label from PREDEFINED_GOALS or return the id/custom goal as-is. */
-function getGoalLabel(goalId: string): string {
-  const found = PREDEFINED_GOALS.find((g) => g.id === goalId);
-  return found ? found.label : goalId;
-}
-
-/** Look up coaching style label. */
-function getCoachingStyleLabel(value: string): string {
-  const found = COACHING_STYLE_OPTIONS.find((o) => o.value === value);
-  return found ? found.label : value;
-}
-
-/** Look up notification frequency label. */
-function getFrequencyLabel(value: string): string {
-  const found = NOTIFICATION_FREQUENCY_OPTIONS.find((o) => o.value === value);
-  return found ? found.label : value;
-}
-
 // ---------------------------------------------------------------------------
 // Sub-components
 // ---------------------------------------------------------------------------
@@ -72,10 +71,11 @@ interface SectionCardProps {
   title: string;
   step: WizardStep;
   onEdit: (step: WizardStep) => void;
+  editLabel: string;
   children: React.ReactNode;
 }
 
-function SectionCard({ title, step, onEdit, children }: SectionCardProps) {
+function SectionCard({ title, step, onEdit, editLabel, children }: SectionCardProps) {
   return (
     <section className="bg-white/5 rounded-xl p-4 space-y-2">
       <div className="flex justify-between items-center mb-2">
@@ -85,7 +85,7 @@ function SectionCard({ title, step, onEdit, children }: SectionCardProps) {
           onClick={() => onEdit(step)}
           className="text-indigo-400 hover:text-indigo-300 text-sm"
         >
-          Edit
+          {editLabel}
         </button>
       </div>
       {children}
@@ -98,44 +98,84 @@ function SectionCard({ title, step, onEdit, children }: SectionCardProps) {
 // ---------------------------------------------------------------------------
 
 export function ReviewSummary({ sessionData, language, onEdit }: ReviewSummaryProps) {
+  const { t } = useTranslations();
   const profile = sessionData?.father_profile;
   const children = sessionData?.children;
   const goals = sessionData?.goals;
   const preferences = sessionData?.preferences;
 
+  /** Look up goal label from translations or return the id/custom goal as-is. */
+  const getGoalLabel = (goalId: string): string => {
+    const translationKey = GOAL_TRANSLATION_KEYS[goalId];
+    if (translationKey) {
+      return t(translationKey);
+    }
+    const found = PREDEFINED_GOALS.find((g) => g.id === goalId);
+    return found ? found.label : goalId;
+  };
+
+  /** Look up coaching style label with translation. */
+  const getCoachingStyleLabel = (value: string): string => {
+    const styleKey = `coachingStyle.${value.toLowerCase()}` as keyof typeof import('@/src/i18n/translations').en;
+    const translated = t(styleKey);
+    // If translation returns the key itself, fallback to original lookup
+    if (translated === styleKey) {
+      const found = COACHING_STYLE_OPTIONS.find((o) => o.value === value);
+      return found ? found.label : value;
+    }
+    return translated;
+  };
+
+  /** Look up notification frequency label with translation. */
+  const getFrequencyLabel = (value: string): string => {
+    const freqMap: Record<string, keyof TranslationStrings> = {
+      'DAILY': 'notificationFrequency.daily',
+      'EVERY_OTHER_DAY': 'notificationFrequency.everyOtherDay',
+      'TWICE_WEEKLY': 'notificationFrequency.twiceWeekly',
+    };
+    const translationKey = freqMap[value];
+    if (translationKey) {
+      return t(translationKey);
+    }
+    const found = NOTIFICATION_FREQUENCY_OPTIONS.find((o) => o.value === value);
+    return found ? found.label : value;
+  };
+
   return (
     <div className="space-y-4">
       {/* Profile Section */}
       <SectionCard
-        title="Profile"
+        title={t('review.profile')}
         step={WizardStepEnum.FATHER_PROFILE}
         onEdit={onEdit}
+        editLabel={t('common.edit')}
       >
         {profile ? (
           <dl className="space-y-1 text-sm">
             <div className="flex gap-2">
-              <dt className="text-gray-400">Name:</dt>
+              <dt className="text-gray-400">{t('profile.name')}:</dt>
               <dd className="text-white">{profile.display_name}</dd>
             </div>
             <div className="flex gap-2">
-              <dt className="text-gray-400">Phone:</dt>
+              <dt className="text-gray-400">{t('profile.phone')}:</dt>
               <dd className="text-white">{maskPhone(profile.phone_number)}</dd>
             </div>
             <div className="flex gap-2">
-              <dt className="text-gray-400">Timezone:</dt>
+              <dt className="text-gray-400">{t('profile.timezone')}:</dt>
               <dd className="text-white">{profile.timezone}</dd>
             </div>
           </dl>
         ) : (
-          <p className="text-gray-400 text-sm">No profile data</p>
+          <p className="text-gray-400 text-sm">{t('profile.noData')}</p>
         )}
       </SectionCard>
 
       {/* Children Section */}
       <SectionCard
-        title="Children"
+        title={t('review.children')}
         step={WizardStepEnum.CHILDREN}
         onEdit={onEdit}
+        editLabel={t('common.edit')}
       >
         {children && children.length > 0 ? (
           <ul className="space-y-1 text-sm text-white">
@@ -145,22 +185,23 @@ export function ReviewSummary({ sessionData, language, onEdit }: ReviewSummaryPr
                 <li key={idx} className="flex items-center gap-1">
                   <span className="text-gray-400">•</span>
                   <span>
-                    {child.name} ({age} {age === 1 ? 'year' : 'years'})
+                    {child.name} ({age} {age === 1 ? t('time.year') : t('time.years')})
                   </span>
                 </li>
               );
             })}
           </ul>
         ) : (
-          <p className="text-gray-400 text-sm">No children added</p>
+          <p className="text-gray-400 text-sm">{t('family.noChildren')}</p>
         )}
       </SectionCard>
 
       {/* Goals Section */}
       <SectionCard
-        title="Goals"
+        title={t('review.goals')}
         step={WizardStepEnum.GOALS}
         onEdit={onEdit}
+        editLabel={t('common.edit')}
       >
         {goals && goals.selected_goals.length > 0 ? (
           <ul className="space-y-1 text-sm text-white">
@@ -179,33 +220,34 @@ export function ReviewSummary({ sessionData, language, onEdit }: ReviewSummaryPr
           </ul>
         ) : (
           <p className="text-gray-400 text-sm">
-            Goal: {getGoalLabel(DEFAULTS.GOAL)} (default)
+            {getGoalLabel(DEFAULTS.GOAL)} ({t('common.default')})
           </p>
         )}
       </SectionCard>
 
       {/* Preferences Section */}
       <SectionCard
-        title="Preferences"
+        title={t('review.preferences')}
         step={WizardStepEnum.PREFERENCES}
         onEdit={onEdit}
+        editLabel={t('common.edit')}
       >
         {preferences ? (
           <dl className="space-y-1 text-sm">
             <div className="flex gap-2">
-              <dt className="text-gray-400">Style:</dt>
+              <dt className="text-gray-400">{t('preferences.coachingStyle')}:</dt>
               <dd className="text-white">
                 {getCoachingStyleLabel(preferences.coaching_style)}
               </dd>
             </div>
             <div className="flex gap-2">
-              <dt className="text-gray-400">Time:</dt>
+              <dt className="text-gray-400">{t('preferences.coachingTime')}:</dt>
               <dd className="text-white">
                 {formatTime(preferences.preferred_coaching_time)}
               </dd>
             </div>
             <div className="flex gap-2">
-              <dt className="text-gray-400">Frequency:</dt>
+              <dt className="text-gray-400">{t('preferences.notificationFrequency')}:</dt>
               <dd className="text-white">
                 {getFrequencyLabel(preferences.notification_frequency)}
               </dd>
@@ -214,21 +256,21 @@ export function ReviewSummary({ sessionData, language, onEdit }: ReviewSummaryPr
         ) : (
           <dl className="space-y-1 text-sm">
             <div className="flex gap-2">
-              <dt className="text-gray-400">Style:</dt>
+              <dt className="text-gray-400">{t('preferences.coachingStyle')}:</dt>
               <dd className="text-white">
-                {getCoachingStyleLabel(DEFAULTS.COACHING_STYLE)} (default)
+                {getCoachingStyleLabel(DEFAULTS.COACHING_STYLE)} ({t('common.default')})
               </dd>
             </div>
             <div className="flex gap-2">
-              <dt className="text-gray-400">Time:</dt>
+              <dt className="text-gray-400">{t('preferences.coachingTime')}:</dt>
               <dd className="text-white">
-                {formatTime(DEFAULTS.COACHING_TIME)} (default)
+                {formatTime(DEFAULTS.COACHING_TIME)} ({t('common.default')})
               </dd>
             </div>
             <div className="flex gap-2">
-              <dt className="text-gray-400">Frequency:</dt>
+              <dt className="text-gray-400">{t('preferences.notificationFrequency')}:</dt>
               <dd className="text-white">
-                {getFrequencyLabel(DEFAULTS.NOTIFICATION_FREQUENCY)} (default)
+                {getFrequencyLabel(DEFAULTS.NOTIFICATION_FREQUENCY)} ({t('common.default')})
               </dd>
             </div>
           </dl>

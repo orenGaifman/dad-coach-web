@@ -4,6 +4,7 @@ import { useState, forwardRef, useCallback } from 'react';
 import Image from 'next/image';
 
 import { PREDEFINED_GOALS, VALIDATION } from '@/src/constants/onboarding';
+import { useTranslations } from '@/src/i18n/useTranslations';
 import type { GoalsData } from '@/src/types/onboarding';
 
 // ---------------------------------------------------------------------------
@@ -17,11 +18,28 @@ export interface GoalsSelectorProps {
 }
 
 // ---------------------------------------------------------------------------
+// Goal ID to translation key mapping
+// ---------------------------------------------------------------------------
+
+import type { TranslationStrings } from '@/src/i18n/translations';
+
+const GOAL_TRANSLATION_KEYS: Record<string, keyof TranslationStrings> = {
+  'spend_more_quality_time': 'onboarding.goals.spendMoreQualityTime',
+  'improve_communication': 'onboarding.goals.improveCommunication',
+  'build_stronger_emotional_connection': 'onboarding.goals.buildStrongerEmotionalConnection',
+  'handle_conflicts_better': 'onboarding.goals.handleConflictsBetter',
+  'create_family_routines': 'onboarding.goals.createFamilyRoutines',
+  'support_child_development': 'onboarding.goals.supportChildDevelopment',
+  'be_more_patient': 'onboarding.goals.beMorePatient',
+};
+
+// ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
 export const GoalsSelector = forwardRef<HTMLFormElement, GoalsSelectorProps>(
   function GoalsSelector({ onSubmit, initialData, isSubmitting = false }, ref) {
+    const { t } = useTranslations();
     const [selectedGoals, setSelectedGoals] = useState<string[]>(
       initialData?.selected_goals ?? [],
     );
@@ -69,9 +87,7 @@ export const GoalsSelector = forwardRef<HTMLFormElement, GoalsSelectorProps>(
         selectedGoals.length < VALIDATION.MIN_GOALS ||
         selectedGoals.length > VALIDATION.MAX_GOALS
       ) {
-        setError(
-          `Select ${VALIDATION.MIN_GOALS}–${VALIDATION.MAX_GOALS} goals`,
-        );
+        setError(t('onboarding.goals.validation.selectGoals'));
         return;
       }
 
@@ -83,6 +99,17 @@ export const GoalsSelector = forwardRef<HTMLFormElement, GoalsSelectorProps>(
       }
 
       onSubmit(data);
+    };
+
+    // Get translated label for a goal
+    const getGoalLabel = (goalId: string): string => {
+      const translationKey = GOAL_TRANSLATION_KEYS[goalId];
+      if (translationKey) {
+        return t(translationKey);
+      }
+      // Fallback to the label from PREDEFINED_GOALS
+      const found = PREDEFINED_GOALS.find((g) => g.id === goalId);
+      return found ? found.label : goalId;
     };
 
     return (
@@ -102,9 +129,9 @@ export const GoalsSelector = forwardRef<HTMLFormElement, GoalsSelectorProps>(
         {/* Heading */}
         <div className="text-center space-y-1">
           <h1 className="text-2xl font-bold text-white">
-            What would you like to improve as a father?
+            {t('onboarding.goals.title')}
           </h1>
-          <p className="text-gray-400">(Choose up to {VALIDATION.MAX_GOALS})</p>
+          <p className="text-gray-400">({t('onboarding.goals.subtitle')})</p>
         </div>
 
         {/* Validation error */}
@@ -119,6 +146,7 @@ export const GoalsSelector = forwardRef<HTMLFormElement, GoalsSelectorProps>(
           <legend className="sr-only">Select your goals</legend>
           {PREDEFINED_GOALS.map((goal) => {
             const isSelected = selectedGoals.includes(goal.id);
+            const goalLabel = getGoalLabel(goal.id);
             return (
               <label
                 key={goal.id}
@@ -133,7 +161,7 @@ export const GoalsSelector = forwardRef<HTMLFormElement, GoalsSelectorProps>(
                   checked={isSelected}
                   onChange={() => toggleGoal(goal.id)}
                   className="sr-only"
-                  aria-label={goal.label}
+                  aria-label={goalLabel}
                 />
                 {/* Checkbox visual */}
                 <span
@@ -161,7 +189,7 @@ export const GoalsSelector = forwardRef<HTMLFormElement, GoalsSelectorProps>(
                   )}
                 </span>
                 <span className="text-white text-sm font-medium">
-                  {goal.label}
+                  {goalLabel}
                 </span>
               </label>
             );
@@ -174,14 +202,14 @@ export const GoalsSelector = forwardRef<HTMLFormElement, GoalsSelectorProps>(
             htmlFor="custom-goal"
             className="block text-sm font-medium text-gray-300"
           >
-            Custom goal (optional)
+            {t('onboarding.goals.customGoal')}
           </label>
           <input
             id="custom-goal"
             type="text"
             value={customGoal}
             onChange={handleCustomGoalChange}
-            placeholder="Type your own goal…"
+            placeholder={t('onboarding.goals.customGoalPlaceholder')}
             maxLength={VALIDATION.CUSTOM_GOAL_MAX}
             className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
           />

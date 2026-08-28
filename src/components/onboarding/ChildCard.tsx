@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { VALIDATION } from '@/src/constants/onboarding';
+import { useTranslations } from '@/src/i18n/useTranslations';
 import type { ChildGender } from '@/src/types/onboarding';
 
 // ---------------------------------------------------------------------------
@@ -115,6 +116,7 @@ export function ChildCard({
   onRemove,
   errors,
 }: ChildCardProps) {
+  const { t } = useTranslations();
   const inputBase =
     'w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-500 transition-colors focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500';
 
@@ -129,7 +131,7 @@ export function ChildCard({
           type="button"
           onClick={onRemove}
           className="text-gray-400 hover:text-red-400 transition-colors text-sm"
-          aria-label={`Remove child ${index + 1}`}
+          aria-label={`${t('onboarding.children.remove')} child ${index + 1}`}
         >
           ✕
         </button>
@@ -141,14 +143,14 @@ export function ChildCard({
           htmlFor={`child-name-${id}`}
           className="text-sm text-gray-300 mb-1 block"
         >
-          Name
+          {t('onboarding.children.name')}
         </label>
         <input
           id={`child-name-${id}`}
           type="text"
           value={name}
           onChange={(e) => onChange('name', e.target.value)}
-          placeholder="Child's name"
+          placeholder={t('onboarding.children.namePlaceholder')}
           className={inputBase}
           minLength={VALIDATION.CHILD_NAME_MIN}
           maxLength={VALIDATION.CHILD_NAME_MAX}
@@ -169,7 +171,7 @@ export function ChildCard({
           htmlFor={`child-birth-${id}`}
           className="text-sm text-gray-300 mb-1 block"
         >
-          Birth date
+          {t('onboarding.children.birthDate')}
         </label>
         <input
           id={`child-birth-${id}`}
@@ -190,7 +192,7 @@ export function ChildCard({
       {/* Gender radio buttons */}
       <fieldset>
         <legend className="text-sm text-gray-300 mb-2">
-          Gender (optional)
+          {t('onboarding.children.gender')} ({t('common.optional')})
         </legend>
         <div className="flex gap-4">
           <label className="flex items-center gap-1.5 text-sm text-gray-300 cursor-pointer">
@@ -202,7 +204,7 @@ export function ChildCard({
               onChange={() => onChange('gender', 'MALE')}
               className="accent-indigo-500"
             />
-            Boy
+            {t('onboarding.children.genderBoy')}
           </label>
           <label className="flex items-center gap-1.5 text-sm text-gray-300 cursor-pointer">
             <input
@@ -213,7 +215,7 @@ export function ChildCard({
               onChange={() => onChange('gender', 'FEMALE')}
               className="accent-indigo-500"
             />
-            Girl
+            {t('onboarding.children.genderGirl')}
           </label>
           <label className="flex items-center gap-1.5 text-sm text-gray-300 cursor-pointer">
             <input
@@ -224,7 +226,7 @@ export function ChildCard({
               onChange={() => onChange('gender', 'PREFER_NOT_TO_SAY')}
               className="accent-indigo-500"
             />
-            Skip
+            {t('common.skip')}
           </label>
         </div>
       </fieldset>
@@ -232,7 +234,7 @@ export function ChildCard({
       {/* Interests tag input */}
       <TagInput
         id={`child-interests-${id}`}
-        label="Interests (optional)"
+        label={`${t('onboarding.children.interests')} (${t('common.optional')})`}
         tags={interests}
         onChange={(tags) => onChange('interests', tags)}
         placeholder="e.g. Soccer, Drawing..."
@@ -241,7 +243,7 @@ export function ChildCard({
       {/* Challenges tag input */}
       <TagInput
         id={`child-challenges-${id}`}
-        label="Challenges (optional)"
+        label={`${t('onboarding.children.challenges')} (${t('common.optional')})`}
         tags={challenges}
         onChange={(tags) => onChange('challenges', tags)}
         placeholder="e.g. Bedtime routine, Homework..."

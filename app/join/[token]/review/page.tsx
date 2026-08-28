@@ -7,6 +7,7 @@ import { OnboardingLayout } from '@/src/components/onboarding/OnboardingLayout';
 import { useOnboarding } from '@/src/components/onboarding/OnboardingProvider';
 import { ReviewSummary } from '@/src/components/onboarding/ReviewSummary';
 import { useStepGuard } from '@/src/hooks/useStepGuard';
+import { useTranslations } from '@/src/i18n/useTranslations';
 import { completeOnboarding, getSession } from '@/src/services/onboarding';
 import { ApiError } from '@/src/lib/api-client';
 import { getStoredSessionId } from '@/src/lib/api-client';
@@ -31,6 +32,7 @@ import type { SessionState } from '@/src/types/onboarding';
  */
 export default function ReviewPage() {
   const { isAllowed } = useStepGuard(WizardStep.REVIEW);
+  const { t } = useTranslations();
   const {
     sessionId,
     language,
@@ -161,7 +163,7 @@ export default function ReviewPage() {
         goForward();
       } else {
         setIsProvisioning(false);
-        setProvisionError('Something went wrong. Your information is safe — please try again.');
+        setProvisionError(t('onboarding.review.error'));
       }
     }
   }, [sessionId, isProvisioning, markStepCompleted, goForward]);
@@ -176,10 +178,10 @@ export default function ReviewPage() {
           <div
             className="w-12 h-12 rounded-full border-4 border-indigo-500/30 border-t-indigo-500 animate-spin"
             role="status"
-            aria-label="Setting up your coaching"
+            aria-label={t('onboarding.review.provisioning')}
           />
-          <p className="text-white text-lg font-medium">Setting up your coaching...</p>
-          <p className="text-gray-400 text-sm">This usually takes just a moment</p>
+          <p className="text-white text-lg font-medium">{t('onboarding.review.provisioning')}</p>
+          <p className="text-gray-400 text-sm">{t('onboarding.review.provisioningSubtitle')}</p>
         </div>
       </OnboardingLayout>
     );
@@ -189,7 +191,7 @@ export default function ReviewPage() {
     return (
       <OnboardingLayout isStepValid={false}>
         <div className="flex items-center justify-center py-12">
-          <div className="animate-pulse text-gray-400 text-sm">Loading your information…</div>
+          <div className="animate-pulse text-gray-400 text-sm">{t('onboarding.review.loading')}</div>
         </div>
       </OnboardingLayout>
     );
@@ -208,14 +210,14 @@ export default function ReviewPage() {
   return (
     <OnboardingLayout
       isStepValid={!isProvisioning}
-      continueLabel="Confirm & Start"
+      continueLabel={t('onboarding.review.confirmButton')}
       onContinue={handleConfirm}
     >
       <div className="space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold text-white">Review &amp; Confirm</h1>
+          <h1 className="text-2xl font-bold text-white">{t('onboarding.review.title')}</h1>
           <p className="text-gray-400 text-sm">
-            Take a moment to review your information before we set everything up.
+            {t('onboarding.review.subtitle')}
           </p>
         </div>
 

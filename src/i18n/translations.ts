@@ -96,6 +96,9 @@ export interface TranslationStrings {
   'common.error': string;
   'common.success': string;
   'common.retry': string;
+  'common.optional': string;
+  'common.required': string;
+  'common.default': string;
 
   // Time Units
   'time.hours': string;
@@ -202,6 +205,63 @@ export interface TranslationStrings {
   'onboarding.profile.duplicatePhone': string;
   'onboarding.profile.loginInstead': string;
 
+  // Onboarding - Children Form
+  'onboarding.children.title': string;
+  'onboarding.children.subtitle': string;
+  'onboarding.children.noChildren': string;
+  'onboarding.children.addAnother': string;
+  'onboarding.children.name': string;
+  'onboarding.children.namePlaceholder': string;
+  'onboarding.children.birthDate': string;
+  'onboarding.children.gender': string;
+  'onboarding.children.genderBoy': string;
+  'onboarding.children.genderGirl': string;
+  'onboarding.children.genderOther': string;
+  'onboarding.children.remove': string;
+  'onboarding.children.interests': string;
+  'onboarding.children.challenges': string;
+  'onboarding.children.validation.nameMin': string;
+  'onboarding.children.validation.nameMax': string;
+  'onboarding.children.validation.birthDateRequired': string;
+  'onboarding.children.validation.birthDateFuture': string;
+  'onboarding.children.validation.birthDateAge': string;
+
+  // Onboarding - Goals
+  'onboarding.goals.title': string;
+  'onboarding.goals.subtitle': string;
+  'onboarding.goals.customGoal': string;
+  'onboarding.goals.customGoalPlaceholder': string;
+  'onboarding.goals.validation.selectGoals': string;
+  // Predefined goals
+  'onboarding.goals.spendMoreQualityTime': string;
+  'onboarding.goals.improveCommunication': string;
+  'onboarding.goals.buildStrongerEmotionalConnection': string;
+  'onboarding.goals.handleConflictsBetter': string;
+  'onboarding.goals.createFamilyRoutines': string;
+  'onboarding.goals.supportChildDevelopment': string;
+  'onboarding.goals.beMorePatient': string;
+
+  // Onboarding - Preferences Form
+  'onboarding.preferences.title': string;
+  'onboarding.preferences.subtitle': string;
+  'onboarding.preferences.coachingStyle': string;
+  'onboarding.preferences.coachingTime': string;
+  'onboarding.preferences.frequency': string;
+  'onboarding.preferences.quietHours': string;
+
+  // Onboarding - Review
+  'onboarding.review.title': string;
+  'onboarding.review.subtitle': string;
+  'onboarding.review.confirmButton': string;
+  'onboarding.review.provisioning': string;
+  'onboarding.review.provisioningSubtitle': string;
+  'onboarding.review.loading': string;
+  'onboarding.review.error': string;
+
+  // Onboarding - Activation
+  'onboarding.activation.connected': string;
+  'onboarding.activation.settingUp': string;
+
   // Onboarding - Navigation
   'onboarding.nav.saving': string;
 
@@ -275,13 +335,13 @@ export const en: TranslationStrings = {
   'dashboard.weeklyGoal.history.cancelled': 'Cancelled',
 
   // Dashboard - Motivational Messages
-  'dashboard.motivation.goalMet': 'Great job! 🎉 You achieved your weekly goal!',
-  'dashboard.motivation.almost': 'Excellent! Almost there! 💪',
-  'dashboard.motivation.onTrack': 'You\'re on the right track! Keep going! 🌟',
-  'dashboard.motivation.goodStart': 'Good start! Every moment with the kids counts! 👨‍👧',
-  'dashboard.motivation.firstStep': 'The first step is the most important! ✨',
-  'dashboard.motivation.timeToStart': 'Time to start! The kids are waiting! 🚀',
-  'dashboard.motivation.masterDad': 'You reached the highest level! 🏆 You\'re a master dad!',
+  'dashboard.motivation.goalMet': 'Great job! You achieved your weekly goal!',
+  'dashboard.motivation.almost': 'Excellent! Almost there!',
+  'dashboard.motivation.onTrack': 'You\'re on the right track! Keep going!',
+  'dashboard.motivation.goodStart': 'Good start! Every moment with the kids counts!',
+  'dashboard.motivation.firstStep': 'The first step is the most important!',
+  'dashboard.motivation.timeToStart': 'Time to start! The kids are waiting!',
+  'dashboard.motivation.masterDad': 'You reached the highest level! You\'re a master dad!',
 
   // Belts
   'belt.white': 'White Belt',
@@ -308,6 +368,9 @@ export const en: TranslationStrings = {
   'common.error': 'Error',
   'common.success': 'Success',
   'common.retry': 'Retry',
+  'common.optional': 'optional',
+  'common.required': 'required',
+  'common.default': 'default',
 
   // Time Units
   'time.hours': 'hours',
@@ -333,7 +396,7 @@ export const en: TranslationStrings = {
   'calendar.connect.button': 'Connect with Google',
   'calendar.connect.connecting': 'Connecting...',
   'calendar.connect.privacy': 'We only access your calendar events. We won\'t share or modify any other data.',
-  'calendar.connected.title': '✅ Calendar Connected!',
+  'calendar.connected.title': 'Calendar Connected!',
   'calendar.connected.nextStep': 'Moving to the next step...',
 
   // Profile
@@ -393,15 +456,15 @@ export const en: TranslationStrings = {
   'onboarding.welcome.title': 'Become the Father You Want to Be',
   'onboarding.welcome.tagline': 'Small daily actions. Big lifelong impact.',
   'onboarding.welcome.invitedBy': 'Invited by',
-  'onboarding.welcome.startButton': 'Start Your Journey →',
-  'onboarding.welcome.starting': 'Starting…',
+  'onboarding.welcome.startButton': 'Start Your Journey',
+  'onboarding.welcome.starting': 'Starting...',
   'onboarding.welcome.feature.relationships': 'Relationships',
   'onboarding.welcome.feature.growth': 'Growth',
   'onboarding.welcome.feature.achievements': 'Achievements',
   'onboarding.welcome.feature.memories': 'Memories',
 
   // Onboarding - Profile Form
-  'onboarding.profile.title': "Let's start your journey",
+  'onboarding.profile.title': 'Let\'s start your journey',
   'onboarding.profile.subtitle': 'Just a few quick questions',
   'onboarding.profile.displayName': 'Display Name',
   'onboarding.profile.displayNamePlaceholder': 'Your name',
@@ -413,6 +476,63 @@ export const en: TranslationStrings = {
   'onboarding.profile.selectTimezone': 'Select timezone',
   'onboarding.profile.duplicatePhone': 'This number is already registered.',
   'onboarding.profile.loginInstead': 'Would you like to log in instead?',
+
+  // Onboarding - Children Form
+  'onboarding.children.title': 'How many children do you have?',
+  'onboarding.children.subtitle': 'Tell us about your children so we can personalize your coaching',
+  'onboarding.children.noChildren': 'Add your children when you\'re ready. You can always do this later.',
+  'onboarding.children.addAnother': '+ Add another child',
+  'onboarding.children.name': 'Name',
+  'onboarding.children.namePlaceholder': 'Child\'s name',
+  'onboarding.children.birthDate': 'Birth date',
+  'onboarding.children.gender': 'Gender',
+  'onboarding.children.genderBoy': 'Boy',
+  'onboarding.children.genderGirl': 'Girl',
+  'onboarding.children.genderOther': 'Other',
+  'onboarding.children.remove': 'Remove',
+  'onboarding.children.interests': 'Interests',
+  'onboarding.children.challenges': 'Challenges',
+  'onboarding.children.validation.nameMin': 'Name must be at least 2 characters',
+  'onboarding.children.validation.nameMax': 'Name must be under 30 characters',
+  'onboarding.children.validation.birthDateRequired': 'Birth date is required',
+  'onboarding.children.validation.birthDateFuture': 'Birth date cannot be in the future',
+  'onboarding.children.validation.birthDateAge': 'Child must be under 18 years old',
+
+  // Onboarding - Goals
+  'onboarding.goals.title': 'What would you like to improve as a father?',
+  'onboarding.goals.subtitle': 'Choose up to 5',
+  'onboarding.goals.customGoal': 'Custom goal (optional)',
+  'onboarding.goals.customGoalPlaceholder': 'Type your own goal...',
+  'onboarding.goals.validation.selectGoals': 'Select 1-5 goals',
+  // Predefined goals
+  'onboarding.goals.spendMoreQualityTime': 'Spend more quality time',
+  'onboarding.goals.improveCommunication': 'Improve communication',
+  'onboarding.goals.buildStrongerEmotionalConnection': 'Build stronger emotional connection',
+  'onboarding.goals.handleConflictsBetter': 'Handle conflicts better',
+  'onboarding.goals.createFamilyRoutines': 'Create family routines',
+  'onboarding.goals.supportChildDevelopment': 'Support child development',
+  'onboarding.goals.beMorePatient': 'Be more patient',
+
+  // Onboarding - Preferences Form
+  'onboarding.preferences.title': 'Customize your experience',
+  'onboarding.preferences.subtitle': 'How would you like to be coached?',
+  'onboarding.preferences.coachingStyle': 'Coaching Style',
+  'onboarding.preferences.coachingTime': 'Preferred Time',
+  'onboarding.preferences.frequency': 'Check-in Frequency',
+  'onboarding.preferences.quietHours': 'Quiet Hours',
+
+  // Onboarding - Review
+  'onboarding.review.title': 'Review & Confirm',
+  'onboarding.review.subtitle': 'Take a moment to review your information before we set everything up.',
+  'onboarding.review.confirmButton': 'Confirm & Start',
+  'onboarding.review.provisioning': 'Setting up your coaching...',
+  'onboarding.review.provisioningSubtitle': 'This usually takes just a moment',
+  'onboarding.review.loading': 'Loading your information...',
+  'onboarding.review.error': 'Something went wrong. Your information is safe — please try again.',
+
+  // Onboarding - Activation
+  'onboarding.activation.connected': 'You\'re connected!',
+  'onboarding.activation.settingUp': 'Setting up calendar...',
 
   // Onboarding - Navigation
   'onboarding.nav.saving': 'Saving...',
@@ -487,13 +607,13 @@ export const he: TranslationStrings = {
   'dashboard.weeklyGoal.history.cancelled': 'בוטל',
 
   // Dashboard - Motivational Messages
-  'dashboard.motivation.goalMet': 'כל הכבוד! 🎉 השגת את היעד השבועי!',
-  'dashboard.motivation.almost': 'מעולה! קצת עוד ואתה שם! 💪',
-  'dashboard.motivation.onTrack': 'אתה בדרך הנכונה! המשך כך! 🌟',
-  'dashboard.motivation.goodStart': 'התחלה טובה! כל רגע עם הילדים נחשב! 👨‍👧',
-  'dashboard.motivation.firstStep': 'הצעד הראשון הוא הכי חשוב! ✨',
-  'dashboard.motivation.timeToStart': 'הגיע הזמן להתחיל! הילדים מחכים! 🚀',
-  'dashboard.motivation.masterDad': 'הגעת לדרגה הגבוהה ביותר! 🏆 אתה אבא מאסטר!',
+  'dashboard.motivation.goalMet': 'כל הכבוד! השגת את היעד השבועי!',
+  'dashboard.motivation.almost': 'מעולה! קצת עוד ואתה שם!',
+  'dashboard.motivation.onTrack': 'אתה בדרך הנכונה! המשך כך!',
+  'dashboard.motivation.goodStart': 'התחלה טובה! כל רגע עם הילדים נחשב!',
+  'dashboard.motivation.firstStep': 'הצעד הראשון הוא הכי חשוב!',
+  'dashboard.motivation.timeToStart': 'הגיע הזמן להתחיל! הילדים מחכים!',
+  'dashboard.motivation.masterDad': 'הגעת לדרגה הגבוהה ביותר! אתה אבא מאסטר!',
 
   // Belts
   'belt.white': 'חגורה לבנה',
@@ -520,6 +640,9 @@ export const he: TranslationStrings = {
   'common.error': 'שגיאה',
   'common.success': 'הצלחה',
   'common.retry': 'נסה שוב',
+  'common.optional': 'אופציונלי',
+  'common.required': 'חובה',
+  'common.default': 'ברירת מחדל',
 
   // Time Units
   'time.hours': 'שעות',
@@ -542,10 +665,10 @@ export const he: TranslationStrings = {
   'calendar.connect.benefit2.description': 'זמן האיכות יתווסף אוטומטית ללוח שלך',
   'calendar.connect.benefit3.title': 'תזכורות',
   'calendar.connect.benefit3.description': 'תקבל תזכורת לפני זמן האיכות',
-  'calendar.connect.button': 'התחבר עם גוגל',
+  'calendar.connect.button': 'התחבר עם Google',
   'calendar.connect.connecting': 'מתחבר...',
   'calendar.connect.privacy': 'אנחנו ניגש רק לאירועים בלוח השנה שלך. לא נשתף או נשנה שום מידע אחר.',
-  'calendar.connected.title': '✅ לוח השנה מחובר!',
+  'calendar.connected.title': 'לוח השנה מחובר!',
   'calendar.connected.nextStep': 'עוברים לשלב הבא...',
 
   // Profile
@@ -605,8 +728,8 @@ export const he: TranslationStrings = {
   'onboarding.welcome.title': 'להפוך לאבא שתמיד רצית להיות',
   'onboarding.welcome.tagline': 'פעולות קטנות יומיומיות. השפעה גדולה לכל החיים.',
   'onboarding.welcome.invitedBy': 'הוזמנת על ידי',
-  'onboarding.welcome.startButton': 'בוא נתחיל ←',
-  'onboarding.welcome.starting': 'מתחיל…',
+  'onboarding.welcome.startButton': 'בוא נתחיל',
+  'onboarding.welcome.starting': 'מתחיל...',
   'onboarding.welcome.feature.relationships': 'יחסים',
   'onboarding.welcome.feature.growth': 'צמיחה',
   'onboarding.welcome.feature.achievements': 'הישגים',
@@ -625,6 +748,63 @@ export const he: TranslationStrings = {
   'onboarding.profile.selectTimezone': 'בחר אזור זמן',
   'onboarding.profile.duplicatePhone': 'המספר הזה כבר רשום.',
   'onboarding.profile.loginInstead': 'האם תרצה להתחבר במקום?',
+
+  // Onboarding - Children Form
+  'onboarding.children.title': 'כמה ילדים יש לך?',
+  'onboarding.children.subtitle': 'ספר לנו על הילדים שלך כדי שנוכל להתאים את האימון',
+  'onboarding.children.noChildren': 'הוסף את הילדים שלך כשתהיה מוכן. תמיד אפשר לעשות את זה אחר כך.',
+  'onboarding.children.addAnother': '+ הוסף ילד נוסף',
+  'onboarding.children.name': 'שם',
+  'onboarding.children.namePlaceholder': 'שם הילד',
+  'onboarding.children.birthDate': 'תאריך לידה',
+  'onboarding.children.gender': 'מגדר',
+  'onboarding.children.genderBoy': 'בן',
+  'onboarding.children.genderGirl': 'בת',
+  'onboarding.children.genderOther': 'אחר',
+  'onboarding.children.remove': 'הסר',
+  'onboarding.children.interests': 'תחומי עניין',
+  'onboarding.children.challenges': 'אתגרים',
+  'onboarding.children.validation.nameMin': 'השם חייב להכיל לפחות 2 תווים',
+  'onboarding.children.validation.nameMax': 'השם חייב להיות פחות מ-30 תווים',
+  'onboarding.children.validation.birthDateRequired': 'תאריך לידה הוא שדה חובה',
+  'onboarding.children.validation.birthDateFuture': 'תאריך לידה לא יכול להיות בעתיד',
+  'onboarding.children.validation.birthDateAge': 'הילד חייב להיות מתחת לגיל 18',
+
+  // Onboarding - Goals
+  'onboarding.goals.title': 'במה תרצה להשתפר כאבא?',
+  'onboarding.goals.subtitle': 'בחר עד 5',
+  'onboarding.goals.customGoal': 'מטרה מותאמת אישית (אופציונלי)',
+  'onboarding.goals.customGoalPlaceholder': 'כתוב מטרה משלך...',
+  'onboarding.goals.validation.selectGoals': 'בחר 1-5 מטרות',
+  // Predefined goals
+  'onboarding.goals.spendMoreQualityTime': 'להקדיש יותר זמן איכות',
+  'onboarding.goals.improveCommunication': 'לשפר תקשורת',
+  'onboarding.goals.buildStrongerEmotionalConnection': 'לבנות קשר רגשי חזק יותר',
+  'onboarding.goals.handleConflictsBetter': 'להתמודד טוב יותר עם קונפליקטים',
+  'onboarding.goals.createFamilyRoutines': 'ליצור שגרות משפחתיות',
+  'onboarding.goals.supportChildDevelopment': 'לתמוך בהתפתחות הילד',
+  'onboarding.goals.beMorePatient': 'להיות יותר סבלני',
+
+  // Onboarding - Preferences Form
+  'onboarding.preferences.title': 'התאמה אישית של החוויה',
+  'onboarding.preferences.subtitle': 'איך תרצה שנאמן אותך?',
+  'onboarding.preferences.coachingStyle': 'סגנון אימון',
+  'onboarding.preferences.coachingTime': 'שעה מועדפת',
+  'onboarding.preferences.frequency': 'תדירות בדיקה',
+  'onboarding.preferences.quietHours': 'שעות שקטות',
+
+  // Onboarding - Review
+  'onboarding.review.title': 'סקירה ואישור',
+  'onboarding.review.subtitle': 'קח רגע לסקור את המידע שלך לפני שנסיים את ההגדרות.',
+  'onboarding.review.confirmButton': 'אישור והתחלה',
+  'onboarding.review.provisioning': 'מכינים את האימון שלך...',
+  'onboarding.review.provisioningSubtitle': 'זה בדרך כלל לוקח רק רגע',
+  'onboarding.review.loading': 'טוען את המידע שלך...',
+  'onboarding.review.error': 'משהו השתבש. המידע שלך בטוח — אנא נסה שוב.',
+
+  // Onboarding - Activation
+  'onboarding.activation.connected': 'אתה מחובר!',
+  'onboarding.activation.settingUp': 'מגדיר לוח שנה...',
 
   // Onboarding - Navigation
   'onboarding.nav.saving': 'שומר...',
