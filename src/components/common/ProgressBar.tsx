@@ -1,12 +1,6 @@
 'use client';
 
-/**
- * Helper function to combine class names, filtering out undefined/null values.
- * A lightweight alternative to clsx/classnames.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Height variant options for the progress bar.

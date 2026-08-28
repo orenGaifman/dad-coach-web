@@ -36,13 +36,7 @@ import type {
   PositiveActivityType,
   ActivityResponse,
 } from '@/src/types/coaching';
-
-/**
- * Helper function to combine class names.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Activity type options for the selector.

@@ -5,6 +5,21 @@
  * multi-step onboarding wizard (WEB-SPEC-007).
  */
 
+// Re-export shared types for consumers of onboarding types
+export type {
+  CoachingStyle,
+  NotificationFrequency,
+  ChildGender,
+  SupportedLanguage,
+} from './common';
+
+import type {
+  CoachingStyle,
+  NotificationFrequency,
+  ChildGender,
+  SupportedLanguage,
+} from './common';
+
 // ---------------------------------------------------------------------------
 // Enums
 // ---------------------------------------------------------------------------
@@ -21,18 +36,6 @@ export enum WizardStep {
   REVIEW = 'REVIEW',
   ACTIVATION = 'ACTIVATION',
 }
-
-/** Coaching style options (Req 7). */
-export type CoachingStyle = 'GENTLE' | 'BALANCED' | 'DIRECT' | 'MOTIVATIONAL';
-
-/** Notification frequency options (Req 7). */
-export type NotificationFrequency = 'DAILY' | 'EVERY_OTHER_DAY' | 'TWICE_WEEKLY';
-
-/** Child gender options (Req 5). */
-export type ChildGender = 'MALE' | 'FEMALE' | 'OTHER' | 'PREFER_NOT_TO_SAY';
-
-/** Supported languages. */
-export type SupportedLanguage = 'he' | 'en';
 
 /** Activation polling status values (Req 9). */
 export type ActivationPollingStatus =

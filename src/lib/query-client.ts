@@ -20,7 +20,6 @@
  * | children, child-*      | 120s (2m)  |
  * | goals, goal-*          | 120s (2m)  |
  * | missions-active        | 60s        |
- * | conversations          | 120s (2m)  |
  * | notifications          | 30s        |
  * | profile                | 0 (fresh)  |
  *
@@ -66,9 +65,6 @@ export const STALE_TIMES = {
   /** Active mission - refreshes often */
   MISSIONS_ACTIVE: 60 * 1000, // 60s
 
-  /** Conversations - moderate refresh rate */
-  CONVERSATIONS: 2 * 60 * 1000, // 2 minutes
-
   /** Notifications - more frequent refresh */
   NOTIFICATIONS: 30 * 1000, // 30s
 
@@ -106,10 +102,6 @@ export const queryKeys = {
   goals: () => ['goals'] as const,
   goal: (goalId: string) => ['goal', goalId] as const,
   missionsActive: () => ['missions-active'] as const,
-
-  // Coaching
-  conversations: () => ['conversations'] as const,
-  conversation: (conversationId: string) => ['conversation', conversationId] as const,
 
   // Notifications
   notifications: () => ['notifications'] as const,

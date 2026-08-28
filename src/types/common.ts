@@ -159,6 +159,33 @@ export type ISODate = string;
 export type TimeString = string;
 
 // ---------------------------------------------------------------------------
+// Shared Domain Types
+// ---------------------------------------------------------------------------
+
+/**
+ * Coaching style preferences.
+ * Used across onboarding and workspace profile.
+ * @see Requirement 15.1: Coaching style options
+ */
+export type CoachingStyle = 'GENTLE' | 'BALANCED' | 'DIRECT' | 'MOTIVATIONAL';
+
+/**
+ * Supported languages for the application.
+ */
+export type SupportedLanguage = 'he' | 'en';
+
+/**
+ * Notification frequency options for coaching reminders.
+ */
+export type NotificationFrequency = 'DAILY' | 'EVERY_OTHER_DAY' | 'TWICE_WEEKLY';
+
+/**
+ * Child gender options.
+ * @see Requirement 14.2: Child form fields
+ */
+export type ChildGender = 'MALE' | 'FEMALE' | 'OTHER' | 'PREFER_NOT_TO_SAY';
+
+// ---------------------------------------------------------------------------
 // Generic Response Types
 // ---------------------------------------------------------------------------
 

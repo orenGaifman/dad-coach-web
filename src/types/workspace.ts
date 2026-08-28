@@ -10,8 +10,14 @@ import type {
   DegradedSection,
   ISODateTime,
   TimeString,
+  CoachingStyle,
+  SupportedLanguage,
+  NotificationFrequency,
 } from './common';
 import type { BeltLevel } from './growth';
+
+// Re-export shared types for consumers of workspace types
+export type { CoachingStyle, SupportedLanguage, NotificationFrequency } from './common';
 
 // ---------------------------------------------------------------------------
 // Coaching Phase
@@ -26,16 +32,6 @@ export type CoachingPhase =
   | 'ACTIVE_COACHING'
   | 'ESTABLISHED'
   | 'MASTERY';
-
-// ---------------------------------------------------------------------------
-// Coaching Style
-// ---------------------------------------------------------------------------
-
-/**
- * Coaching style preferences.
- * @see Requirement 15.1: Coaching style options
- */
-export type CoachingStyle = 'GENTLE' | 'BALANCED' | 'DIRECT' | 'MOTIVATIONAL';
 
 // ---------------------------------------------------------------------------
 // Active Mission (summary)
@@ -123,16 +119,6 @@ export interface WorkspaceSummaryResponse extends BaseApiResponse {
 // ---------------------------------------------------------------------------
 // Profile
 // ---------------------------------------------------------------------------
-
-/**
- * Supported languages.
- */
-export type SupportedLanguage = 'he' | 'en';
-
-/**
- * Notification frequency options.
- */
-export type NotificationFrequency = 'DAILY' | 'EVERY_OTHER_DAY' | 'TWICE_WEEKLY';
 
 /**
  * Response from GET /api/v1/workspace/profile

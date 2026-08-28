@@ -60,6 +60,15 @@ export function useCommitmentStats() {
 // ---------------------------------------------------------------------------
 
 /**
+ * Shared invalidation for commitment changes.
+ */
+function invalidateCommitmentQueries(queryClient: ReturnType<typeof useQueryClient>) {
+  queryClient.invalidateQueries({ queryKey: queryKeys.commitments() });
+  queryClient.invalidateQueries({ queryKey: queryKeys.commitmentsUpcoming() });
+  queryClient.invalidateQueries({ queryKey: queryKeys.commitmentStats() });
+}
+
+/**
  * Create a new commitment.
  */
 export function useCreateCommitment() {
@@ -68,10 +77,7 @@ export function useCreateCommitment() {
   return useMutation({
     mutationFn: (data: CreateCommitmentRequest) => createCommitment(data),
     onSuccess: () => {
-      // Invalidate commitment queries
-      queryClient.invalidateQueries({ queryKey: queryKeys.commitments() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.commitmentsUpcoming() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.commitmentStats() });
+      invalidateCommitmentQueries(queryClient);
       queryClient.invalidateQueries({ queryKey: queryKeys.workspaceSummary() });
     },
   });
@@ -87,10 +93,7 @@ export function useCompleteCommitment() {
     mutationFn: ({ commitmentId, data }: { commitmentId: number; data?: CompleteCommitmentRequest }) =>
       completeCommitment(commitmentId, data),
     onSuccess: () => {
-      // Invalidate commitment and growth queries
-      queryClient.invalidateQueries({ queryKey: queryKeys.commitments() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.commitmentsUpcoming() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.commitmentStats() });
+      invalidateCommitmentQueries(queryClient);
       invalidationPatterns.afterActivityLog.forEach((key) => {
         queryClient.invalidateQueries({ queryKey: key });
       });
@@ -107,9 +110,7 @@ export function useCancelCommitment() {
   return useMutation({
     mutationFn: (commitmentId: number) => cancelCommitment(commitmentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.commitments() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.commitmentsUpcoming() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.commitmentStats() });
+      invalidateCommitmentQueries(queryClient);
     },
   });
 }

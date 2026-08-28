@@ -147,7 +147,7 @@ export function calculateProgramProgress(
   currentStreakWeeks: number,
   longestStreakWeeks: number
 ): ProgramProgress {
-  const beltOrder: BeltLevel[] = ['WHITE', 'YELLOW', 'ORANGE', 'GREEN', 'BLUE', 'BROWN', 'BLACK'];
+  const beltOrder: BeltLevel[] = ['WHITE', 'YELLOW', 'ORANGE', 'GREEN', 'BLUE', 'PURPLE', 'BROWN', 'BLACK'];
   const currentIndex = beltOrder.indexOf(currentBelt);
   const totalBelts = beltOrder.length - 1; // Exclude WHITE as starting point
   

@@ -5,17 +5,14 @@
  * for the Family section (WEB-SPEC-008).
  */
 
-import type { BaseApiResponse, ISODateTime, ISODate } from './common';
+import type { BaseApiResponse, ISODateTime, ISODate, ChildGender } from './common';
+
+// Re-export shared types for consumers of family types
+export type { ChildGender } from './common';
 
 // ---------------------------------------------------------------------------
 // Child
 // ---------------------------------------------------------------------------
-
-/**
- * Child gender options.
- * @see Requirement 14.2: Child form fields
- */
-export type ChildGender = 'MALE' | 'FEMALE' | 'OTHER' | 'PREFER_NOT_TO_SAY';
 
 /**
  * Child overview item for the children list.
