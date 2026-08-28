@@ -65,6 +65,13 @@ export interface OnboardingContextValue extends OnboardingState {
 const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 
 // ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+const CURRENT_STEP_KEY = 'dadcoach_current_step';
+const COMPLETED_STEPS_KEY = 'dadcoach_completed_steps';
+
+// ---------------------------------------------------------------------------
 // Default state
 // ---------------------------------------------------------------------------
 
@@ -126,12 +133,41 @@ export function OnboardingProvider({
       }
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  const [currentStep, setCurrentStepState] = useState<WizardStep>(
-    initialState?.currentStep ?? DEFAULT_STATE.currentStep,
-  );
-  const [completedSteps, setCompletedSteps] = useState<WizardStep[]>(
-    initialState?.completedSteps ?? DEFAULT_STATE.completedSteps,
-  );
+
+  // Initialize currentStep from localStorage if available
+  const [currentStep, setCurrentStepState] = useState<WizardStep>(() => {
+    if (initialState?.currentStep) {
+      return initialState.currentStep;
+    }
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(CURRENT_STEP_KEY);
+      if (stored && ONBOARDING_STEPS.some(s => s.name === stored)) {
+        return stored as WizardStep;
+      }
+    }
+    return DEFAULT_STATE.currentStep;
+  });
+
+  // Initialize completedSteps from localStorage if available
+  const [completedSteps, setCompletedSteps] = useState<WizardStep[]>(() => {
+    if (initialState?.completedSteps) {
+      return initialState.completedSteps;
+    }
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(COMPLETED_STEPS_KEY);
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) {
+            return parsed.filter(step => ONBOARDING_STEPS.some(s => s.name === step));
+          }
+        } catch {
+          // Invalid JSON, use default
+        }
+      }
+    }
+    return DEFAULT_STATE.completedSteps;
+  });
   const [language, setLanguageState] = useState<SupportedLanguage | null>(
     initialState?.language ?? DEFAULT_STATE.language,
   );
@@ -144,6 +180,20 @@ export function OnboardingProvider({
   const [editingFromReview, setEditingFromReviewState] = useState<boolean>(
     initialState?.editingFromReview ?? DEFAULT_STATE.editingFromReview,
   );
+
+  // Persist currentStep to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(CURRENT_STEP_KEY, currentStep);
+    }
+  }, [currentStep]);
+
+  // Persist completedSteps to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(COMPLETED_STEPS_KEY, JSON.stringify(completedSteps));
+    }
+  }, [completedSteps]);
 
   // --- Helpers ---
 
