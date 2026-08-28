@@ -6,6 +6,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { OnboardingLayout } from '@/src/components/onboarding/OnboardingLayout';
 import { useOnboarding } from '@/src/components/onboarding/OnboardingProvider';
 import { LanguageSelector } from '@/src/components/onboarding/LanguageSelector';
+import { useLanguage } from '@/src/providers/LanguageProvider';
 import { apiClient } from '@/src/lib/api-client';
 import { getStoredSessionId } from '@/src/lib/api-client';
 import { WizardStep } from '@/src/types/onboarding';
@@ -25,6 +26,9 @@ export default function LanguagePage() {
     setIsSubmitting,
     isSubmitting,
   } = useOnboarding();
+  
+  // Also get the global language setter to persist across the app
+  const { setLanguage: setGlobalLanguage } = useLanguage();
 
   const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +52,11 @@ export default function LanguagePage() {
       } else {
         console.warn('No session ID available — skipping server step submission');
       }
+      
+      // Update both onboarding state AND global language provider
       setLanguage(selectedLanguage);
+      setGlobalLanguage(selectedLanguage);
+      
       setCurrentStep(WizardStep.FATHER_PROFILE);
       markStepCompleted(WizardStep.LANGUAGE);
       router.push(`/join/${params.token}/profile`);
@@ -58,7 +66,7 @@ export default function LanguagePage() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [selectedLanguage, isSubmitting, sessionId, setIsSubmitting, setLanguage, setCurrentStep, markStepCompleted, router, params.token]);
+  }, [selectedLanguage, isSubmitting, sessionId, setIsSubmitting, setLanguage, setGlobalLanguage, setCurrentStep, markStepCompleted, router, params.token]);
 
   return (
     <OnboardingLayout
