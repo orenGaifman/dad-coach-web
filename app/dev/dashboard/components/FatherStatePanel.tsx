@@ -30,6 +30,8 @@ interface FatherStatePanelProps {
   fatherId: number;
   /** Whether auto-refresh polling is enabled (default: true) */
   autoRefreshEnabled?: boolean;
+  /** Callback when workflow state changes (for state diagram synchronization) */
+  onWorkflowStateChange?: (currentState: string | null, previousState: string | null) => void;
 }
 
 /** Color mapping for workflow states */
@@ -343,7 +345,7 @@ function LoadingState() {
  *
  * @see Requirements 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7
  */
-export function FatherStatePanel({ fatherId, autoRefreshEnabled = true }: FatherStatePanelProps) {
+export function FatherStatePanel({ fatherId, autoRefreshEnabled = true, onWorkflowStateChange }: FatherStatePanelProps) {
   const [fatherState, setFatherState] = useState<DevFatherState | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -361,6 +363,13 @@ export function FatherStatePanel({ fatherId, autoRefreshEnabled = true }: Father
     try {
       const data = await fetchFatherState(fatherId, signal);
       setFatherState(data);
+      // Notify parent of workflow state changes
+      if (onWorkflowStateChange) {
+        onWorkflowStateChange(
+          data.workflow?.current_state ?? null,
+          data.workflow?.previous_state ?? null
+        );
+      }
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') {
         return; // Request was cancelled
@@ -372,7 +381,7 @@ export function FatherStatePanel({ fatherId, autoRefreshEnabled = true }: Father
         setIsLoading(false);
       }
     }
-  }, [fatherId]);
+  }, [fatherId, onWorkflowStateChange]);
 
   // Initial load when fatherId changes
   useEffect(() => {

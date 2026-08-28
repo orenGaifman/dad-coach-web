@@ -100,8 +100,8 @@ export function CalendarConnect({
         </h2>
         <p className="text-gray-400">
           {isHebrew 
-            ? 'עוברים לשלב הבא...' 
-            : 'Moving to next step...'}
+            ? 'ממשיכים לשלב הבא...' 
+            : 'Continuing to next step...'}
         </p>
       </div>
     );

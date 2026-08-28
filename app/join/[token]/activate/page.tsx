@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { useOnboarding } from '@/src/components/onboarding/OnboardingProvider';
 import ActivationScreen from '@/src/components/onboarding/ActivationScreen';
@@ -29,7 +30,8 @@ import { VALIDATION } from '@/src/constants/onboarding';
  */
 export default function ActivatePage() {
   const { isAllowed } = useStepGuard(WizardStep.ACTIVATION);
-  const { sessionId, markStepCompleted, goForward } = useOnboarding();
+  const { sessionId, markStepCompleted } = useOnboarding();
+  const router = useRouter();
 
   // Activation data — read from localStorage (set by review page after provisioning)
   const [deepLink] = useState(() => {
@@ -52,13 +54,20 @@ export default function ActivatePage() {
   const { status, isPolling, error: pollingError, restart } =
     useActivationPolling(sessionId);
 
-  // When activation succeeds, proceed to Calendar step
+  // When activation succeeds, proceed to Dashboard (calendar already done)
   useEffect(() => {
     if (status === 'CONVERSATION_STARTED') {
       markStepCompleted(WizardStep.ACTIVATION);
-      goForward(); // → calendar
+      // Clean up onboarding data from localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('dadcoach_deep_link');
+        localStorage.removeItem('dadcoach_activation_message');
+        // Keep father_id - might be useful for dashboard
+      }
+      // Go directly to dashboard - onboarding complete!
+      router.push('/workspace');
     }
-  }, [status, markStepCompleted, goForward]);
+  }, [status, markStepCompleted, router]);
 
   // --- Retry handler (Req 9.6) ---
   const handleRetry = useCallback(async () => {

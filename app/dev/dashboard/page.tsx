@@ -7,6 +7,7 @@ import { UnifiedConversationTimeline } from './components/UnifiedConversationTim
 import { AutoRefreshToggle } from './components/AutoRefreshToggle';
 import { TimezoneIndicator } from './components/TimezoneIndicator';
 import { StatusDictionaryPanel } from './components/StatusDictionaryPanel';
+import { StateFlowDiagram } from './components/StateFlowDiagram';
 import type { DevFatherListItem } from '@/src/types/dev';
 
 /**
@@ -57,6 +58,12 @@ function QualityTimePanelPlaceholder() {
   );
 }
 
+/** Workflow state for the state flow diagram */
+interface WorkflowStateInfo {
+  currentState: string | null;
+  previousState: string | null;
+}
+
 
 export default function DevDashboardPage() {
   // Auto-refresh state - defaults to enabled on every page load (per requirement 11.4)
@@ -67,6 +74,12 @@ export default function DevDashboardPage() {
   const [selectedFather, setSelectedFather] = useState<DevFatherListItem | null>(null);
   const [selectedFatherId, setSelectedFatherId] = useState<number | null>(null);
 
+  // Workflow state for state flow diagram
+  const [workflowState, setWorkflowState] = useState<WorkflowStateInfo>({
+    currentState: null,
+    previousState: null,
+  });
+
   // Handle auto-refresh toggle
   // @see Requirements 11.1, 11.3
   const handleAutoRefreshToggle = useCallback((enabled: boolean) => {
@@ -76,11 +89,20 @@ export default function DevDashboardPage() {
   // Handle father selection
   const handleFatherSelect = useCallback((father: DevFatherListItem | null) => {
     setSelectedFather(father);
+    // Reset workflow state when father changes
+    if (!father) {
+      setWorkflowState({ currentState: null, previousState: null });
+    }
   }, []);
 
   // Handle father ID change (includes initial load from localStorage)
   const handleFatherIdChange = useCallback((fatherId: number | null) => {
     setSelectedFatherId(fatherId);
+  }, []);
+
+  // Handle workflow state changes from FatherStatePanel
+  const handleWorkflowStateChange = useCallback((currentState: string | null, previousState: string | null) => {
+    setWorkflowState({ currentState, previousState });
   }, []);
 
   return (
@@ -115,20 +137,32 @@ export default function DevDashboardPage() {
       {/* Main Content Grid */}
       <main className="max-w-7xl mx-auto">
         {selectedFather ? (
-          <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-6">
-            {/* Left Column (40%) - Father State, Children, Quality Times */}
-            <div className="space-y-4">
-              <FatherStatePanel fatherId={selectedFather.id} />
-              <QualityTimePanelPlaceholder />
-              <StatusDictionaryPanel />
-            </div>
+          <div className="space-y-6">
+            {/* State Flow Diagram - Full Width */}
+            <StateFlowDiagram
+              currentState={workflowState.currentState}
+              previousState={workflowState.previousState}
+            />
+            
+            {/* Two Column Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-6">
+              {/* Left Column (40%) - Father State, Children, Quality Times */}
+              <div className="space-y-4">
+                <FatherStatePanel 
+                  fatherId={selectedFather.id}
+                  onWorkflowStateChange={handleWorkflowStateChange}
+                />
+                <QualityTimePanelPlaceholder />
+                <StatusDictionaryPanel />
+              </div>
 
-            {/* Right Column (60%) - Unified Conversation Timeline */}
-            <div className="space-y-4">
-              <UnifiedConversationTimeline 
-                fatherId={selectedFather.id} 
-                autoRefreshEnabled={autoRefreshEnabled}
-              />
+              {/* Right Column (60%) - Unified Conversation Timeline */}
+              <div className="space-y-4">
+                <UnifiedConversationTimeline 
+                  fatherId={selectedFather.id} 
+                  autoRefreshEnabled={autoRefreshEnabled}
+                />
+              </div>
             </div>
           </div>
         ) : (

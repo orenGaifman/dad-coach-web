@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 import { OnboardingLayout } from '@/src/components/onboarding/OnboardingLayout';
 import { useOnboarding } from '@/src/components/onboarding/OnboardingProvider';
@@ -11,8 +10,8 @@ import { WizardStep } from '@/src/types/onboarding';
 
 /**
  * Calendar connection page — connects Google Calendar for scheduling.
- * This step comes AFTER activation, so father_id is available from localStorage.
- * This is the FINAL step - after completion, user is redirected to dashboard.
+ * This step comes AFTER review (provisioning), so father_id is available from localStorage.
+ * After calendar connection (or skip), user proceeds to WhatsApp activation.
  *
  * Handles:
  * - Google OAuth flow for calendar access
@@ -21,9 +20,8 @@ import { WizardStep } from '@/src/types/onboarding';
  * @see Requirement: Calendar integration for automatic slot detection
  */
 export default function CalendarPage() {
-  const router = useRouter();
   const { isAllowed } = useStepGuard(WizardStep.CALENDAR);
-  const { markStepCompleted } = useOnboarding();
+  const { markStepCompleted, goForward } = useOnboarding();
   const [error, setError] = useState<string | null>(null);
   const [fatherId, setFatherId] = useState<number | undefined>(undefined);
   const [isConnected, setIsConnected] = useState(false);
@@ -55,35 +53,27 @@ export default function CalendarPage() {
     }
   }, []);
 
-  const goToDashboard = useCallback(() => {
-    // Clean up onboarding data from localStorage
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('dadcoach_deep_link');
-      localStorage.removeItem('dadcoach_activation_message');
-      // Keep father_id - might be useful for dashboard
-    }
-    router.push('/workspace');
-  }, [router]);
+  const goToActivation = useCallback(() => {
+    markStepCompleted(WizardStep.CALENDAR);
+    goForward(); // → activate (WhatsApp)
+  }, [markStepCompleted, goForward]);
 
   const handleConnected = useCallback(() => {
     setIsConnected(true);
-    markStepCompleted(WizardStep.CALENDAR);
-    goToDashboard();
-  }, [markStepCompleted, goToDashboard]);
+    goToActivation();
+  }, [goToActivation]);
 
   const handleSkip = useCallback(() => {
-    // Skip without connecting calendar - proceed to dashboard
-    markStepCompleted(WizardStep.CALENDAR);
-    goToDashboard();
-  }, [markStepCompleted, goToDashboard]);
+    // Skip without connecting calendar - proceed to activation
+    goToActivation();
+  }, [goToActivation]);
 
   const handleContinue = useCallback(() => {
     if (isConnected) {
-      markStepCompleted(WizardStep.CALENDAR);
-      goToDashboard();
+      goToActivation();
     }
     // If not connected, the CalendarConnect component handles the OAuth redirect
-  }, [isConnected, markStepCompleted, goToDashboard]);
+  }, [isConnected, goToActivation]);
 
   if (!isAllowed) return null;
 
