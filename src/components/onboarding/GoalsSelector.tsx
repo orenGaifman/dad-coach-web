@@ -24,13 +24,13 @@ export interface GoalsSelectorProps {
 import type { TranslationStrings } from '@/src/i18n/translations';
 
 const GOAL_TRANSLATION_KEYS: Record<string, keyof TranslationStrings> = {
-  'spend_more_quality_time': 'onboarding.goals.spendMoreQualityTime',
-  'improve_communication': 'onboarding.goals.improveCommunication',
-  'build_stronger_emotional_connection': 'onboarding.goals.buildStrongerEmotionalConnection',
-  'handle_conflicts_better': 'onboarding.goals.handleConflictsBetter',
-  'create_family_routines': 'onboarding.goals.createFamilyRoutines',
-  'support_child_development': 'onboarding.goals.supportChildDevelopment',
-  'be_more_patient': 'onboarding.goals.beMorePatient',
+  'spend-more-quality-time': 'onboarding.goals.spendMoreQualityTime',
+  'improve-communication': 'onboarding.goals.improveCommunication',
+  'build-stronger-emotional-connection': 'onboarding.goals.buildStrongerEmotionalConnection',
+  'handle-conflicts-better': 'onboarding.goals.handleConflictsBetter',
+  'create-family-routines': 'onboarding.goals.createFamilyRoutines',
+  'support-child-development': 'onboarding.goals.supportChildDevelopment',
+  'be-more-patient': 'onboarding.goals.beMorePatient',
 };
 
 // ---------------------------------------------------------------------------
