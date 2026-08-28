@@ -143,7 +143,7 @@ export const GoalsSelector = forwardRef<HTMLFormElement, GoalsSelectorProps>(
 
         {/* Goal cards */}
         <fieldset className="space-y-3">
-          <legend className="sr-only">Select your goals</legend>
+          <legend className="sr-only">{t('onboarding.goals.selectGoalsLabel')}</legend>
           {PREDEFINED_GOALS.map((goal) => {
             const isSelected = selectedGoals.includes(goal.id);
             const goalLabel = getGoalLabel(goal.id);

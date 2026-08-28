@@ -6,6 +6,7 @@ import { OnboardingLayout } from '@/src/components/onboarding/OnboardingLayout';
 import { useOnboarding } from '@/src/components/onboarding/OnboardingProvider';
 import { CalendarConnect } from '@/src/components/onboarding/CalendarConnect';
 import { useStepGuard } from '@/src/hooks/useStepGuard';
+import { useTranslations } from '@/src/i18n/useTranslations';
 import { WizardStep } from '@/src/types/onboarding';
 
 /**
@@ -22,6 +23,7 @@ import { WizardStep } from '@/src/types/onboarding';
  */
 export default function CalendarPage() {
   const { isAllowed } = useStepGuard(WizardStep.CALENDAR);
+  const { t } = useTranslations();
   const { markStepCompleted, goForward } = useOnboarding();
   const [error, setError] = useState<string | null>(null);
   const [fatherId, setFatherId] = useState<number | undefined>(undefined);
@@ -77,7 +79,7 @@ export default function CalendarPage() {
     <OnboardingLayout 
       isStepValid={isConnected} 
       onContinue={handleContinue}
-      continueLabel={isConnected ? 'Continue' : 'Connect Calendar'}
+      continueLabel={isConnected ? t('common.continue') : t('calendar.connect.button')}
     >
       <CalendarConnect
         onConnected={handleConnected}

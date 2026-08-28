@@ -6,6 +6,7 @@ import { OnboardingLayout } from '@/src/components/onboarding/OnboardingLayout';
 import { useOnboarding } from '@/src/components/onboarding/OnboardingProvider';
 import { PreferencesForm } from '@/src/components/onboarding/PreferencesForm';
 import { useStepGuard } from '@/src/hooks/useStepGuard';
+import { useTranslations } from '@/src/i18n/useTranslations';
 import { ApiError } from '@/src/lib/api-client';
 import { submitStep } from '@/src/services/onboarding';
 import { WizardStep } from '@/src/types/onboarding';
@@ -23,6 +24,7 @@ import type { PreferencesData } from '@/src/types/onboarding';
  */
 export default function PreferencesPage() {
   const { isAllowed } = useStepGuard(WizardStep.PREFERENCES);
+  const { t } = useTranslations();
   const { sessionId, isSubmitting, setIsSubmitting, markStepCompleted, goForward } = useOnboarding();
   const [formError, setFormError] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
@@ -40,14 +42,14 @@ export default function PreferencesPage() {
       goForward();
     } catch (err) {
       if (err instanceof ApiError) {
-        setFormError(err.body?.message || 'Something went wrong. Please try again.');
+        setFormError(err.body?.message || t('error.generic'));
       } else {
-        setFormError('Something went wrong. Please try again.');
+        setFormError(t('error.generic'));
       }
     } finally {
       setIsSubmitting(false);
     }
-  }, [isSubmitting, sessionId, setIsSubmitting, markStepCompleted, goForward]);
+  }, [isSubmitting, sessionId, setIsSubmitting, markStepCompleted, goForward, t]);
 
   const handleContinue = useCallback(() => {
     formRef.current?.requestSubmit();

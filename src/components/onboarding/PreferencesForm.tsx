@@ -7,6 +7,7 @@ import {
   NOTIFICATION_FREQUENCY_OPTIONS,
   DEFAULTS,
 } from '@/src/constants/onboarding';
+import { useTranslations } from '@/src/i18n/useTranslations';
 import type { PreferencesData, CoachingStyle, NotificationFrequency } from '@/src/types/onboarding';
 
 // ---------------------------------------------------------------------------
@@ -35,6 +36,7 @@ export interface PreferencesFormProps {
 
 export const PreferencesForm = forwardRef<HTMLFormElement, PreferencesFormProps>(
   function PreferencesForm({ onSubmit, initialData, isSubmitting = false }, ref) {
+    const { t } = useTranslations();
     const [coachingStyle, setCoachingStyle] = useState<CoachingStyle>(
       initialData?.coaching_style ?? DEFAULTS.COACHING_STYLE,
     );
@@ -70,10 +72,12 @@ export const PreferencesForm = forwardRef<HTMLFormElement, PreferencesFormProps>
         {/* Coaching Style Cards */}
         <fieldset className="space-y-3">
           <legend className="block text-sm font-medium text-gray-300 mb-2">
-            Coaching style
+            {t('preferences.coachingStyle')}
           </legend>
           {COACHING_STYLE_OPTIONS.map((option) => {
             const isSelected = coachingStyle === option.value;
+            const labelKey = `coachingStyle.${option.value.toLowerCase()}` as keyof import('@/src/i18n/translations').TranslationStrings;
+            const descKey = `coachingStyle.${option.value.toLowerCase()}.description` as keyof import('@/src/i18n/translations').TranslationStrings;
             return (
               <label
                 key={option.value}
@@ -92,10 +96,10 @@ export const PreferencesForm = forwardRef<HTMLFormElement, PreferencesFormProps>
                   className="sr-only"
                 />
                 <span className="block text-white text-sm font-medium">
-                  {option.label}
+                  {t(labelKey)}
                 </span>
                 <span className="block text-gray-400 text-xs mt-1">
-                  {option.description}
+                  {t(descKey)}
                 </span>
               </label>
             );
@@ -108,7 +112,7 @@ export const PreferencesForm = forwardRef<HTMLFormElement, PreferencesFormProps>
             htmlFor="coaching-time"
             className="block text-sm font-medium text-gray-300"
           >
-            Preferred coaching time
+            {t('preferences.coachingTime')}
           </label>
           <select
             id="coaching-time"
@@ -127,10 +131,16 @@ export const PreferencesForm = forwardRef<HTMLFormElement, PreferencesFormProps>
         {/* Notification Frequency */}
         <fieldset className="space-y-3">
           <legend className="block text-sm font-medium text-gray-300 mb-2">
-            Notification frequency
+            {t('preferences.notificationFrequency')}
           </legend>
           {NOTIFICATION_FREQUENCY_OPTIONS.map((option) => {
             const isSelected = frequency === option.value;
+            const freqKeyMap: Record<string, keyof import('@/src/i18n/translations').TranslationStrings> = {
+              'DAILY': 'notificationFrequency.daily',
+              'EVERY_OTHER_DAY': 'notificationFrequency.everyOtherDay',
+              'TWICE_WEEKLY': 'notificationFrequency.twiceWeekly',
+            };
+            const labelKey = freqKeyMap[option.value];
             return (
               <label
                 key={option.value}
@@ -162,7 +172,7 @@ export const PreferencesForm = forwardRef<HTMLFormElement, PreferencesFormProps>
                   )}
                 </span>
                 <span className="text-white text-sm font-medium">
-                  {option.label}
+                  {t(labelKey)}
                 </span>
               </label>
             );
@@ -172,7 +182,7 @@ export const PreferencesForm = forwardRef<HTMLFormElement, PreferencesFormProps>
         {/* Quiet Hours */}
         <div className="space-y-3">
           <p className="block text-sm font-medium text-gray-300">
-            Quiet hours
+            {t('preferences.quietHours')}
           </p>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
@@ -180,7 +190,7 @@ export const PreferencesForm = forwardRef<HTMLFormElement, PreferencesFormProps>
                 htmlFor="quiet-start"
                 className="block text-xs text-gray-400"
               >
-                From
+                {t('preferences.quietHours.from')}
               </label>
               <select
                 id="quiet-start"
@@ -200,7 +210,7 @@ export const PreferencesForm = forwardRef<HTMLFormElement, PreferencesFormProps>
                 htmlFor="quiet-end"
                 className="block text-xs text-gray-400"
               >
-                To
+                {t('preferences.quietHours.to')}
               </label>
               <select
                 id="quiet-end"

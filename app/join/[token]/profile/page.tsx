@@ -68,15 +68,15 @@ export default function ProfilePage() {
           setDuplicatePhone(true);
         } else if (err instanceof ApiError && err.body?.code) {
           const field = mapErrorToField(err.body.code);
-          setServerErrors({ [field]: err.body.message || 'Validation error' });
+          setServerErrors({ [field]: err.body.message || t('error.generic') });
         } else {
-          setServerErrors({ _form: 'Something went wrong. Please try again.' });
+          setServerErrors({ _form: t('error.generic') });
         }
       } finally {
         setIsSubmitting(false);
       }
     },
-    [isSubmitting, sessionId, setIsSubmitting, markStepCompleted, goForward],
+    [isSubmitting, sessionId, setIsSubmitting, markStepCompleted, goForward, t],
   );
 
   // Trigger the hidden form submit button from OnboardingLayout's Continue

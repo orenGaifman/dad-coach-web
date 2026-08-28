@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
+import { useTranslations } from '@/src/i18n/useTranslations';
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -37,6 +39,7 @@ export default function ActivationScreen({
   isPolling,
   pollingError,
 }: ActivationScreenProps) {
+  const { t, isRTL } = useTranslations();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -50,7 +53,7 @@ export default function ActivationScreen({
   };
 
   return (
-    <div className="flex flex-col items-center text-center space-y-6 pt-4">
+    <div className="flex flex-col items-center text-center space-y-6 pt-4" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Hero illustration */}
       <div className="w-full max-w-[200px]">
         <Image
@@ -65,12 +68,12 @@ export default function ActivationScreen({
 
       {/* Heading */}
       <h2 className="text-2xl font-bold text-white">
-        Welcome to Dad Coach!
+        {t('onboarding.activation.welcome')}
       </h2>
 
       {/* Description */}
       <p className="text-gray-300">
-        Your coach is already waiting for you on WhatsApp. Let&apos;s do this together!
+        {t('onboarding.activation.description')}
       </p>
 
       {/* WhatsApp deep link button */}
@@ -82,12 +85,12 @@ export default function ActivationScreen({
         className="w-full max-w-xs px-6 py-3 bg-[#25D366] hover:bg-[#1DA851] text-white font-semibold rounded-full transition-colors flex items-center justify-center gap-2"
       >
         <span aria-hidden="true">💬</span>
-        Open WhatsApp →
+        {t('onboarding.activation.openWhatsApp')}
       </a>
 
       {/* Copy message fallback */}
       <div className="w-full max-w-xs space-y-2">
-        <p className="text-sm text-gray-400">or copy this message:</p>
+        <p className="text-sm text-gray-400">{t('onboarding.activation.copyMessage')}</p>
         <button
           onClick={handleCopy}
           aria-label={copied ? 'Message copied to clipboard' : 'Copy activation message to clipboard'}
@@ -100,7 +103,7 @@ export default function ActivationScreen({
         </button>
         {copied && (
           <p className="text-xs text-green-400" role="status" aria-live="polite">
-            Copied!
+            {t('onboarding.activation.copied')}
           </p>
         )}
       </div>
@@ -112,7 +115,7 @@ export default function ActivationScreen({
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-500" />
           </span>
-          Waiting for connection...
+          {t('onboarding.activation.waiting')}
         </div>
       )}
 
@@ -125,7 +128,7 @@ export default function ActivationScreen({
 
       {/* Footer text */}
       <p className="text-gray-500 italic text-sm">
-        The journey begins now.
+        {t('onboarding.activation.journeyBegins')}
       </p>
     </div>
   );

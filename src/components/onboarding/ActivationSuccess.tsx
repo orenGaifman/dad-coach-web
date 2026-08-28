@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 
+import { useTranslations } from '@/src/i18n/useTranslations';
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -26,8 +28,10 @@ export interface ActivationSuccessProps {
 export default function ActivationSuccess({
   dashboardUrl = '/workspace',
 }: ActivationSuccessProps) {
+  const { t, isRTL } = useTranslations();
+
   return (
-    <div className="flex flex-col items-center text-center space-y-6 pt-4">
+    <div className="flex flex-col items-center text-center space-y-6 pt-4" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Decorative confetti (positioned behind success illustration) */}
       <div className="relative">
         <Image
@@ -51,12 +55,12 @@ export default function ActivationSuccess({
 
       {/* Heading */}
       <h2 className="text-2xl font-bold text-white">
-        You&apos;re connected! 🎉
+        {t('onboarding.activation.success.title')}
       </h2>
 
       {/* Description */}
       <p className="text-gray-300">
-        Your coaching journey starts now.
+        {t('onboarding.activation.success.description')}
       </p>
 
       {/* Dashboard button */}
@@ -64,7 +68,7 @@ export default function ActivationSuccess({
         href={dashboardUrl}
         className="w-full max-w-xs px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-full transition-colors flex items-center justify-center gap-1"
       >
-        Go to Dashboard →
+        {t('onboarding.activation.success.dashboard')}
       </a>
     </div>
   );

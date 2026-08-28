@@ -210,6 +210,7 @@ export interface TranslationStrings {
   'onboarding.children.subtitle': string;
   'onboarding.children.noChildren': string;
   'onboarding.children.addAnother': string;
+  'onboarding.children.childNumber': string;
   'onboarding.children.name': string;
   'onboarding.children.namePlaceholder': string;
   'onboarding.children.birthDate': string;
@@ -219,7 +220,10 @@ export interface TranslationStrings {
   'onboarding.children.genderOther': string;
   'onboarding.children.remove': string;
   'onboarding.children.interests': string;
+  'onboarding.children.interestsPlaceholder': string;
   'onboarding.children.challenges': string;
+  'onboarding.children.challengesPlaceholder': string;
+  'onboarding.children.tagInputPlaceholder': string;
   'onboarding.children.validation.nameMin': string;
   'onboarding.children.validation.nameMax': string;
   'onboarding.children.validation.birthDateRequired': string;
@@ -261,6 +265,28 @@ export interface TranslationStrings {
   // Onboarding - Activation
   'onboarding.activation.connected': string;
   'onboarding.activation.settingUp': string;
+  'onboarding.activation.welcome': string;
+  'onboarding.activation.description': string;
+  'onboarding.activation.openWhatsApp': string;
+  'onboarding.activation.copyMessage': string;
+  'onboarding.activation.copied': string;
+  'onboarding.activation.waiting': string;
+  'onboarding.activation.journeyBegins': string;
+  'onboarding.activation.success.title': string;
+  'onboarding.activation.success.description': string;
+  'onboarding.activation.success.dashboard': string;
+  'onboarding.activation.failed.noMessage': string;
+  'onboarding.activation.failed.tryAgain': string;
+  'onboarding.activation.failed.reminder': string;
+  'onboarding.activation.failed.closePage': string;
+
+  // Onboarding - Session/Errors
+  'onboarding.session.expired.title': string;
+  'onboarding.session.expired.description': string;
+  'onboarding.session.expired.startAgain': string;
+
+  // Goals Accessibility
+  'onboarding.goals.selectGoalsLabel': string;
 
   // Onboarding - Navigation
   'onboarding.nav.saving': string;
@@ -482,6 +508,7 @@ export const en: TranslationStrings = {
   'onboarding.children.subtitle': 'Tell us about your children so we can personalize your coaching',
   'onboarding.children.noChildren': 'Add your children when you\'re ready. You can always do this later.',
   'onboarding.children.addAnother': '+ Add another child',
+  'onboarding.children.childNumber': 'Child',
   'onboarding.children.name': 'Name',
   'onboarding.children.namePlaceholder': 'Child\'s name',
   'onboarding.children.birthDate': 'Birth date',
@@ -491,7 +518,10 @@ export const en: TranslationStrings = {
   'onboarding.children.genderOther': 'Other',
   'onboarding.children.remove': 'Remove',
   'onboarding.children.interests': 'Interests',
+  'onboarding.children.interestsPlaceholder': 'e.g. Soccer, Drawing...',
   'onboarding.children.challenges': 'Challenges',
+  'onboarding.children.challengesPlaceholder': 'e.g. Bedtime routine, Homework...',
+  'onboarding.children.tagInputPlaceholder': 'Type and press Enter',
   'onboarding.children.validation.nameMin': 'Name must be at least 2 characters',
   'onboarding.children.validation.nameMax': 'Name must be under 30 characters',
   'onboarding.children.validation.birthDateRequired': 'Birth date is required',
@@ -533,6 +563,28 @@ export const en: TranslationStrings = {
   // Onboarding - Activation
   'onboarding.activation.connected': 'You\'re connected!',
   'onboarding.activation.settingUp': 'Setting up calendar...',
+  'onboarding.activation.welcome': 'Welcome to Dad Coach!',
+  'onboarding.activation.description': 'Your coach is already waiting for you on WhatsApp. Let\'s do this together!',
+  'onboarding.activation.openWhatsApp': 'Open WhatsApp →',
+  'onboarding.activation.copyMessage': 'or copy this message:',
+  'onboarding.activation.copied': 'Copied!',
+  'onboarding.activation.waiting': 'Waiting for connection...',
+  'onboarding.activation.journeyBegins': 'The journey begins now.',
+  'onboarding.activation.success.title': 'You\'re connected! 🎉',
+  'onboarding.activation.success.description': 'Your coaching journey starts now.',
+  'onboarding.activation.success.dashboard': 'Go to Dashboard →',
+  'onboarding.activation.failed.noMessage': 'We didn\'t receive your message.',
+  'onboarding.activation.failed.tryAgain': 'Try Again',
+  'onboarding.activation.failed.reminder': 'We\'ll send you a reminder.',
+  'onboarding.activation.failed.closePage': 'You can close this page.',
+
+  // Onboarding - Session/Errors
+  'onboarding.session.expired.title': 'Your session has expired',
+  'onboarding.session.expired.description': 'Your session has expired, but the invitation is still valid. Let\'s start fresh.',
+  'onboarding.session.expired.startAgain': 'Start Again',
+
+  // Goals Accessibility
+  'onboarding.goals.selectGoalsLabel': 'Select your goals',
 
   // Onboarding - Navigation
   'onboarding.nav.saving': 'Saving...',
@@ -754,6 +806,7 @@ export const he: TranslationStrings = {
   'onboarding.children.subtitle': 'ספר לנו על הילדים שלך כדי שנוכל להתאים את האימון',
   'onboarding.children.noChildren': 'הוסף את הילדים שלך כשתהיה מוכן. תמיד אפשר לעשות את זה אחר כך.',
   'onboarding.children.addAnother': '+ הוסף ילד נוסף',
+  'onboarding.children.childNumber': 'ילד',
   'onboarding.children.name': 'שם',
   'onboarding.children.namePlaceholder': 'שם הילד',
   'onboarding.children.birthDate': 'תאריך לידה',
@@ -763,7 +816,10 @@ export const he: TranslationStrings = {
   'onboarding.children.genderOther': 'אחר',
   'onboarding.children.remove': 'הסר',
   'onboarding.children.interests': 'תחומי עניין',
+  'onboarding.children.interestsPlaceholder': 'לדוגמה: כדורגל, ציור...',
   'onboarding.children.challenges': 'אתגרים',
+  'onboarding.children.challengesPlaceholder': 'לדוגמה: שגרת שינה, שיעורי בית...',
+  'onboarding.children.tagInputPlaceholder': 'הקלד ולחץ Enter',
   'onboarding.children.validation.nameMin': 'השם חייב להכיל לפחות 2 תווים',
   'onboarding.children.validation.nameMax': 'השם חייב להיות פחות מ-30 תווים',
   'onboarding.children.validation.birthDateRequired': 'תאריך לידה הוא שדה חובה',
@@ -805,6 +861,28 @@ export const he: TranslationStrings = {
   // Onboarding - Activation
   'onboarding.activation.connected': 'אתה מחובר!',
   'onboarding.activation.settingUp': 'מגדיר לוח שנה...',
+  'onboarding.activation.welcome': 'ברוך הבא ל-Dad Coach!',
+  'onboarding.activation.description': 'המאמן שלך כבר מחכה לך בוואטסאפ. בוא נעשה את זה ביחד!',
+  'onboarding.activation.openWhatsApp': 'פתח וואטסאפ ←',
+  'onboarding.activation.copyMessage': 'או העתק את ההודעה הזו:',
+  'onboarding.activation.copied': 'הועתק!',
+  'onboarding.activation.waiting': 'ממתין לחיבור...',
+  'onboarding.activation.journeyBegins': 'המסע מתחיל עכשיו.',
+  'onboarding.activation.success.title': 'אתה מחובר! 🎉',
+  'onboarding.activation.success.description': 'מסע האימון שלך מתחיל עכשיו.',
+  'onboarding.activation.success.dashboard': 'לדשבורד ←',
+  'onboarding.activation.failed.noMessage': 'לא קיבלנו את ההודעה שלך.',
+  'onboarding.activation.failed.tryAgain': 'נסה שוב',
+  'onboarding.activation.failed.reminder': 'נשלח לך תזכורת.',
+  'onboarding.activation.failed.closePage': 'אפשר לסגור את הדף.',
+
+  // Onboarding - Session/Errors
+  'onboarding.session.expired.title': 'פג תוקף הסשן שלך',
+  'onboarding.session.expired.description': 'פג תוקף הסשן שלך, אבל ההזמנה עדיין תקפה. בוא נתחיל מחדש.',
+  'onboarding.session.expired.startAgain': 'התחל מחדש',
+
+  // Goals Accessibility
+  'onboarding.goals.selectGoalsLabel': 'בחר את היעדים שלך',
 
   // Onboarding - Navigation
   'onboarding.nav.saving': 'שומר...',

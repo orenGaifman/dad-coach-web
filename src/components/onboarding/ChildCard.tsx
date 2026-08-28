@@ -32,10 +32,10 @@ interface TagInputProps {
   label: string;
   tags: string[];
   onChange: (tags: string[]) => void;
-  placeholder?: string;
+  placeholder: string;
 }
 
-function TagInput({ id, label, tags, onChange, placeholder = 'Type and press Enter' }: TagInputProps) {
+function TagInput({ id, label, tags, onChange, placeholder }: TagInputProps) {
   const [inputValue, setInputValue] = useState('');
 
   const addTag = () => {
@@ -125,7 +125,7 @@ export function ChildCard({
       {/* Child header with remove button */}
       <div className="flex justify-between items-center">
         <span className="text-sm font-medium text-gray-300">
-          Child {index + 1}
+          {t('onboarding.children.childNumber')} {index + 1}
         </span>
         <button
           type="button"
@@ -237,7 +237,7 @@ export function ChildCard({
         label={`${t('onboarding.children.interests')} (${t('common.optional')})`}
         tags={interests}
         onChange={(tags) => onChange('interests', tags)}
-        placeholder="e.g. Soccer, Drawing..."
+        placeholder={t('onboarding.children.interestsPlaceholder')}
       />
 
       {/* Challenges tag input */}
@@ -246,7 +246,7 @@ export function ChildCard({
         label={`${t('onboarding.children.challenges')} (${t('common.optional')})`}
         tags={challenges}
         onChange={(tags) => onChange('challenges', tags)}
-        placeholder="e.g. Bedtime routine, Homework..."
+        placeholder={t('onboarding.children.challengesPlaceholder')}
       />
     </div>
   );

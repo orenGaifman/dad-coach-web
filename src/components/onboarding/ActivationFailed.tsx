@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 
+import { useTranslations } from '@/src/i18n/useTranslations';
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -29,11 +31,14 @@ export default function ActivationFailed({
   onRetry,
   showGiveUp = false,
 }: ActivationFailedProps) {
+  const { t, isRTL } = useTranslations();
+
   return (
     <div
       className="flex flex-col items-center text-center space-y-6 pt-4"
       role="alert"
       aria-live="polite"
+      dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Error illustration */}
       <Image
@@ -48,20 +53,20 @@ export default function ActivationFailed({
         <>
           {/* Give-up state: max retries exceeded */}
           <h2 className="text-2xl font-bold text-white">
-            We&apos;ll send you a reminder.
+            {t('onboarding.activation.failed.reminder')}
           </h2>
           <p className="text-gray-300">
-            You can close this page.
+            {t('onboarding.activation.failed.closePage')}
           </p>
         </>
       ) : (
         <>
           {/* Retry state */}
           <h2 className="text-2xl font-bold text-white">
-            We didn&apos;t receive your message.
+            {t('onboarding.activation.failed.noMessage')}
           </h2>
           <p className="text-gray-300">
-            Tap the button to try again.
+            {t('onboarding.activation.failed.tryAgain')}
           </p>
 
           {/* Retry button */}
@@ -69,7 +74,7 @@ export default function ActivationFailed({
             onClick={onRetry}
             className="w-full max-w-xs px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-full transition-colors"
           >
-            Try Again
+            {t('onboarding.activation.failed.tryAgain')}
           </button>
         </>
       )}
