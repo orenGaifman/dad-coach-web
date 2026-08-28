@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { z } from 'zod';
 
 import { VALIDATION, DEFAULTS } from '@/src/constants/onboarding';
+import { useTranslations } from '@/src/i18n/useTranslations';
 import { formatE164, isValidE164 } from '@/src/utils/phone';
 
 // ---------------------------------------------------------------------------
@@ -64,6 +65,8 @@ export const ProfileForm = forwardRef<HTMLFormElement, ProfileFormProps>(functio
   { onSubmit, isSubmitting = false, initialData, serverErrors },
   ref,
 ) {
+  const { t, isRTL } = useTranslations();
+
   // Form state
   const [displayName, setDisplayName] = useState(initialData?.displayName ?? '');
   const [phoneNumber, setPhoneNumber] = useState(initialData?.phoneNumber ?? '');
@@ -228,7 +231,7 @@ export const ProfileForm = forwardRef<HTMLFormElement, ProfileFormProps>(functio
   };
 
   return (
-    <form ref={ref} onSubmit={handleSubmit} noValidate className="space-y-6">
+    <form ref={ref} onSubmit={handleSubmit} noValidate className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Illustration */}
       <div className="flex justify-center">
         <Image
@@ -244,15 +247,15 @@ export const ProfileForm = forwardRef<HTMLFormElement, ProfileFormProps>(functio
       {/* Heading */}
       <div className="text-center space-y-1">
         <h1 className="text-2xl font-bold text-white">
-          Let&apos;s start your journey
+          {t('onboarding.profile.title')}
         </h1>
-        <p className="text-gray-400">Just a few quick questions</p>
+        <p className="text-gray-400">{t('onboarding.profile.subtitle')}</p>
       </div>
 
       {/* Display Name */}
       <div>
         <label htmlFor="displayName" className="text-sm text-gray-300 mb-1 block">
-          Display Name
+          {t('onboarding.profile.displayName')}
         </label>
         <input
           id="displayName"
@@ -260,7 +263,7 @@ export const ProfileForm = forwardRef<HTMLFormElement, ProfileFormProps>(functio
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
           onBlur={() => handleBlur('displayName')}
-          placeholder="Your name"
+          placeholder={t('onboarding.profile.displayNamePlaceholder')}
           className={getInputClassName('displayName')}
           aria-describedby={getError('displayName') ? 'displayName-error' : undefined}
           aria-invalid={!!getError('displayName')}
@@ -276,7 +279,7 @@ export const ProfileForm = forwardRef<HTMLFormElement, ProfileFormProps>(functio
       {/* Phone Number with Country Code */}
       <div>
         <label htmlFor="phoneNumber" className="text-sm text-gray-300 mb-1 block">
-          WhatsApp Number
+          {t('onboarding.profile.whatsappNumber')}
         </label>
         <div className="flex gap-2" dir="ltr">
           <select
@@ -298,7 +301,7 @@ export const ProfileForm = forwardRef<HTMLFormElement, ProfileFormProps>(functio
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
             onBlur={() => handleBlur('phoneNumber')}
-            placeholder="50-123-4567"
+            placeholder={t('onboarding.profile.phonePlaceholder')}
             className={`flex-1 ${getInputClassName('phoneNumber')}`}
             aria-describedby={getError('phoneNumber') ? 'phoneNumber-error' : undefined}
             aria-invalid={!!getError('phoneNumber')}
@@ -316,7 +319,7 @@ export const ProfileForm = forwardRef<HTMLFormElement, ProfileFormProps>(functio
       {/* Email (optional) */}
       <div>
         <label htmlFor="email" className="text-sm text-gray-300 mb-1 block">
-          Email (optional)
+          {t('onboarding.profile.emailOptional')}
         </label>
         <input
           id="email"
@@ -324,7 +327,7 @@ export const ProfileForm = forwardRef<HTMLFormElement, ProfileFormProps>(functio
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           onBlur={() => handleBlur('email')}
-          placeholder="you@example.com"
+          placeholder={t('onboarding.profile.emailPlaceholder')}
           className={getInputClassName('email')}
           aria-describedby={getError('email') ? 'email-error' : undefined}
           aria-invalid={!!getError('email')}
@@ -340,7 +343,7 @@ export const ProfileForm = forwardRef<HTMLFormElement, ProfileFormProps>(functio
       {/* Timezone */}
       <div>
         <label htmlFor="timezone" className="text-sm text-gray-300 mb-1 block">
-          Timezone
+          {t('onboarding.profile.timezone')}
         </label>
         <select
           id="timezone"
@@ -352,7 +355,7 @@ export const ProfileForm = forwardRef<HTMLFormElement, ProfileFormProps>(functio
           aria-invalid={!!getError('timezone')}
         >
           <option value="" className="bg-gray-900">
-            Select timezone
+            {t('onboarding.profile.selectTimezone')}
           </option>
           {Intl.supportedValuesOf('timeZone').map((tz) => (
             <option key={tz} value={tz} className="bg-gray-900">

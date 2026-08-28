@@ -8,6 +8,7 @@ import { useOnboarding } from '@/src/components/onboarding/OnboardingProvider';
 import { ProfileForm } from '@/src/components/onboarding/ProfileForm';
 import type { ProfileFormData } from '@/src/components/onboarding/ProfileForm';
 import { useStepGuard } from '@/src/hooks/useStepGuard';
+import { useTranslations } from '@/src/i18n/useTranslations';
 import { ApiError } from '@/src/lib/api-client';
 import { submitStep } from '@/src/services/onboarding';
 import { WizardStep } from '@/src/types/onboarding';
@@ -27,6 +28,7 @@ import { formatE164 } from '@/src/utils/phone';
  */
 export default function ProfilePage() {
   const { isAllowed } = useStepGuard(WizardStep.FATHER_PROFILE);
+  const { t } = useTranslations();
   const {
     sessionId,
     isSubmitting,
@@ -112,13 +114,13 @@ export default function ProfilePage() {
           aria-live="polite"
         >
           <p className="text-amber-200 text-sm font-medium">
-            This number is already registered.
+            {t('onboarding.profile.duplicatePhone')}
           </p>
           <Link
             href="/login"
             className="text-indigo-400 hover:text-indigo-300 text-sm underline mt-1 inline-block"
           >
-            Would you like to log in instead?
+            {t('onboarding.profile.loginInstead')}
           </Link>
         </div>
       )}

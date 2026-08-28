@@ -177,6 +177,34 @@ export interface TranslationStrings {
   'onboarding.invitationRevoked.title': string;
   'onboarding.invitationRevoked.description': string;
 
+  // Onboarding - Welcome Screen
+  'onboarding.welcome.title': string;
+  'onboarding.welcome.tagline': string;
+  'onboarding.welcome.invitedBy': string;
+  'onboarding.welcome.startButton': string;
+  'onboarding.welcome.starting': string;
+  'onboarding.welcome.feature.relationships': string;
+  'onboarding.welcome.feature.growth': string;
+  'onboarding.welcome.feature.achievements': string;
+  'onboarding.welcome.feature.memories': string;
+
+  // Onboarding - Profile Form
+  'onboarding.profile.title': string;
+  'onboarding.profile.subtitle': string;
+  'onboarding.profile.displayName': string;
+  'onboarding.profile.displayNamePlaceholder': string;
+  'onboarding.profile.whatsappNumber': string;
+  'onboarding.profile.phonePlaceholder': string;
+  'onboarding.profile.emailOptional': string;
+  'onboarding.profile.emailPlaceholder': string;
+  'onboarding.profile.timezone': string;
+  'onboarding.profile.selectTimezone': string;
+  'onboarding.profile.duplicatePhone': string;
+  'onboarding.profile.loginInstead': string;
+
+  // Onboarding - Navigation
+  'onboarding.nav.saving': string;
+
   // Review Summary
   'review.profile': string;
   'review.children': string;
@@ -361,6 +389,34 @@ export const en: TranslationStrings = {
   'onboarding.invitationRevoked.title': 'Invitation No Longer Available',
   'onboarding.invitationRevoked.description': 'This invitation is no longer available. Please contact the person who shared it with you.',
 
+  // Onboarding - Welcome Screen
+  'onboarding.welcome.title': 'Become the Father You Want to Be',
+  'onboarding.welcome.tagline': 'Small daily actions. Big lifelong impact.',
+  'onboarding.welcome.invitedBy': 'Invited by',
+  'onboarding.welcome.startButton': 'Start Your Journey →',
+  'onboarding.welcome.starting': 'Starting…',
+  'onboarding.welcome.feature.relationships': 'Relationships',
+  'onboarding.welcome.feature.growth': 'Growth',
+  'onboarding.welcome.feature.achievements': 'Achievements',
+  'onboarding.welcome.feature.memories': 'Memories',
+
+  // Onboarding - Profile Form
+  'onboarding.profile.title': "Let's start your journey",
+  'onboarding.profile.subtitle': 'Just a few quick questions',
+  'onboarding.profile.displayName': 'Display Name',
+  'onboarding.profile.displayNamePlaceholder': 'Your name',
+  'onboarding.profile.whatsappNumber': 'WhatsApp Number',
+  'onboarding.profile.phonePlaceholder': '50-123-4567',
+  'onboarding.profile.emailOptional': 'Email (optional)',
+  'onboarding.profile.emailPlaceholder': 'you@example.com',
+  'onboarding.profile.timezone': 'Timezone',
+  'onboarding.profile.selectTimezone': 'Select timezone',
+  'onboarding.profile.duplicatePhone': 'This number is already registered.',
+  'onboarding.profile.loginInstead': 'Would you like to log in instead?',
+
+  // Onboarding - Navigation
+  'onboarding.nav.saving': 'Saving...',
+
   // Review Summary
   'review.profile': 'Profile',
   'review.children': 'Children',
@@ -544,6 +600,34 @@ export const he: TranslationStrings = {
   'onboarding.stepOf': 'מתוך',
   'onboarding.invitationRevoked.title': 'ההזמנה לא זמינה יותר',
   'onboarding.invitationRevoked.description': 'ההזמנה הזו כבר לא זמינה. אנא פנה לאדם ששיתף אותה איתך.',
+
+  // Onboarding - Welcome Screen
+  'onboarding.welcome.title': 'להפוך לאבא שתמיד רצית להיות',
+  'onboarding.welcome.tagline': 'פעולות קטנות יומיומיות. השפעה גדולה לכל החיים.',
+  'onboarding.welcome.invitedBy': 'הוזמנת על ידי',
+  'onboarding.welcome.startButton': 'בוא נתחיל ←',
+  'onboarding.welcome.starting': 'מתחיל…',
+  'onboarding.welcome.feature.relationships': 'יחסים',
+  'onboarding.welcome.feature.growth': 'צמיחה',
+  'onboarding.welcome.feature.achievements': 'הישגים',
+  'onboarding.welcome.feature.memories': 'זכרונות',
+
+  // Onboarding - Profile Form
+  'onboarding.profile.title': 'בוא נתחיל את המסע שלך',
+  'onboarding.profile.subtitle': 'רק כמה שאלות קצרות',
+  'onboarding.profile.displayName': 'שם תצוגה',
+  'onboarding.profile.displayNamePlaceholder': 'השם שלך',
+  'onboarding.profile.whatsappNumber': 'מספר וואטסאפ',
+  'onboarding.profile.phonePlaceholder': '50-123-4567',
+  'onboarding.profile.emailOptional': 'אימייל (אופציונלי)',
+  'onboarding.profile.emailPlaceholder': 'you@example.com',
+  'onboarding.profile.timezone': 'אזור זמן',
+  'onboarding.profile.selectTimezone': 'בחר אזור זמן',
+  'onboarding.profile.duplicatePhone': 'המספר הזה כבר רשום.',
+  'onboarding.profile.loginInstead': 'האם תרצה להתחבר במקום?',
+
+  // Onboarding - Navigation
+  'onboarding.nav.saving': 'שומר...',
 
   // Review Summary
   'review.profile': 'פרופיל',

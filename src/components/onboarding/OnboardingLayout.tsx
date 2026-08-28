@@ -3,6 +3,7 @@
 import Image from 'next/image';
 
 import { ONBOARDING_STEPS } from '@/src/constants/onboarding';
+import { useTranslations } from '@/src/i18n/useTranslations';
 import { WizardStep } from '@/src/types/onboarding';
 
 import { useOnboarding } from './OnboardingProvider';
@@ -43,12 +44,16 @@ export interface OnboardingLayoutProps {
 export function OnboardingLayout({
   children,
   isStepValid = false,
-  continueLabel = 'Continue',
+  continueLabel,
   onContinue,
   hideNavigation = false,
   hideStepIndicator = false,
 }: OnboardingLayoutProps) {
   const { currentStep, isSubmitting, goBack, skipStep } = useOnboarding();
+  const { t, isRTL } = useTranslations();
+
+  // Use provided label or default to translated "Continue"
+  const buttonLabel = continueLabel || t('common.continue');
 
   // Determine if Back button should be shown (Req 12.1)
   // Hidden on LANGUAGE (first wizard step — WELCOME isn't in the wizard flow)
@@ -59,7 +64,7 @@ export function OnboardingLayout({
   const showSkip = currentStepDef ? !currentStepDef.required : false;
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-4rem)]">
+    <div className="flex flex-col min-h-[calc(100vh-4rem)]" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Logo Header */}
       <header className="flex justify-center py-4">
         <Image
@@ -92,7 +97,7 @@ export function OnboardingLayout({
                 onClick={skipStep}
                 className="text-gray-400 hover:text-gray-300 text-sm underline"
               >
-                Skip this step
+                {t('common.skipForNow')}
               </button>
             </div>
           )}
@@ -106,7 +111,7 @@ export function OnboardingLayout({
                 onClick={goBack}
                 className="text-gray-400 hover:text-white transition-colors flex items-center gap-1"
               >
-                <span aria-hidden="true">←</span> Back
+                <span aria-hidden="true">{isRTL ? '→' : '←'}</span> {t('common.back')}
               </button>
             ) : (
               <div /> /* Spacer to maintain layout */
@@ -119,7 +124,7 @@ export function OnboardingLayout({
               disabled={!isStepValid || isSubmitting}
               className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-full px-6 py-3 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {isSubmitting ? 'Saving...' : continueLabel}
+              {isSubmitting ? t('onboarding.nav.saving') : buttonLabel}
             </button>
           </div>
         </footer>
