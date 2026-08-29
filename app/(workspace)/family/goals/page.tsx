@@ -236,17 +236,18 @@ export default function GoalsPage() {
   const [childFilter, setChildFilter] = useState<number | 'ALL'>('ALL');
 
   // Get unique categories from goals
+  const goals = goalsData?.goals;
   const availableCategories = useMemo(() => {
-    if (!goalsData?.goals) return [];
-    const categories = new Set(goalsData.goals.map(g => g.category));
+    if (!goals) return [];
+    const categories = new Set(goals.map(g => g.category));
     return Array.from(categories);
-  }, [goalsData?.goals]);
+  }, [goals]);
 
   // Filter goals
   const filteredGoals = useMemo(() => {
-    if (!goalsData?.goals) return [];
+    if (!goals) return [];
     
-    return goalsData.goals.filter((goal) => {
+    return goals.filter((goal) => {
       // Status filter
       if (statusFilter !== 'ALL' && goal.status !== statusFilter) {
         return false;
@@ -266,9 +267,9 @@ export default function GoalsPage() {
       
       return true;
     });
-  }, [goalsData?.goals, statusFilter, categoryFilter, childFilter]);
+  }, [goals, statusFilter, categoryFilter, childFilter]);
 
-  const hasGoals = (goalsData?.goals?.length ?? 0) > 0;
+  const hasGoals = (goals?.length ?? 0) > 0;
   const hasFilters = statusFilter !== 'ALL' || categoryFilter !== 'ALL' || childFilter !== 'ALL';
   const showNoResults = hasFilters && filteredGoals.length === 0 && hasGoals;
 

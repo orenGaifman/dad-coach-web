@@ -20,7 +20,7 @@
  * @see design.md - Screen D1: Dashboard Home
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useWorkspaceSummary } from '@/src/hooks/useWorkspaceSummary';
 import { useCelebrations } from '@/src/hooks/useCelebrations';
 import { CelebrationModal } from '@/src/components/common/CelebrationModal';
@@ -335,19 +335,23 @@ export default function DashboardPage() {
   // Track page view
   usePageView({ pageName: 'Dashboard' });
   
-  // Track if celebrations modal should be shown
+  // Track if celebrations modal should be shown - initialize based on data
+  // Use a ref to track if we've already shown celebrations this session
+  const celebrationsShownRef = useRef(false);
+  
+  // Determine if we should show celebrations based on data
+  const hasUndisplayedCelebrations = celebrationsData?.has_undisplayed && 
+    celebrationsData.celebrations.some(c => !c.displayed);
+  
   const [showCelebrations, setShowCelebrations] = useState(false);
   
-  // Check for undisplayed celebrations on mount
+  // Show celebrations modal when data loads with undisplayed celebrations (once per session)
   useEffect(() => {
-    if (celebrationsData?.has_undisplayed && celebrationsData.celebrations.length > 0) {
-      // Filter to only undisplayed celebrations
-      const undisplayed = celebrationsData.celebrations.filter(c => !c.displayed);
-      if (undisplayed.length > 0) {
-        setShowCelebrations(true);
-      }
+    if (hasUndisplayedCelebrations && !celebrationsShownRef.current) {
+      celebrationsShownRef.current = true;
+      setShowCelebrations(true);
     }
-  }, [celebrationsData]);
+  }, [hasUndisplayedCelebrations]);
 
   // Handle celebration modal complete
   const handleCelebrationsComplete = () => {
