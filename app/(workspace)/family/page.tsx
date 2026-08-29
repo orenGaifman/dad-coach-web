@@ -26,13 +26,7 @@ import { SkeletonCard } from '@/src/components/common/SkeletonScreen';
 import { EmptyState } from '@/src/components/common/EmptyState';
 import { ErrorState } from '@/src/components/common/ErrorState';
 import type { ChildOverview } from '@/src/types/family';
-
-/**
- * Helper function to combine class names, filtering out falsy values.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Loading skeleton for the family page.

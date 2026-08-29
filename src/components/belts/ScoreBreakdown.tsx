@@ -18,6 +18,7 @@
  */
 
 import type { ScoreBySignal, RecentSignal, SignalType } from '@/src/types/growth';
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Signal type display metadata.
@@ -59,13 +60,6 @@ const SIGNAL_TYPE_INFO: Record<SignalType, {
     color: 'text-orange-400' 
   },
 };
-
-/**
- * Helper function to combine class names, filtering out falsy values.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
 
 /**
  * Formats a date string to a relative time string (e.g., "2 hours ago").

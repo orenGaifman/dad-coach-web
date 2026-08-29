@@ -23,13 +23,7 @@ import type {
   CoachingStyle,
   NotificationFrequency,
 } from '@/src/types/workspace';
-
-/**
- * Helper function to combine class names.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Coaching style options with descriptions.

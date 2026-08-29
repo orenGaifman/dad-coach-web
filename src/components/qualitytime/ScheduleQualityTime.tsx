@@ -26,6 +26,7 @@ import { useAvailableSlots } from '@/src/hooks/useAvailableSlots';
 import { useScheduleQualityTime } from '@/src/hooks/useScheduleQualityTime';
 import { useChildren } from '@/src/hooks/useChildren';
 import type { AvailableSlot } from '@/src/types/qualityTime';
+import { classNames } from '@/src/utils/classNames';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -43,13 +44,6 @@ type SchedulingStep = 'select-slot' | 'confirm' | 'success' | 'error';
 // ---------------------------------------------------------------------------
 // Helper Functions
 // ---------------------------------------------------------------------------
-
-/**
- * Helper function to combine class names.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
 
 /**
  * Format a slot's date and time for display.

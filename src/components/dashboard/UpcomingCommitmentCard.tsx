@@ -23,13 +23,7 @@ import { useCalendarEvents } from '@/src/hooks/useCalendar';
 import { useProfile } from '@/src/hooks/useProfile';
 import type { Commitment } from '@/src/types/commitment';
 import type { CalendarEvent } from '@/src/types/calendar';
-
-/**
- * Helper function to combine class names.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Unified item type that can represent either a commitment or a calendar event.

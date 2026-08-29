@@ -21,6 +21,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import type { BeltLevel } from '@/src/types/growth';
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Size variants for the BeltBadge component.
@@ -80,13 +81,6 @@ const BELT_BG_COLORS: Record<BeltLevel, string> = {
   BROWN: 'bg-amber-900/50',
   BLACK: 'bg-gray-800',
 };
-
-/**
- * Helper function to combine class names, filtering out falsy values.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
 
 /**
  * Get the belt image path.

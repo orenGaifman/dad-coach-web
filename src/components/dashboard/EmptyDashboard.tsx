@@ -29,13 +29,7 @@ import {
   getWhatsAppDeepLink,
 } from '@/src/config/whatsapp';
 import { useTranslations } from '@/src/i18n';
-
-/**
- * Helper function to combine class names.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Props for the EmptyDashboard component.

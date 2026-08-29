@@ -21,13 +21,7 @@
 
 import Image from 'next/image';
 import type { Achievement } from '@/src/types/growth';
-
-/**
- * Helper function to combine class names, filtering out falsy values.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Formats a date string to a short display format (e.g., "Jan 15, 2024").

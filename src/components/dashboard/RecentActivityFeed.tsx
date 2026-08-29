@@ -16,13 +16,7 @@
  */
 
 import type { QualityTime } from '@/src/types/qualityTime';
-
-/**
- * Helper function to combine class names.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Format a date string into a human-readable format.

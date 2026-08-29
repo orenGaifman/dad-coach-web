@@ -24,13 +24,7 @@ import { SkeletonCard, SkeletonText } from '@/src/components/common/SkeletonScre
 import { ErrorState } from '@/src/components/common/ErrorState';
 import { ProgressBar } from '@/src/components/common/ProgressBar';
 import type { GoalCategory, GoalPriority, GoalRelatedMission, GoalMilestone } from '@/src/types/family';
-
-/**
- * Helper function to combine class names, filtering out falsy values.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Category display information.

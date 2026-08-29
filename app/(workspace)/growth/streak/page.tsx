@@ -24,6 +24,7 @@ import { useStreak } from '@/src/hooks/useStreak';
 import { SkeletonCard } from '@/src/components/common/SkeletonScreen';
 import { ErrorState } from '@/src/components/common/ErrorState';
 import type { StreakMilestone } from '@/src/types/growth';
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Streak milestone definitions with icons and names.
@@ -38,13 +39,6 @@ const STREAK_MILESTONES: { days: StreakMilestone; name: string; icon: string }[]
   { days: 180, name: '6 Months', icon: '💎' },
   { days: 365, name: '1 Year', icon: '👑' },
 ];
-
-/**
- * Helper function to combine class names, filtering out falsy values.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
 
 /**
  * Formats a date string to a friendly format.

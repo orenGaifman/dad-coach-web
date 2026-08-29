@@ -22,13 +22,7 @@ import { useCurrentWeeklyGoal, useWeeklyGoalHistory } from '@/src/hooks/useWeekl
 import { useBeltProgression } from '@/src/hooks/useBeltProgression';
 import type { BeltLevel } from '@/src/types/growth';
 import type { WeeklyGoal } from '@/src/types/weeklyGoal';
-
-/**
- * Helper function to combine class names.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Belt display configuration with Hebrew names and colors.

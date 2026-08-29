@@ -45,6 +45,7 @@ import {
 } from '@/src/components/common/SkeletonScreen';
 import type { Achievement } from '@/src/types/growth';
 import type { QualityTime } from '@/src/types/qualityTime';
+import { classNames } from '@/src/utils/classNames';
 
 // ---------------------------------------------------------------------------
 // Localized Text
@@ -58,17 +59,6 @@ const GREETINGS: Record<'en' | 'he', string> = {
   en: 'Welcome back',
   he: 'ברוך שובך',
 };
-
-// ---------------------------------------------------------------------------
-// Helper Functions
-// ---------------------------------------------------------------------------
-
-/**
- * Helper function to combine class names, filtering out falsy values.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
 
 // ---------------------------------------------------------------------------
 // Loading Skeleton Component

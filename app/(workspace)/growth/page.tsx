@@ -26,13 +26,7 @@ import {
 import { ErrorState } from '@/src/components/common/ErrorState';
 import { ProgressBar } from '@/src/components/common/ProgressBar';
 import type { BeltLevel } from '@/src/types/growth';
-
-/**
- * Helper function to combine class names
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Belt metadata for display

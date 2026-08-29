@@ -17,12 +17,7 @@
  * @see Backend: GrowthController.getStreak()
  */
 
-/**
- * Helper function to combine class names.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Props for the StreakDisplay component.

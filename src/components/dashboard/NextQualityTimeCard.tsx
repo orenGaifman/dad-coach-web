@@ -19,13 +19,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { QualityTime } from '@/src/types/qualityTime';
-
-/**
- * Helper function to combine class names.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Calculate the time difference between now and a target date.

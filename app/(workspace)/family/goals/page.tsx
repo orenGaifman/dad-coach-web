@@ -29,13 +29,7 @@ import { EmptyState } from '@/src/components/common/EmptyState';
 import { ErrorState } from '@/src/components/common/ErrorState';
 import { ProgressBar } from '@/src/components/common/ProgressBar';
 import type { GoalOverview, GoalStatus, GoalCategory } from '@/src/types/family';
-
-/**
- * Helper function to combine class names, filtering out falsy values.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Category display information.

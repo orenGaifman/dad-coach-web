@@ -22,6 +22,7 @@
  */
 
 import { useEffect } from 'react';
+import { classNames } from '@/src/utils/classNames';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -59,13 +60,6 @@ export interface ChildSelectorProps {
 // ---------------------------------------------------------------------------
 // Helper Functions
 // ---------------------------------------------------------------------------
-
-/**
- * Helper function to combine class names, filtering out undefined/null values.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
 
 /**
  * Default avatar icon when no avatar URL is provided.

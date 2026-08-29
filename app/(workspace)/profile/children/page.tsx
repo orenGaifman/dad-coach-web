@@ -22,15 +22,9 @@ import { SkeletonList } from '@/src/components/common/SkeletonScreen';
 import { ErrorState } from '@/src/components/common/ErrorState';
 import { EmptyState } from '@/src/components/common/EmptyState';
 import type { ChildOverview, ChildMutationRequest, ChildGender } from '@/src/types/family';
+import { classNames } from '@/src/utils/classNames';
 
 const MAX_CHILDREN = 8;
-
-/**
- * Helper function to combine class names.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
 
 /**
  * Gender options for the form.

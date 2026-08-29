@@ -22,6 +22,7 @@
 
 import type { Achievement, AchievementCategory, NextAchievable } from '@/src/types/growth';
 import { AchievementCard } from './AchievementCard';
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Category display metadata.
@@ -49,13 +50,6 @@ const CATEGORY_ORDER: AchievementCategory[] = [
   'GOALS',
   'SPECIAL',
 ];
-
-/**
- * Helper function to combine class names, filtering out falsy values.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
 
 /**
  * Props for the AchievementGallery component.

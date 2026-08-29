@@ -37,13 +37,7 @@ import { ErrorState } from '@/src/components/common/ErrorState';
 import { ProgressBar } from '@/src/components/common/ProgressBar';
 import type { ActiveMissionSummary, MissionCategory } from '@/src/types/workspace';
 import type { DegradedSection } from '@/src/types/common';
-
-/**
- * Helper function to combine class names
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Check if a section is degraded

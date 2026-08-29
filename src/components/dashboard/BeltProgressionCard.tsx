@@ -31,6 +31,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ProgressBar } from '@/src/components/common/ProgressBar';
 import type { BeltLevel } from '@/src/types/growth';
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Belt thresholds defining the completion count ranges for each belt level.
@@ -88,13 +89,6 @@ const BELT_PROGRESS_COLORS: Record<BeltLevel, string> = {
   BROWN: 'bg-amber-700',
   BLACK: 'bg-gray-200',
 };
-
-/**
- * Helper function to combine class names.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
 
 /**
  * Calculate progress percentage to the next belt based on completion count.

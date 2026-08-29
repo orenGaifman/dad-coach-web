@@ -23,13 +23,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ProgressBar } from '@/src/components/common/ProgressBar';
 import type { ActiveMissionSummary, MissionCategory } from '@/src/types/workspace';
-
-/**
- * Helper function to combine class names.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Map mission category to image path.

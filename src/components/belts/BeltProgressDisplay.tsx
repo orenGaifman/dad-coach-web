@@ -23,6 +23,7 @@
 import Image from 'next/image';
 import { ProgressBar } from '@/src/components/common/ProgressBar';
 import type { BeltLevel } from '@/src/types/growth';
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Belt metadata for display purposes.
@@ -98,13 +99,6 @@ const BELT_THRESHOLDS: Record<BeltLevel, number> = {
   BROWN: 5000,
   BLACK: 5000, // Max level
 };
-
-/**
- * Helper function to combine class names, filtering out falsy values.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
 
 /**
  * Props for the BeltProgressDisplay component.

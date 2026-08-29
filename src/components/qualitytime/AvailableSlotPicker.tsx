@@ -19,13 +19,7 @@
  */
 
 import type { AvailableSlot } from '@/src/types/qualityTime';
-
-/**
- * Helper function to combine class names.
- */
-function classNames(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '@/src/utils/classNames';
 
 /**
  * Format a date relative to today (Today, Tomorrow, or day name).
