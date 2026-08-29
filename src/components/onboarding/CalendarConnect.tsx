@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useOnboarding } from './OnboardingProvider';
 import { useTranslations } from '@/src/i18n/useTranslations';
+import { API_BASE_URL } from '@/src/config/api';
 
 // ---------------------------------------------------------------------------
 // Props
@@ -78,10 +79,9 @@ export function CalendarConnect({
     // Redirect to backend OAuth endpoint
     // After OAuth completion, redirect back to the current page with success parameter
     // This keeps the user in the onboarding flow and allows proper progression
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://dad-coach.onrender.com/api/v1';
     const currentUrl = window.location.origin + window.location.pathname;
     const redirectParam = encodeURIComponent(currentUrl);
-    const connectUrl = `${apiBaseUrl}/calendar/connect/${fatherId}?redirectUrl=${redirectParam}`;
+    const connectUrl = `${API_BASE_URL}/calendar/connect/${fatherId}?redirectUrl=${redirectParam}`;
     
     // Open in same window - will redirect back after OAuth
     window.location.href = connectUrl;
