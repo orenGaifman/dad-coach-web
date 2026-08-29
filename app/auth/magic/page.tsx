@@ -154,13 +154,12 @@ function MagicLinkAuthContent() {
             setErrorMessage(response.error_message ?? 'Unable to authenticate. Please try again.');
           }
         }
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('[MagicLink] Validation failed:', error);
         console.error('Magic link validation failed:', error);
         
         // Check if it's an ApiError with TOKEN_EXPIRED
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const apiError = error as any;
+        const apiError = error as { status?: number; code?: string } | null;
         if (apiError?.status === 401 || apiError?.code === 'TOKEN_EXPIRED') {
           setStatus('expired');
           setErrorMessage('This link has expired. Please request a new one from your coach.');

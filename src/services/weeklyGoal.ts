@@ -27,9 +27,9 @@ export async function getCurrentWeeklyGoal(
 ): Promise<CurrentWeeklyGoalResponse | null> {
   try {
     return await apiClient.get<CurrentWeeklyGoalResponse>('/workspace/weekly-goals/current', { signal });
-  } catch (error: any) {
+  } catch (error: unknown) {
     // 404 means no goal set for this week yet
-    if (error?.status === 404) {
+    if (error && typeof error === 'object' && 'status' in error && error.status === 404) {
       return null;
     }
     throw error;
