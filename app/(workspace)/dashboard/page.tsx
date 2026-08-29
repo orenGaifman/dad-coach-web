@@ -20,7 +20,8 @@
  * @see design.md - Screen D1: Dashboard Home
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { useWorkspaceSummary } from '@/src/hooks/useWorkspaceSummary';
 import { useCelebrations } from '@/src/hooks/useCelebrations';
 import { CelebrationModal } from '@/src/components/common/CelebrationModal';
@@ -266,12 +267,22 @@ function ActiveMissionCard({ mission, isDegraded }: ActiveMissionCardProps) {
  * Quick Actions Grid - navigation shortcuts in Hebrew
  */
 function QuickActionsGrid() {
+  const router = useRouter();
   const actions = [
     { icon: '⏰', label: 'דווח זמן איכות', href: '/coaching/log' },
     { icon: '💜', label: 'דווח פעולה חיובית', href: '/coaching/log' },
     { icon: '💬', label: 'שוחח עם המאמן', href: '#whatsapp' },
     { icon: '🎯', label: 'צפה במשימות', href: '/coaching' },
   ];
+
+  const handleActionClick = useCallback((href: string) => {
+    if (href === '#whatsapp') {
+      // WhatsApp action - could open WhatsApp deep link or trigger chat
+      window.open('https://wa.me/', '_blank');
+    } else {
+      router.push(href);
+    }
+  }, [router]);
 
   return (
     <div dir="rtl">
@@ -289,10 +300,7 @@ function QuickActionsGrid() {
               'hover:bg-[#2D3B4F] transition-colors',
               'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-[#0F172A]'
             )}
-            onClick={() => {
-              // Navigation will be implemented with actual routing
-              console.log(`Navigate to: ${action.href}`);
-            }}
+            onClick={() => handleActionClick(action.href)}
             aria-label={action.label}
           >
             <span className="text-2xl block mb-1" aria-hidden="true">
