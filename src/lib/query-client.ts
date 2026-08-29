@@ -122,6 +122,11 @@ export const queryKeys = {
   calendarStatus: (fatherId: number) => ['calendar-status', fatherId] as const,
   calendarEvents: (fatherId: number, days?: number, allEvents?: boolean) =>
     ['calendar-events', { fatherId, days, allEvents }] as const,
+  // Weekly Goal
+  weeklyGoal: () => ['weekly-goal'] as const,
+  weeklyGoalCurrent: () => ['weekly-goal', 'current'] as const,
+  weeklyGoalHistory: (limit: number) => ['weekly-goal', 'history', limit] as const,
+  weeklyGoalSummary: () => ['weekly-goal', 'summary'] as const,
 } as const;
 
 // ---------------------------------------------------------------------------

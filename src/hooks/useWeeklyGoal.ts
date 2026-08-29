@@ -26,7 +26,7 @@ import type { CreateWeeklyGoalRequest } from '@/src/types/weeklyGoal';
  */
 export function useCurrentWeeklyGoal() {
   return useQuery({
-    queryKey: ['weekly-goal', 'current'],
+    queryKey: queryKeys.weeklyGoalCurrent(),
     queryFn: ({ signal }) => getCurrentWeeklyGoal(signal),
     staleTime: STALE_TIMES.COMMITMENTS,
   });
@@ -37,7 +37,7 @@ export function useCurrentWeeklyGoal() {
  */
 export function useWeeklyGoalHistory(limit = 10) {
   return useQuery({
-    queryKey: ['weekly-goal', 'history', limit],
+    queryKey: queryKeys.weeklyGoalHistory(limit),
     queryFn: ({ signal }) => getWeeklyGoalHistory(limit, signal),
     staleTime: STALE_TIMES.COMMITMENTS,
   });
@@ -48,7 +48,7 @@ export function useWeeklyGoalHistory(limit = 10) {
  */
 export function useWeeklySummary() {
   return useQuery({
-    queryKey: ['weekly-goal', 'summary'],
+    queryKey: queryKeys.weeklyGoalSummary(),
     queryFn: ({ signal }) => getWeeklySummary(signal),
     staleTime: STALE_TIMES.COMMITMENTS,
   });
@@ -68,7 +68,7 @@ export function useCreateWeeklyGoal() {
     mutationFn: (data: CreateWeeklyGoalRequest) => createWeeklyGoal(data),
     onSuccess: () => {
       // Invalidate weekly goal queries
-      queryClient.invalidateQueries({ queryKey: ['weekly-goal'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.weeklyGoal() });
       queryClient.invalidateQueries({ queryKey: queryKeys.workspaceSummary() });
       queryClient.invalidateQueries({ queryKey: queryKeys.growthBelt() });
       queryClient.invalidateQueries({ queryKey: queryKeys.growthStreak() });
@@ -85,7 +85,7 @@ export function useActivateWeeklyGoal() {
   return useMutation({
     mutationFn: (goalId: number) => activateWeeklyGoal(goalId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['weekly-goal'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.weeklyGoal() });
       queryClient.invalidateQueries({ queryKey: queryKeys.workspaceSummary() });
     },
   });
