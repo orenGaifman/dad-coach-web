@@ -61,8 +61,8 @@ export default function ActivationScreen({
           alt="Father connecting with coach on WhatsApp"
           width={200}
           height={200}
-          className="w-full aspect-square object-cover rounded-2xl"
           priority
+          className="w-full aspect-square object-cover rounded-2xl"
         />
       </div>
 

@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Data Deletion | Dad Coach",
+  description: "Learn how to request deletion of your data from Dad Coach.",
+};
+
 export default function DataDeletion() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

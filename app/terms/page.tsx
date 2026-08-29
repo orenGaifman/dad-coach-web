@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms of Service | Dad Coach",
+  description: "Read the terms and conditions for using Dad Coach parenting coaching service.",
+};
+
 export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

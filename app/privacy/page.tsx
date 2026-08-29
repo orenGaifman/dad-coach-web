@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | Dad Coach",
+  description: "Learn how Dad Coach protects your privacy and handles your personal information.",
+};
+
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
