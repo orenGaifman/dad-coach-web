@@ -25,7 +25,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { fetchMessages, fetchTransitions } from '@/src/api/dev';
 import { formatIsraelTime, formatIsraelDateTime } from '@/src/utils/timezone';
-import type { DevMessage, DevTransition, DevMessagesResponse, DevTransitionsResponse } from '@/src/types/dev';
+import type { DevMessage, DevTransition } from '@/src/types/dev';
 
 /** Polling interval in milliseconds */
 const POLLING_INTERVAL_MS = 2000;
@@ -153,23 +153,118 @@ function StateTransitionMarker({ transition }: { transition: DevTransition }) {
 }
 
 /**
+ * Renders AI decision metadata for outbound messages
+ */
+function AiDecisionInfo({ message }: { message: DevMessage }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  // Only show for outbound messages with AI decision data
+  if (message.direction !== 'OUTBOUND' || !message.tool_used) {
+    return null;
+  }
+
+  const hasStateChange = message.new_state && message.new_state !== message.previous_state;
+  const hasParams = message.tool_parameters && Object.keys(message.tool_parameters).length > 0;
+  const hasError = !message.tool_success && message.error_message;
+
+  return (
+    <div className="mt-2 pt-2 border-t border-white/10">
+      {/* Compact AI info header */}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center justify-between text-left group"
+        aria-expanded={isExpanded}
+      >
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Tool badge */}
+          <span className="px-2 py-0.5 rounded text-xs font-medium bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1">
+            🧠 {message.tool_used.replace(/_/g, ' ')}
+          </span>
+          
+          {/* Success/failure indicator */}
+          {message.tool_success === false ? (
+            <span className="px-1.5 py-0.5 rounded text-xs bg-red-500/20 text-red-300 border border-red-500/30">
+              ❌ Failed
+            </span>
+          ) : (
+            <span className="px-1.5 py-0.5 rounded text-xs bg-green-500/20 text-green-300 border border-green-500/30">
+              ✓
+            </span>
+          )}
+          
+          {/* State transition indicator */}
+          {hasStateChange && (
+            <span className="text-xs text-gray-400 flex items-center gap-1">
+              <span className={`px-1.5 py-0.5 rounded ${WORKFLOW_STATE_COLORS[message.previous_state || ''] || 'bg-gray-500/20 text-gray-300'}`}>
+                {(message.previous_state || '').replace(/_/g, ' ')}
+              </span>
+              <span>→</span>
+              <span className={`px-1.5 py-0.5 rounded ${WORKFLOW_STATE_COLORS[message.new_state || ''] || 'bg-gray-500/20 text-gray-300'}`}>
+                {(message.new_state || '').replace(/_/g, ' ')}
+              </span>
+            </span>
+          )}
+        </div>
+        
+        {/* Expand/collapse indicator */}
+        {(hasParams || hasError) && (
+          <span className={`text-xs text-gray-500 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}>
+            ▼
+          </span>
+        )}
+      </button>
+
+      {/* Expanded details */}
+      {isExpanded && (hasParams || hasError) && (
+        <div className="mt-2 space-y-2">
+          {/* Parameters */}
+          {hasParams && (
+            <div className="bg-black/20 rounded p-2">
+              <div className="text-xs text-gray-500 mb-1">Parameters:</div>
+              <pre className="text-xs text-gray-300 overflow-x-auto whitespace-pre-wrap break-all">
+                {JSON.stringify(message.tool_parameters, null, 2)}
+              </pre>
+            </div>
+          )}
+          
+          {/* Error message */}
+          {hasError && (
+            <div className="bg-red-500/10 border border-red-500/30 rounded p-2">
+              <div className="text-xs text-red-400">
+                ⚠️ Error: {message.error_message}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
  * Renders a message bubble
  */
 function MessageBubble({ message }: { message: DevMessage }) {
   const isInbound = message.direction === 'INBOUND';
+  const hasAiInfo = !isInbound && message.tool_used;
 
   return (
     <div className={`flex ${isInbound ? 'justify-start' : 'justify-end'} my-1`}>
       <div
-        className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+        className={`max-w-[85%] rounded-2xl px-4 py-2 ${
           isInbound
             ? 'bg-gray-600/50 text-white rounded-bl-sm'
             : 'bg-blue-600/50 text-white rounded-br-sm'
         }`}
       >
         {/* Sender label */}
-        <div className={`text-xs font-medium mb-1 ${isInbound ? 'text-gray-400' : 'text-blue-300/70'}`}>
+        <div className={`text-xs font-medium mb-1 flex items-center gap-2 ${isInbound ? 'text-gray-400' : 'text-blue-300/70'}`}>
           {isInbound ? '👤 User' : '🤖 Bot'}
+          {hasAiInfo && (
+            <span className="px-1.5 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              AI
+            </span>
+          )}
         </div>
         
         {/* Message Content */}
@@ -179,6 +274,9 @@ function MessageBubble({ message }: { message: DevMessage }) {
         <div className={`text-right text-xs mt-1 ${isInbound ? 'text-gray-500' : 'text-blue-400/60'}`}>
           {formatIsraelTime(message.created_at)}
         </div>
+        
+        {/* AI Decision Info (for outbound messages) */}
+        <AiDecisionInfo message={message} />
       </div>
     </div>
   );
@@ -464,8 +562,9 @@ export function UnifiedConversationTimeline({ fatherId, autoRefreshEnabled = tru
         <span className="px-2 py-1 rounded bg-gray-600/50 text-gray-300">👤 User message</span>
         <span className="px-2 py-1 rounded bg-blue-600/50 text-blue-300">🤖 Bot message</span>
         <span className="px-2 py-1 rounded bg-purple-500/30 text-purple-300 border border-purple-500/50">📍 State change</span>
-        <span className="px-2 py-1 rounded bg-amber-500/30 text-amber-300 border border-amber-500/50">🧠 AI invoked</span>
+        <span className="px-2 py-1 rounded bg-amber-500/30 text-amber-300 border border-amber-500/50">🧠 AI decision</span>
         <span className="px-2 py-1 rounded bg-orange-500/30 text-orange-300 border border-orange-500/50">⏰ Scheduler</span>
+        <span className="text-gray-500 italic">(Click AI messages to see tool details)</span>
       </div>
 
       {/* Timeline container */}
@@ -477,7 +576,7 @@ export function UnifiedConversationTimeline({ fatherId, autoRefreshEnabled = tru
           <EmptyState />
         ) : (
           <div className="space-y-1">
-            {timelineItems.map((item, index) => {
+            {timelineItems.map((item) => {
               if (item.type === 'transition') {
                 return (
                   <StateTransitionMarker 

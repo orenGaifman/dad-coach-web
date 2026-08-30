@@ -135,6 +135,7 @@ export type DevMessageDirection = 'INBOUND' | 'OUTBOUND';
 
 /**
  * Message log entry for the conversation view.
+ * For outbound (AI) messages, includes AI decision metadata for debugging.
  * @see Requirement 3.1: Get Message Log
  */
 export interface DevMessage {
@@ -146,6 +147,20 @@ export interface DevMessage {
   content: string;
   /** When the message was created (ISO 8601) */
   created_at: string;
+  
+  // AI Decision metadata (for outbound messages only)
+  /** The AI tool that was used (e.g., respond_to_father, start_quality_time) */
+  tool_used?: string;
+  /** Parameters passed to the tool */
+  tool_parameters?: Record<string, unknown>;
+  /** Workflow state before AI processing */
+  previous_state?: string;
+  /** Workflow state after AI processing (null if no transition) */
+  new_state?: string;
+  /** Whether the tool execution succeeded */
+  tool_success?: boolean;
+  /** Error message if tool execution failed */
+  error_message?: string;
 }
 
 // ---------------------------------------------------------------------------
