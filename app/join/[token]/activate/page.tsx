@@ -12,6 +12,7 @@ import { useActivationPolling } from '@/src/hooks/useActivationPolling';
 import { retryActivation } from '@/src/services/onboarding';
 import { WizardStep } from '@/src/types/onboarding';
 import { VALIDATION } from '@/src/constants/onboarding';
+import { getWhatsAppDeepLink, WHATSAPP_PHONE_NUMBER } from '@/src/config/whatsapp';
 
 // ---------------------------------------------------------------------------
 // Activation Page
@@ -36,9 +37,9 @@ export default function ActivatePage() {
   // Activation data — read from localStorage (set by review page after provisioning)
   const [deepLink] = useState(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('dadcoach_deep_link') || 'https://wa.me/15551944820?text=%F0%9F%9A%80%20START';
+      return localStorage.getItem('dadcoach_deep_link') || getWhatsAppDeepLink(WHATSAPP_PHONE_NUMBER, '🚀 START');
     }
-    return 'https://wa.me/15551944820?text=%F0%9F%9A%80%20START';
+    return getWhatsAppDeepLink(WHATSAPP_PHONE_NUMBER, '🚀 START');
   });
   const [activationMessage] = useState(() => {
     if (typeof window !== 'undefined') {

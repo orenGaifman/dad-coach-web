@@ -27,6 +27,7 @@ import { EmptyState } from '@/src/components/common/EmptyState';
 import { ErrorState } from '@/src/components/common/ErrorState';
 import type { ChildOverview } from '@/src/types/family';
 import { classNames } from '@/src/utils/classNames';
+import { getWhatsAppDeepLink, WHATSAPP_PHONE_NUMBER } from '@/src/config/whatsapp';
 
 /**
  * Loading skeleton for the family page.
@@ -167,7 +168,7 @@ function ChildCard({ child }: ChildCardProps) {
  */
 function EmptyChildrenState() {
   const handleChatWithCoach = () => {
-    window.open('https://wa.me/message/your-coach-number', '_blank');
+    window.open(getWhatsAppDeepLink(WHATSAPP_PHONE_NUMBER), '_blank');
   };
 
   return (

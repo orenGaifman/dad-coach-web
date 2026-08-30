@@ -28,6 +28,7 @@ import { SkeletonCard } from '@/src/components/common/SkeletonScreen';
 import { EmptyState } from '@/src/components/common/EmptyState';
 import { ErrorState } from '@/src/components/common/ErrorState';
 import { ProgressBar } from '@/src/components/common/ProgressBar';
+import { getWhatsAppDeepLink, WHATSAPP_PHONE_NUMBER } from '@/src/config/whatsapp';
 import type { GoalOverview, GoalStatus, GoalCategory } from '@/src/types/family';
 import { classNames } from '@/src/utils/classNames';
 
@@ -201,7 +202,7 @@ function FilterButton({
  */
 function EmptyGoalsState() {
   const handleChatWithCoach = () => {
-    window.open('https://wa.me/message/your-coach-number', '_blank');
+    window.open(getWhatsAppDeepLink(WHATSAPP_PHONE_NUMBER), '_blank');
   };
 
   return (

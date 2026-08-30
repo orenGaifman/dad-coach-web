@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { useProfile } from '@/src/hooks/useProfile';
 import { SkeletonCard } from '@/src/components/common/SkeletonScreen';
 import { ErrorState } from '@/src/components/common/ErrorState';
+import { getWhatsAppDeepLink, WHATSAPP_PHONE_NUMBER } from '@/src/config/whatsapp';
 
 /**
  * Format date to readable string.
@@ -185,7 +186,7 @@ export default function AccountPage() {
           <p className="text-gray-500 text-sm">
             Need help with your account?{' '}
             <a
-              href="https://wa.me/your-support-number"
+              href={getWhatsAppDeepLink(WHATSAPP_PHONE_NUMBER, 'I need help with my account')}
               className="text-teal-400 hover:text-teal-300 transition-colors"
             >
               Contact support via WhatsApp
