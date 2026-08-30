@@ -7,8 +7,8 @@
  * - Warm greeting with father's name
  * - Belt summary card (current belt + progress)
  * - Stats row (streak, score, kids count)
- * - Active mission card (or encouraging empty state)
- * - Quick actions grid
+ * - Upcoming commitment card
+ * - Weekly goal progress
  *
  * Handles:
  * - Loading state with skeleton placeholders
@@ -20,8 +20,7 @@
  * @see design.md - Screen D1: Dashboard Home
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, useRef } from 'react';
 import { useWorkspaceSummary } from '@/src/hooks/useWorkspaceSummary';
 import { useCelebrations } from '@/src/hooks/useCelebrations';
 import { CelebrationModal } from '@/src/components/common/CelebrationModal';
@@ -35,10 +34,7 @@ import {
   SkeletonBlock,
 } from '@/src/components/common/SkeletonScreen';
 import { ErrorState } from '@/src/components/common/ErrorState';
-import { ProgressBar } from '@/src/components/common/ProgressBar';
-import type { ActiveMissionSummary, MissionCategory } from '@/src/types/workspace';
 import type { DegradedSection } from '@/src/types/common';
-import { classNames } from '@/src/utils/classNames';
 
 /**
  * Check if a section is degraded
@@ -153,162 +149,6 @@ function StatsRow({ streak, score, kidsCount, degradedSections }: StatsRowProps)
           </p>
         )}
         <p className="text-xs text-gray-500">ילדים</p>
-      </div>
-    </div>
-  );
-}
-
-/**
- * Get mission category icon
- */
-function getMissionCategoryEmoji(category: MissionCategory): string {
-  const icons: Record<MissionCategory, string> = {
-    QUALITY_TIME: '⏰',
-    LISTENING: '👂',
-    PLAY: '🎮',
-    CONVERSATION: '💬',
-    ROUTINE: '📋',
-    TEACHING: '📚',
-    BONDING: '🤝',
-  };
-  return icons[category] || '🎯';
-}
-
-/**
- * Active Mission Card - displays current mission or encouraging empty state
- */
-interface ActiveMissionCardProps {
-  mission: ActiveMissionSummary | null;
-  isDegraded?: boolean;
-}
-
-function ActiveMissionCard({ mission, isDegraded }: ActiveMissionCardProps) {
-  // If missions section is degraded, show placeholder
-  if (isDegraded) {
-    return (
-      <div className="bg-[#1E293B] rounded-2xl p-4 border border-white/5">
-        <div className="flex items-center justify-between mb-3">
-          <SkeletonText width="w-32" />
-          <SkeletonText width="w-16" />
-        </div>
-        <div className="flex items-center gap-3">
-          <SkeletonBlock className="w-10 h-10 rounded-lg" />
-          <div className="flex-1 space-y-2">
-            <SkeletonText width="w-3/4" />
-            <SkeletonText width="w-1/2" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // No active mission - show encouraging message
-  if (!mission) {
-    return (
-      <div className="bg-[#1E293B] rounded-2xl p-4 border border-white/5">
-        <div className="text-center py-4">
-          <span className="text-3xl mb-2 block" aria-hidden="true">
-            🎯
-          </span>
-          <p className="text-white font-medium">No active mission</p>
-          <p className="text-sm text-gray-400 mt-1">
-            Check Coaching for your next adventure
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  const progress = mission.total_steps > 0
-    ? (mission.completed_steps / mission.total_steps) * 100
-    : 0;
-
-  return (
-    <div
-      className="bg-[#1E293B] rounded-2xl p-4 border border-white/5"
-      role="region"
-      aria-label={`Active mission: ${mission.title}`}
-    >
-      <div className="flex items-center justify-between mb-3">
-        <p className="text-sm text-gray-400">Active Mission</p>
-        {mission.days_remaining !== null && (
-          <span className="text-xs text-teal-400 bg-teal-500/10 px-2 py-1 rounded-full">
-            {mission.days_remaining} {mission.days_remaining === 1 ? 'day' : 'days'} left
-          </span>
-        )}
-      </div>
-      <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-lg bg-[#0F172A] flex items-center justify-center flex-shrink-0">
-          <span className="text-xl" aria-hidden="true">
-            {getMissionCategoryEmoji(mission.category)}
-          </span>
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="font-semibold text-white truncate">{mission.title}</p>
-          <p className="text-sm text-gray-400">{mission.child_name}</p>
-          <div className="mt-2">
-            <ProgressBar
-              value={progress}
-              color="bg-teal-500"
-              height="sm"
-              label={`Mission progress: ${mission.completed_steps} of ${mission.total_steps} steps`}
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              {mission.completed_steps}/{mission.total_steps} completed
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/**
- * Quick Actions Grid - navigation shortcuts in Hebrew
- */
-function QuickActionsGrid() {
-  const router = useRouter();
-  const actions = [
-    { icon: '⏰', label: 'דווח זמן איכות', href: '/coaching/log' },
-    { icon: '💜', label: 'דווח פעולה חיובית', href: '/coaching/log' },
-    { icon: '💬', label: 'שוחח עם המאמן', href: '#whatsapp' },
-    { icon: '🎯', label: 'צפה במשימות', href: '/coaching' },
-  ];
-
-  const handleActionClick = useCallback((href: string) => {
-    if (href === '#whatsapp') {
-      // WhatsApp action - could open WhatsApp deep link or trigger chat
-      window.open('https://wa.me/', '_blank');
-    } else {
-      router.push(href);
-    }
-  }, [router]);
-
-  return (
-    <div dir="rtl">
-      <p className="text-sm text-gray-500 uppercase tracking-wide mb-3">
-        פעולות מהירות
-      </p>
-      <div className="grid grid-cols-2 gap-3" role="navigation" aria-label="פעולות מהירות">
-        {actions.map((action) => (
-          <button
-            key={action.label}
-            type="button"
-            className={classNames(
-              'bg-[#1E293B] rounded-xl p-3 text-center',
-              'border border-white/5',
-              'hover:bg-[#2D3B4F] transition-colors',
-              'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-[#0F172A]'
-            )}
-            onClick={() => handleActionClick(action.href)}
-            aria-label={action.label}
-          >
-            <span className="text-2xl block mb-1" aria-hidden="true">
-              {action.icon}
-            </span>
-            <span className="text-xs text-gray-300">{action.label}</span>
-          </button>
-        ))}
       </div>
     </div>
   );
@@ -444,19 +284,10 @@ export default function DashboardPage() {
           degradedSections={degradedSections}
         />
 
-        {/* Active Mission Card */}
-        <ActiveMissionCard
-          mission={data.active_mission}
-          isDegraded={isSectionDegraded('missions', degradedSections)}
-        />
-
-        {/* Quick Actions Grid */}
-        <QuickActionsGrid />
-
-        {/* Recent Conversations placeholder - will be expanded in later tasks */}
+        {/* Recent Conversations - Hebrew */}
         {data.last_conversation_timestamp && (
-          <div className="text-xs text-gray-500 text-center pt-4">
-            Last coaching session: {new Date(data.last_conversation_timestamp).toLocaleDateString()}
+          <div className="text-xs text-gray-500 text-center pt-4" dir="rtl">
+            שיחת אימון אחרונה: {new Date(data.last_conversation_timestamp).toLocaleDateString('he-IL')}
           </div>
         )}
       </div>

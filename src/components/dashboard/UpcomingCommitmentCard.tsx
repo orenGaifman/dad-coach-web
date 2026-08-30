@@ -11,14 +11,13 @@
  * - Shows relative time countdown (e.g., "in 2 hours", "tomorrow at 5pm")
  * - Displays activity note if available
  * - Shows Google Calendar events synced to the dashboard
- * - Allows marking commitments as complete or canceling
  * - Links to full commitments view
  *
  * Requirements: Quality Time Commitment System, Google Calendar Sync
  */
 
 import { useState, useEffect, useMemo } from 'react';
-import { useUpcomingCommitments, useCompleteCommitment, useCancelCommitment } from '@/src/hooks/useCommitments';
+import { useUpcomingCommitments } from '@/src/hooks/useCommitments';
 import { useCalendarEvents } from '@/src/hooks/useCalendar';
 import { useProfile } from '@/src/hooks/useProfile';
 import type { Commitment } from '@/src/types/commitment';
@@ -150,8 +149,6 @@ export function UpcomingCommitmentCard({ className }: UpcomingCommitmentCardProp
     7, // 7 days ahead
     false // Only Dad Coach related events
   );
-  const completeCommitment = useCompleteCommitment();
-  const cancelCommitment = useCancelCommitment();
   
   // Force re-render every minute to update countdown
   const [, setTick] = useState(0);
@@ -183,26 +180,6 @@ export function UpcomingCommitmentCard({ className }: UpcomingCommitmentCardProp
 
   // Get the next item
   const nextItem = upcomingItems.length > 0 ? upcomingItems[0] : null;
-
-  // Handle complete action (only for commitments)
-  const handleComplete = async () => {
-    if (!nextItem || nextItem.type !== 'commitment' || !nextItem.commitment) return;
-    try {
-      await completeCommitment.mutateAsync({ commitmentId: nextItem.commitment.id });
-    } catch (error) {
-      console.error('Failed to complete commitment:', error);
-    }
-  };
-
-  // Handle cancel action (only for commitments)
-  const handleCancel = async () => {
-    if (!nextItem || nextItem.type !== 'commitment' || !nextItem.commitment) return;
-    try {
-      await cancelCommitment.mutateAsync(nextItem.commitment.id);
-    } catch (error) {
-      console.error('Failed to cancel commitment:', error);
-    }
-  };
 
   const isLoading = commitmentsLoading || calendarLoading;
 
@@ -310,40 +287,8 @@ export function UpcomingCommitmentCard({ className }: UpcomingCommitmentCardProp
 
       {/* Location (for calendar events) */}
       {nextItem.location && (
-        <div className="bg-[#0F172A]/50 rounded-xl p-3 mb-4">
+        <div className="bg-[#0F172A]/50 rounded-xl p-3">
           <p className="text-sm text-gray-300">📍 {nextItem.location}</p>
-        </div>
-      )}
-
-      {/* Action buttons - only for commitments */}
-      {isCommitment && (
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={handleComplete}
-            disabled={completeCommitment.isPending}
-            className={classNames(
-              'flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors',
-              'bg-teal-500 text-white hover:bg-teal-600',
-              'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-[#1E293B]',
-              completeCommitment.isPending && 'opacity-50 cursor-not-allowed'
-            )}
-          >
-            {completeCommitment.isPending ? '...' : '✓ בוצע!'}
-          </button>
-          <button
-            type="button"
-            onClick={handleCancel}
-            disabled={cancelCommitment.isPending}
-            className={classNames(
-              'py-2 px-3 rounded-lg text-sm font-medium transition-colors',
-              'bg-gray-700 text-gray-300 hover:bg-gray-600',
-              'focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-[#1E293B]',
-              cancelCommitment.isPending && 'opacity-50 cursor-not-allowed'
-            )}
-          >
-            {cancelCommitment.isPending ? '...' : 'ביטול'}
-          </button>
         </div>
       )}
     </div>
