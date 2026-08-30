@@ -8,6 +8,7 @@ import { AutoRefreshToggle } from './components/AutoRefreshToggle';
 import { TimezoneIndicator } from './components/TimezoneIndicator';
 import { StatusDictionaryPanel } from './components/StatusDictionaryPanel';
 import { StateFlowDiagram } from './components/StateFlowDiagram';
+import { ToolWishlistPanel } from './components/ToolWishlistPanel';
 import type { DevFatherListItem } from '@/src/types/dev';
 
 /**
@@ -153,6 +154,7 @@ export default function DevDashboardPage() {
                   onWorkflowStateChange={handleWorkflowStateChange}
                 />
                 <QualityTimePanelPlaceholder />
+                <ToolWishlistPanel />
                 <StatusDictionaryPanel />
               </div>
 

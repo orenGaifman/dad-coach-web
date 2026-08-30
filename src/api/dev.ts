@@ -13,6 +13,7 @@ import type {
   DevFatherState,
   DevMessagesResponse,
   DevTransitionsResponse,
+  DevToolWishlistResponse,
   PaginatedResponse,
 } from '@/src/types/dev';
 
@@ -176,6 +177,53 @@ export async function fetchTransitions(
   try {
     return await apiClient.get<DevTransitionsResponse>(
       `/dev/fathers/${id}/transitions`,
+      queryParams,
+      { signal }
+    );
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw error;
+  }
+}
+
+
+// ---------------------------------------------------------------------------
+// Get Tool Wishlist
+// ---------------------------------------------------------------------------
+
+/**
+ * Fetch the AI tool wishlist.
+ *
+ * Returns tool wishes that the AI has suggested, ordered by
+ * occurrence count (most requested first).
+ *
+ * @param status - Optional filter by status (NEW, REVIEWING, APPROVED, REJECTED, IMPLEMENTED, DUPLICATE)
+ * @param limit - Maximum number of wishes to return (default: 50, max: 200)
+ * @param signal - Optional AbortSignal for request cancellation
+ * @returns Tool wishlist entries
+ * @throws ApiError with status 400 if limit exceeds 200
+ * @throws ApiError with status 403 if accessed in production environment
+ */
+export async function fetchToolWishlist(
+  status?: string,
+  limit?: number,
+  signal?: AbortSignal
+): Promise<DevToolWishlistResponse> {
+  const queryParams: Record<string, string> = {};
+
+  if (status !== undefined && status !== '') {
+    queryParams.status = status;
+  }
+
+  if (limit !== undefined) {
+    queryParams.limit = String(limit);
+  }
+
+  try {
+    return await apiClient.get<DevToolWishlistResponse>(
+      '/dev/tool-wishlist',
       queryParams,
       { signal }
     );

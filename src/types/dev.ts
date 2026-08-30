@@ -257,3 +257,43 @@ export interface DevApiError {
   /** Human-readable error message */
   message: string;
 }
+
+// ---------------------------------------------------------------------------
+// Tool Wishlist
+// ---------------------------------------------------------------------------
+
+/**
+ * Tool wishlist entry for viewing AI-suggested tools.
+ * @see DevToolWishlistPanel
+ */
+export interface DevToolWishlist {
+  /** Unique identifier */
+  id: string;
+  /** AI-suggested tool name */
+  suggested_name: string;
+  /** Description of what the user needed */
+  user_need: string;
+  /** What capability the AI thinks this tool should have */
+  suggested_capability: string;
+  /** The original user message that triggered this wish */
+  original_message: string | null;
+  /** The father ID who triggered this wish */
+  father_id: number | null;
+  /** Status of the wish (NEW, REVIEWING, APPROVED, REJECTED, IMPLEMENTED, DUPLICATE) */
+  status: string;
+  /** Priority assigned during review (1-5) */
+  priority: number | null;
+  /** Notes from product team review */
+  review_notes: string | null;
+  /** Count of similar wishes */
+  occurrence_count: number;
+  /** When the wish was created (ISO 8601) */
+  created_at: string;
+  /** When the wish was last reviewed (ISO 8601) */
+  reviewed_at: string | null;
+}
+
+/**
+ * Response wrapper for tool wishlist endpoint.
+ */
+export type DevToolWishlistResponse = DevToolWishlist[];
