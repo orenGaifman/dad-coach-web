@@ -1,27 +1,21 @@
 import type { NextConfig } from "next";
 
-const backendUrl = process.env.BACKEND_URL || 'http://localhost:8080';
+// Retired 2026-10-07: Dad Coach's dashboard moved to https://dad-coach-ui.onrender.com (a Vite SPA served from
+// Render with the backend, dad-coach repo frontend/), the marketing and legal pages to https://dad-coach-site.onrender.com.
+// Every old address redirects permanently, so links in old WhatsApp messages and in the Meta app settings keep working.
+const SITE = "https://dad-coach-site.onrender.com";
+const APP = "https://dad-coach-ui.onrender.com";
 
 const nextConfig: NextConfig = {
-  async rewrites() {
+  async redirects() {
     return [
-      {
-        source: '/api/:path*',
-        destination: `${backendUrl}/api/:path*`,
-      },
+      { source: "/", destination: SITE, permanent: true },
+      { source: "/privacy", destination: `${SITE}/privacy/`, permanent: true },
+      { source: "/terms", destination: `${SITE}/terms/`, permanent: true },
+      { source: "/data-deletion", destination: `${SITE}/data-deletion/`, permanent: true },
+      { source: "/belts/:file*", destination: `${APP}/belts/:file*`, permanent: true },
+      { source: "/:path*", destination: `${APP}/login`, permanent: true },
     ];
-  },
-  images: {
-    // Allow local images and belt images from Vercel deployment
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'dad-coach-web.vercel.app',
-        pathname: '/belts/**',
-      },
-    ],
-    // Ensure local images work correctly
-    unoptimized: process.env.NODE_ENV === 'development',
   },
 };
 
